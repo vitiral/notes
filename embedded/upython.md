@@ -1,7 +1,7 @@
 # git integration
 To develop a library ON micropython but still have git integration:
 
-This is how I develop my [microtb](github.com/cloudformdesign/microtb)
+This is how I develop my [microtb](https://github.com/cloudformdesign/microtb)
 library
 
 - create a folder on your pyboard where you want to develop
