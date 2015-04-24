@@ -71,3 +71,5 @@ chmod a+x mount.sh
 You can now mount with `./mount.sh` and unmount with `./mount.sh -u`
 
 Change "folder" to whatever your library is called and it should be plug and play!
+
+You can see this all in action in my [microtb library](https://github.com/cloudformdesign/microtb)
