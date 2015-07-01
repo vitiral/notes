@@ -1,6 +1,7 @@
 virtualenv
 ipython[notebook]
 ipdb
+psutil
 
 pytest
 nose2
@@ -9,7 +10,11 @@ mock
 requests
 flask
 
+numpy
+pandas
 statistics
 pymongo
 matplotlib
 bokeh
+
+ansicolors

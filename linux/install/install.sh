@@ -1,13 +1,17 @@
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
+
 # Install useful software
-if [[ `uname` == 'Darwin' ]]; then
+if [[ `uname` == "Darwin" ]]; then
     :  # pass, none yet
-elif [[ `uname` == 'Linux' ]]; then
+elif [[ `uname` == "Linux" ]]; then
+    echo "Is Linux"
     OSNAME=`cat /etc/*-release | grep ^NAME=`
-    if "Ubuntu" in "$OSNAME" then
-        source "$(SCRIPTPATH)/install_ubuntu.sh"
+    if [[ "Ubuntu" == *"$(OSNAME)"* ]]; then
+        echo "Is Ubuntu"
+        echo "$SCRIPTPATH/install_ubuntu.sh"
+        source "$SCRIPTPATH/install_ubuntu.sh"
     else
         exit 1
     fi
@@ -35,7 +39,7 @@ mkdir ~/.antigen
 cd ~/.antigen
 git clone https://github.com/zsh-users/antigen.git
 sudo chsh -s /usr/bin/zsh
-sudo chsh -s /usr/bin/zsh user
+sudo chsh -s /usr/bin/zsh $(USER)
 
 # python
 cd ~/projects
