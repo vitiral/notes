@@ -10,12 +10,14 @@ sudo apt-get upgrade
 # dev tools
 sudo apt-get install git
 sudo apt-get install zsh tmux vim
-sudo apt-get install build-essential
+sudo apt-get install build-essential cmake
+sudo apt-get install mongodb
 
 # install base python packages
 sudo apt-get install python-dev python3-dev
 sudo apt-get install python-pip
 sudo apt-get install python3-pip
+sudo apt-get install libpng12-dev libfreetype6-dev  # needed for matplotlib
 
 # Install microcode. Check microcode with `dmesg | grep microcode`
 sudo apt-get install microcode.ctl intel-microcode
@@ -25,10 +27,11 @@ sudo apt-get install flashplugin-installer ubuntu-restricted-extras
 sudo apt-get install libdvdcss
 sudo apt-get install libreoffice vlc gimp pithos bleachbit
 sudo apt-get install apvlv  # vim like pdf viewer
-sudo apt-get install gdrive samba
+sudo apt-get install samba
 sudo apt-get install unace unrar zip unzip p7zip-full p7zip-rar sharutils rar \
     uudeview mpack arj cabextract file-roller
 sudo apt-get install openjdk-7-jdk
+sudo apt-get install dcfldd  # better dd, realiased in ~/.alias
 
 ## note: still need to manually disable desktop integration prompts
 sudo apt-get install unity-tweak-tool

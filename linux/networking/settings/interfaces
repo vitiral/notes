@@ -1,0 +1,50 @@
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet static
+    address 192.168.0.64
+    netmask 255.255.255.0
+    gateway 192.168.0.1
+    dns-nameservers 8.8.8.8 8.8.4.4
+
+#   Wireless Configuration
+# This configuration uses wpa_supplicant. wpa_supplicant allows you to "roam", 
+# i.e. automatically connect to a wireless network if it is available.
+# Line by line summary:
+#   - wlan0 auto-connects at boot
+#   - wlan0 can be hotplugged, i.e. removed and plugged back in
+#   - enable manual configuration so that wpa_supplicant can
+#       configure the wifi network
+#   - use wpa-roam (not wpa-config) so that roaming is enabled
+#       Edit wpa_supplicant.conf to add networks to connect to
+#   - use the "home_static" id_str from wpa_supplicant.conf and make
+#       it "static" (instead of dhcp). See wpa_supplicant.conf
+#   - static address = 192.168.0.64  Set the address based on your
+#       network and preferences. You can scan used addresses with
+#       `sudo nmap -sn 192.168.0.0/24` (you must use your own network ip)
+#   - netmask for ip addresses. You can use `ifconfig -a` on a computer
+#       connected with DHCP where Mask==netmask
+#   - gateway for ip addresses. Use `route -n | grep "UG\|Gateway"` to get it
+#   - dns nameservers for static ip. These are used to do ip address
+#       lookups. 8.8.8.8 and 8.8.4.4 are google's dns servers
+#
+# Info on wpa_supplicant
+#   http://gsp.com/cgi-bin/man.cgi?section=5&topic=wpa_supplicant.conf
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+iface home_static inet static
+    address 192.168.0.64
+    netmask 255.255.255.0
+    gateway 192.168.0.1
+    dns-nameservers 8.8.8.8 8.8.4.4
+
+auto wlan1
+allow-hotplug wlan1
+iface wlan1 inet manual
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+

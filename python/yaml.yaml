@@ -1,0 +1,14 @@
+key: value
+
+list:
+    - key1: value1
+      key2: value 2
+    - 42
+
+dicts:
+    one:
+        onea: 1
+        oneb: 1
+    two:
+        twoa: 2
+        twob: 2

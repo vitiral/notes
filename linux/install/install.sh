@@ -42,11 +42,11 @@ cd ~/projects
 git clone git@github.com:cloudformdesign/cloudtb.git
 cd ~/projects/cloudtb
 
-sudo pip2 install "ipython[notebook]" ipdb requests
+sudo pip2 install -r "$(SCRIPTPATH)/python.txt"
 sudo pip2 install -r extras.txt
 sudo python2 setup.py develop
 
-sudo pip3 install "ipython[notebook]" ipdb requests
+sudo pip3 install -r "$(SCRIPTPATH)/python.txt"
 sudo pip3 install -r extras.txt
 sudo python3 setup.py develop
 

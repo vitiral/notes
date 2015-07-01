@@ -1,0 +1,29 @@
+
+# Scanning
+- `sudo nmap -sP 192.168.0.0/24` - scans the network for matching ip addresses
+
+# wpa_supplicant
+
+## configuring
+open `/etc/wpa_supplicant/wpa_supplicant.conf' and make it look like settings/wpa_supplicant.conf
+open `/etc/network/interfaces' and make it look like `settings/interfaces`
+
+Notes:
+- You may need to install `resolvconf`
+    - on raspberry pi you don't seem to need to
+- In ubuntu, the network manager will destroy resolv.conf 
+
+> Sources
+> wpa settings: http://gsp.com/cgi-bin/man.cgi?section=5&topic=wpa_supplicant.conf
+> man wpa_supplicant.conf
+> Raspi thread where I got id_str: https://www.raspberrypi.org/forums/viewtopic.php?f=26&t=31003
+> useful wpa details: https://wiki.debian.org/WPA
+
+
+
+## Reloading
+Changes to configuration file can be reloaded  be  sending  SIGHUP
+signal  to  wpa_supplicant  ('killall -HUP wpa_supplicant'). Simi‐
+larly, reloading can be triggered  with  the  wpa_cli  reconfigure
+command.
+

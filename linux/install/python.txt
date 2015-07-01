@@ -1,0 +1,15 @@
+virtualenv
+ipython[notebook]
+ipdb
+
+pytest
+nose2
+mock
+
+requests
+flask
+
+statistics
+pymongo
+matplotlib
+bokeh
