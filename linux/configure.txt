@@ -1,0 +1,8 @@
+
+# startup scripts
+One off bash commands at startup can be put in
+
+vim /etc/rc.local
+# Here are some useful commands:
+# Don't move mouse from palm (in laptop)
+synclient PalmDetect=1 PalmMinWidth=30 PalmMinZ=300 &
