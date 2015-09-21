@@ -1,0 +1,15 @@
+# Tmux stuff
+
+Tmux has sessions, windows, and panes.
+
+- sessions are completely distinct tmux sessions.
+- windows are like "tabs" in sessions, before tabs were cool
+- panes split windows up
+
+
+# useful commands
+See .tmux.conf and the tmux section of .alias
+
+Also:
+- breaking panes into their own window: `break-pane -t :`
+- 
