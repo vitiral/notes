@@ -53,24 +53,14 @@ fn main() {
         philosophers.push(Philosopher::new(name, left, right));
     }
     // make the last philosopher left handed (switch forks)
-    {
-        // Ok, several things...
-        // 1. can't seem to do:
-        //   let p = philosophers[length -1]
-        //   and then use p -- it is "borrowing" from philosophers,
-        //   so I can't modify philsophers after getting it
-        // 2. Instead I have to implement the clone method and then clone it
-        //   This is rather annoying, but it might make SOME sense... no, it
-        //   really doesn't.
-        //let p = philosophers[length - 1].clone();
-        let ref p = philosophers[length -1];
-        philosophers[length - 1] = Philosopher{left: p.right, right: p.left, name: p.name.clone()};
-        //philosophers[length - 1] = Philosopher{
-        //    left: philosophers[length - 1].right, 
-        //    right: philosophers[length - 1].left, 
-        //    name: philosophers[length -1].name.clone(),
-        //};
-    }
+    let p = philosophers[length - 1];
+    philosophers[length - 1] = Philosopher{left: p.right, right: p.left, name: p.name.clone()};
+
+    // {
+    //     let mut p = &mut philosophers[length - 1];
+    //     std::mem::swap(&mut p.right, &mut p.left);
+    // }
+
 
     // print philosophers, requires Debug trait to be defined
     println!("# Here are our philosophers, ready to eat!");
@@ -100,4 +90,5 @@ fn main() {
     for h in handles {
         h.join().unwrap();
     };
+    println!("All done!")
 }
