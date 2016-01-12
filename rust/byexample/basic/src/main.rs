@@ -1,6 +1,6 @@
 #![allow(dead_code)]
-
 use std::fmt;
+use std::ops::{Add, Mul, Sub};
 
 // # Learn formatting
 #[derive(Debug)]
@@ -429,6 +429,298 @@ fn learn_closures() {
     // Apparently "moving" is the same thing as "capturing by value"
 }
 
+// # learn closure inputs -- closures as input parameters
+// Functions can take closures as inputs, however the *captre method* must be
+// defined.
+// - `Fn` takes capture by &T
+// - `FnMut` takes capture by &mut T
+// - `FnOnce` takes capture by value T -- the moved value!
+// it is important to note that the machinery of closures requires type anonymity:
+// a struct has to be created to store the local variables of the enclosed scope!
+//
+// Also, any function which can take a closure as an argument can also take a function,
+// since functions *never* capture variables (Fn is more than sufficient always)
+
+// function that takes a closure which takes no parameters and may have
+// to move the variables
+fn apply<F>(f: F) where F: FnOnce() {
+    f()
+}
+
+fn apply_mut<F>(mut f: F) where F: FnMut() {
+    f()
+}
+
+// function that takes a closure which takes an i32 and returns an i32
+fn apply_to_3<F>(f: F) -> i32 where
+    F: Fn(i32) -> i32 {
+    f(3)
+}
+
+fn learn_closure_inputs() {
+    use std::mem;
+    println!("# learn closure inputs");
+    let greeting = "hello";
+    let mut farewell = "goodbye".to_owned();
+
+    // capture two variables, greeting by reference and farewell by value
+    let diary = || {
+        // `greeting` is by reference, requres Fn
+        println!("Entry1: I said {}", greeting);
+        // mutation requires `farewell` to be captured by mutable
+        // reference, now requires `FnMut`
+        farewell.push_str("!!!");
+        println!("Then I screamed {}", farewell);
+        println!("Now I can sleep. zzzzz.");
+
+        // manually dropping forces `farewell` to be captured by value
+        // now requires `FnOnce`
+        mem::drop(farewell);
+    };
+
+
+    apply(diary);
+
+    let mut thoughts = "Things were good".to_owned();
+    // I would have thought it would be mut diary2, but that might be ONLY if you
+    // move the values and then mutate them
+    let diary2 = || { 
+        println!("Entry2: Don't have a lot to say");
+        thoughts.push_str(", but the weather sucked.");
+        println!("These are my thoughts: {}", thoughts);
+    };
+    apply_mut(diary2);
+
+    let double = |x| 2 * x;
+    println!("3 doubled is {}", apply_to_3(double));
+}
+
+
+// # Closures as outputs
+// - returning closures could be problematic because rust only supports returning concrete
+//    (non-generic) types. Annonymous closure types are by definition unknown, so we
+//    must make it concrete. This can be done via boxing.
+// Valid traits for returns are Fn, FnMut (as  before), and also FnOnce -> FnBox
+//    (which is unstable). In the future FnBox is expected to change.
+// Other than that, the closure must be Boxed and moved, like so
+
+fn create_fn() -> Box<Fn()> {
+    let text = "Fn".to_owned();
+    Box::new(move || println!("This is a: {}", text))
+}
+
+fn create_fnmut() -> Box<FnMut()> {
+    let mut text = "FnMut".to_owned();
+
+    Box::new(move || {
+        text.push_str("... And I changed it!");
+        println!("This is a: {}", text);
+    })
+}
+
+
+fn learn_closure_outputs() {
+    println!("# learn closure outputs");
+    let fn_plain = create_fn();
+    let mut fn_mut = create_fnmut();
+
+    fn_plain();
+    fn_mut();
+}
+
+// # Closures as outputs
+fn learn_closure_stdlib() {
+    println!("# learn closure stdlib");
+    println!("iterator::any");
+    let vec1 = vec![1,2,3];
+    let vec2 = vec![4,5,6];
+    // iter yeilds &, so destructuring is required
+    println!("2 in vec1: {}", vec1.iter().any(|&x| x == 2));
+    // into_iter yeilds the values, so no destructuring
+    println!("2 in vec2: {}", vec2.into_iter().any(|x| x == 2));
+
+    let array1 = [1,2,3];
+    // for arrays, into_iter also yeilds reference (for some reason?)
+    // note to self: only use .iter() -- what is the point of into_iter
+    println!("2 in array1: {}", array1.into_iter().any(|&x| x == 2));
+
+    // iterator::any
+    let vec1 = vec![1,2,3];
+    let vec2 = vec![4,5,6];
+    let mut iter = vec1.iter();  // yields &i32
+    let mut into_iter = vec2.into_iter(); // yields i32
+    println!("Find 2 in vec1: {}", iter.find(|&&x| x == 2).unwrap());
+    assert!(into_iter.find(|&x| x == 2).is_none());
+}
+
+
+// # higher order functions
+
+fn is_odd(n: u32) -> bool {
+    n % 2 == 1
+}
+
+fn learn_higher_order_functions() {
+    println!("# learn higher order functions");
+    let upper = 1000;
+    println!("finding sum of all odd square numbers under {}", upper);
+    println!("imperative approach:");
+    let mut acc = 0;
+    for n in 0.. { // iterate from 0 to infinity
+        let n_squared = n * n;
+        if n_squared >= upper {
+            break;
+        } else if is_odd(n_squared) {
+            acc += n_squared;
+        }
+    }
+    println!("Imperative answer: {}", acc);
+
+    // Functional approach
+    let sum_of_squared_odd: u32 =
+        (0..).map(|n| n * n)
+        .take_while(|&n| n < upper)
+        .filter(|&n| is_odd(n))
+        .fold(0, |sum, i| sum + i);
+    println!("Functional syle: {}", sum_of_squared_odd);
+}
+
+// # macro rules
+
+macro_rules! say_hello {
+    // `()` indicates the macro takes no argument
+    () => (
+        // the macro expands into the contents of this block
+        println!("Hello from macro!");
+    )
+}
+
+macro_rules! create_function {
+    // the arguments of a macro are prefixed with $ and type annoted
+    // with a designator
+    // This macro takes 
+    ($func_name:ident) => (
+        fn $func_name() {
+            // the `stringify` macro converts an ident into a string
+            println!("You called {}()", stringify!($func_name))
+        }
+    )
+}
+
+create_function!(macrod_foo);
+create_function!(macrod_bar);
+
+macro_rules! print_result {
+    // this macro will take an expression of type `expr` and prints
+    // it as a string along with it's result.
+    // the `expr` designator is used for expressions
+    ($expression:expr) => (
+        println!("The expression {:?} == {:?}",
+                 stringify!($expression),
+                 $expression)
+    )
+}
+
+// # Writing tests using macros
+
+// overloading macros and defining your own syntax within them
+macro_rules! print_cmp {
+    // Arguments don't need to be separated by coma... any template can
+    // be used.
+    ($left:expr; and $right:expr) => (
+        println!("{:?} and {:?} is {:?}",
+                 stringify!($left),
+                 stringify!($right),
+                 $left && $right)
+    );
+    ($left:expr; or $right:expr) => (
+        println!("{:?} or {:?} is {:?}",
+                 stringify!($left),
+                 stringify!($right),
+                 $left || $right)
+    );
+}
+
+macro_rules! find_min {
+    // base case
+    ($x:expr) => ($x);
+    // x followed by at least 1 y
+    ($x:expr, $($y:expr), +) => (
+        // call `find_min` on the tail `$y`
+        std::cmp::min($x, find_min!($($y),+))
+    )
+}
+
+macro_rules! assert_equal_len {
+    // the `tt` (token tree) designator is used for operators and tokens
+    ($a:ident, $b:ident, $func:ident, $op:tt) => (
+        assert!($a.len() == $b.len(),
+                "{:?}: dimension mismatch: {:?} {:?} {:?}",
+                stringify!($func),
+                ($a.len(),),
+                stringify!($op),
+                ($b.len(),));
+    )
+}
+
+macro_rules! op {
+    ($func:ident, $bound:ident, $op:tt, $method:ident) => (
+        fn $func<T: $bound<T, Output=T> + Copy>(xs: &mut Vec<T>, ys: &Vec<T>) {
+            assert_equal_len!(xs, ys, $func, $op);
+            for (x, y) in xs.iter_mut().zip(ys.iter()) {
+                *x = $bound::$method(*x, *y);
+            }
+        }
+    )
+}
+
+
+op!(add_assign, Add, +=, add);
+op!(mul_assign, Mul, *=, mul);
+op!(sub_assign, Sub, -=, sub);
+
+mod test {
+    use std::iter;
+    macro_rules! create_test {
+        ($func: ident, $x: expr, $y:expr, $z:expr) => {
+            #[test]
+            fn $func() {
+                for size in 0usize..10 {
+                    let mut x: Vec<_>= iter::repeat($x).take(size).collect();
+                    let mut y: Vec<_>= iter::repeat($y).take(size).collect();
+                    let mut z: Vec<_>= iter::repeat($z).take(size).collect();
+
+                    super::$func(&mut x, &y);
+                    assert_eq!(x, z);
+                }
+            }
+        }
+    }
+
+    create_test!(add_assign, 1u32, 2u32, 3u32);
+    create_test!(mul_assign, 2u32, 3u32, 6u32);
+    create_test!(sub_assign, 3u32, 2u32, 1u32);
+}
+
+
+fn learn_macro_rules() {
+    println!("# learn macros");
+    say_hello!();
+    macrod_foo();
+    macrod_bar();
+    // recall that blocks are expressions too
+    print_result!({
+        let x = 1u32;
+        x * x + 2 * x - 1
+    });
+    print_cmp!(1i32 + 1 == 2i32; and 2i32 + 2 == 4i32);
+    print_cmp!(true; or false);
+    println!("min is: {}", find_min!(1u32));
+    println!("min is: {}", find_min!(1u32 + 2, 2u32));
+    println!("min is: {}", find_min!(5u32, 2u32 * 3, 4u32));
+}
+
+
 fn main() {
     println!("Hello, world!");
     learn_formatting();
@@ -445,4 +737,9 @@ fn main() {
     learn_iflet();
     learn_method();
     learn_closures();
+    learn_closure_inputs();
+    learn_closure_outputs();
+    learn_closure_stdlib();
+    learn_higher_order_functions();
+    learn_macro_rules();
 }
