@@ -1,0 +1,1 @@
+rustc rary.rs && rustc -L . executable.rs --cfg some_condition && ./executable
