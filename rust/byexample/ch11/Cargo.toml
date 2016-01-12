@@ -1,6 +1,0 @@
-[package]
-name = "ch11"
-version = "0.1.0"
-authors = ["Garrett Berg <googberg@gmail.com>"]
-
-[dependencies]
