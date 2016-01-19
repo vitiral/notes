@@ -27,3 +27,8 @@ signal  to  wpa_supplicant  ('killall -HUP wpa_supplicant'). Simi‐
 larly, reloading can be triggered  with  the  wpa_cli  reconfigure
 command.
 
+
+# General learning
+- [Advanced routing and traffic control](http://lartc.org/howto/index.html)
+
+
