@@ -1,0 +1,62 @@
+Hey guys, I can't seem to get my sound card working
+
+...
+After looking, it seems the problem may have been the command
+
+$ speaker-test -c 2
+
+When I run
+$ speaker-test -c 2 -t wav -D plughw:PCH
+or
+speaker-test -c 8 -t wav -D default:PCH
+
+Then I get output from the speakers (front left then front right)
+
+However, I still can't seem to get sound working on youtube.
+
+
+I have been trying to do the guide here https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture , but haven't had much sucesses except getting the beep to work.
+
+# installed alsa-utils and tried that stuff
+```
+ ~  amixer sset Master 
+unmuteamixer: Unable to find simple control 'Master',0
+```
+
+`alsamixer` gives me my HDMI ports, which are unmuted and card 2 is my intel motherboard sound card, which I unmuted.
+
+```
+$ speaker-test -c 2
+speaker-test 1.0.29
+Playback device is default
+Stream parameters are 48000Hz, S16_LE, 2 channels
+Using 16 octaves of pink noise
+ALSA lib pcm_dmix.c:1024:(snd_pcm_dmix_open) unable to open slave
+Playback open error: -2,No such file or directory
+$ aplay -L | grep :CARD
+hdmi:CARD=HDMI,DEV=0
+hdmi:CARD=HDMI,DEV=1
+hdmi:CARD=HDMI,DEV=2
+default:CARD=PCH
+sysdefault:CARD=PCHfront:CARD=PCH,DEV=0
+surround21:CARD=PCH,DEV=0
+surround40:CARD=PCH,DEV=0
+surround41:CARD=PCH,DEV=0
+surround50:CARD=PCH,DEV=0
+surround51:CARD=PCH,DEV=0
+surround71:CARD=PCH,DEV=0
+```
+
+looks like my card is "default"
+
+```
+$ speaker-test -D default -c 8
+speaker-test 1.0.29
+Playback device is default
+Stream parameters are 48000Hz, S16_LE, 8 channels
+Using 16 octaves of pink noise
+ALSA lib pcm_dmix.c:1024:(snd_pcm_dmix_open) unable to open slave
+Playback open error: -2,No such file or directory
+```
+
+

@@ -1,0 +1,39 @@
+#-*- mode: org -*-
+#+STARTUP: showall
+
+* Welcome to org-mode
+
+    Welcome, and thanks for trying out Org-mode. Making outlines in
+      org is very simple. It is just text! Just start typing.
+      * This is a headline, it starts with one or more stars
+          A heading has one star, a sub-heading two, etc.
+          * Working with lists
+            ** Moving around in our outline
+            ** Moving around headlines
+
+** Lord of the Rings
+   My favorite scenes are (in this order)
+   1) attack of Rohirimm
+   2) Eoyn's fight with the witch king
+      + already my fav in the book
+      + I really like Miranda Otto
+   3) new item
+   4) awesome
+   5) another new item
+   6) and another
+   7) *Peter Jackson* being shot by legolas
+   8) what [2015-12-21 Mon]
+
+* TODOs
+** IN-PROGRESS learn org mode                                           :org:
+   DEADLINE: <2016-01-01 Thu>
+** DONE hello                                                     :test:what:
+   CLOSED: [2015-12-21 Mon 11:35] DEADLINE: <2015-12-29 Tue> SCHEDULED: <2015-12-25 Fri>
+
+* tables
+** awesome table
+
+| name     | date       |
+|----------+------------|
+| bob this | works      |
+| this     | is not wed |

@@ -1,0 +1,78 @@
+
+* Things to learn in vem (spacemacs for emacs)
+** DONE essential file commands: SPC + f                              :file:
+CLOSED: [2015-12-24 Thu 15:33]
+*** finding
+- =f= navigate to file from current directory
+- =L= "locate" file in entire file system
+- =s= file save
+- =y= yank file path
+*** moving/deleting/etc
+- =c= copy file to a different location
+- =D= delete file and buffer (ask for confirmation)
+- =R= rename file
+*** sacemacs commands:
+- =eR= reload configuration file
+- =ed= open ~/.spacemacs file
+- =eh= browse spacemacs documentation
+- =ei= open init.el
+- =eV= display and copy the spacemacs version
+** DONE essential window commands: SPC + w                          :window:
+CLOSED: [2015-12-24 Thu 15:33]
+- = + hjkl= window navigation
+- =/= or =wv= verticle split
+  - =V= verticle split and focus new window
+- =-= or =s= horizontal split
+  - =S= horizontal split and focus new
+- =c= "window close"
+- =m= maximize/minimize window -- if you make a split with a maximized window it forgets previous configuration
+- =R= rotate windows
+- =.= enter window minor mode
+  - ={}= resize window up/down
+  - =[]= resize window left/right
+- `=` window cleanup
+- =pp= close the current sticky popup window
+** TODO essential buffer commands: SPC + b                          :buffer:
+- =TAB= (no =b=) switch to alternate buffer in the current window (switch back and forth)
+- =f= helm switch to a buffer
+- =d= kill current buffer
+- =k= kill a buffer using helm
+- =R= reload buffer from disk
+- special:
+  - =h= open *spacemacs* buffer
+** TODO essential org commands: SPC + m (in org mode)                  :org:
+** TODO 
+SCHEDULED: <2015-12-25 Fri> DEADLINE: <2015-12-30 Wed>
+:LOGBOOK:
+CLOCK: [2015-12-24 Thu 13:06]
+:END:
+:PROPERTIES:
+:Effort:   2d
+:END:
+*** standard commands (no leader)
+  + =TAB= (doesn't currently work) org cycle -- closes minor header lines, etc
+  + =T= insert TODO heading
+  + =t= cycle TODO
+  + =< or >= move list item left/right
+  + =g kl= move up/down headings
+*** misc
+- =e= export sheet
+- You can make words *bold*, /italic/, _underlined_, =code=, ~verbatim~, +strike-through+
+- =:= set tags
+*** links: 
+  + =l= open link at point
+  + =il= insert link [[http://google.com][google]]
+*** TODOs:
+  + =a= agenda
+  + Cycle TODO items with plain =t= (no leader) or:
+    + =L= shift right (change from TODO -> DONE, etc)
+    + =H= shift left (change from DONE -> TODO, etc)
+*** time management:
+  - =.= org-time-stamp
+  - =s= schedule
+  - =d= deadline -- add a deadline to current task
+  - =f= set effort
+*** spreadsheet
+| name    | type    | date             |
+| this is | awesome | <2017-05-05 Fri> |
+- =ta= align table
