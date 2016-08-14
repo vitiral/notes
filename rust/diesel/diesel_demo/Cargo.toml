@@ -5,6 +5,6 @@ authors = ["Garrett Berg <gberg@neutral.io>"]
 
 [dependencies]
 diesel = "0.7.0"
-diesel_codegen = { version = "0.7.0", default-features = false, features = ["nightly", "postgres"] }
+diesel_codegen = { version = "0.7.0", default-features = false, features = ["postgres"] }
 dotenv = "0.8.0"
-dotenv_macros = "0.8.0"
+dotenv_macros = "0.9.0"
