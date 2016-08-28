@@ -6,13 +6,17 @@ use core::mem;
 type Result<T> = core::result::Result<T, ()>;
 type TryLockResult<T> = core::result::Result<T, ()>;
 
-struct Pool<'a> {
+struct RawPool<'a> {
     data: &'a mut [u8],
+}
+
+struct Pool<'a> {
+    raw: RawPool<'a>,
 }
 
 impl <'pool> Pool<'pool> {
     pub fn new(data: &'pool mut [u8]) -> Pool<'pool> {
-        Pool { data: data }
+        Pool { raw: RawPool { data: data } }
     }
 
     pub fn alloc<T>(&'pool self) -> Result<Mutex<'pool, T>> {
@@ -45,7 +49,7 @@ impl<'mutex, T> Deref for MutexGuard<'mutex, T> {
 
     fn deref(&self) -> &T {
         unsafe {
-            let p: *const u8 = mem::transmute(&self.__lock.pool.data[0]);
+            let p: *const u8 = mem::transmute(&self.__lock.pool.raw.data[0]);
             mem::transmute(p)
         }
     }
