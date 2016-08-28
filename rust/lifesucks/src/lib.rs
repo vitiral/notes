@@ -16,8 +16,9 @@ struct MutextGuard<'a> {
 }
 
 impl <'pool> Pool<'pool> {
-    pub fn alloc(&self, i: usize) -> Result<&'pool u32> {
-        Ok(&self.data[i])
+    pub fn alloc(&self, i: usize) -> Result<Mutex<'pool> {
+        // Note: if already allocated, return Error
+        Ok(Mutex{index: i, pool: self})
     }
 }
 
@@ -28,5 +29,5 @@ fn it_works() {
     let pool = Pool {
         data: &data[..],
     };
-    assert_eq!(pool.alloc(0).unwrap(), &10);
+    // assert_eq!(pool.alloc(0).unwrap(), &10);
 }
