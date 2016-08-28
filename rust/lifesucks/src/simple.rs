@@ -1,8 +1,8 @@
-use std;
-use std::ops::Deref;
+use core;
+use core::ops::Deref;
 
-type Result<T> = std::result::Result<T, String>;
-type TryLockResult<T> = std::result::Result<T, String>;
+type Result<T> = core::result::Result<T, ()>;
+type TryLockResult<T> = core::result::Result<T, ()>;
 
 struct Pool<'a> {
     data: &'a [u32],
@@ -57,8 +57,6 @@ fn it_works() {
     match pool.alloc(0) {
         Ok(v) => match v.try_lock() {
             Ok(l) => {
-                // see that we can use l in here! Yay!
-                println!("l: {}", l.deref());
                 assert_eq!(l.deref(), &10);
             }
             Err(_) => assert!(false),
