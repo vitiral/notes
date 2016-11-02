@@ -1,28 +1,9 @@
 
-import { Component } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
 
-
-export class Hero {
-    id: number;
-    name: string;
-}
-
-const HEROES: Hero[] = [
-    { id: 11, name: "Mr. Nice" },
-    { id: 12, name: "Narco" },
-    { id: 13, name: "Bombasto" },
-    { id: 14, name: "Celeritas" },
-    { id: 15, name: "Magenta" },
-    { id: 16, name: "Trump" },
-    { id: 17, name: "Hillary" },
-];
-
-    //<h2>{{selectedHero.name}} details!</h2>
-    //<div><label>id: </label>{{selectedHero.id}}</div>
-    //<div>
-    //    <label>name: </label>
-    //    <input [(ngModel)]="selectedHero.name" placeholder="name"/>
-    //</div>
+import { Hero } from './hero';
+import { HeroDetailComponent } from './hero-detail.component';
+import { HeroService } from './hero.service';
 
 @Component({
     selector: 'my-app',
@@ -35,14 +16,7 @@ const HEROES: Hero[] = [
             <span class="badge">{{hero.id}}</span> {{hero.name}}
         </li>
     </ul>
-    <div *ngIf="selectedHero">
-        <h2>{{selectedHero.name}} details!</h2>
-        <div><label>id: </label>{{selectedHero.id}}</div>
-        <div>
-            <label>name: </label>
-            <input [(ngModel)]="selectedHero.name" placeholder="name"/>
-        </div>
-    </div>
+    <my-hero-detail [hero]="selectedHero"></my-hero-detail>
     `,
     styles: [`
         .selected {
@@ -93,12 +67,23 @@ const HEROES: Hero[] = [
             border-radius: 4px 0 0 4px;
         }
     `],
+    providers: [HeroService],
 })
-
-export class AppComponent {
+export class AppComponent implements OnInit {
     title = "Tour of Heroes";
-    heroes = HEROES;
+    heroes: Hero[];
     selectedHero: Hero;
+
+    constructor(private heroService: HeroService) { }
+
+    ngOnInit(): void {
+        this.getHeroes()
+    }
+
+    getHeroes(): void{
+        this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+        //this.heroService.getHeroesSlowly().then(heroes => this.heroes = heroes);
+    }
 
     onSelect(hero: Hero): void {
         this.selectedHero = hero;
