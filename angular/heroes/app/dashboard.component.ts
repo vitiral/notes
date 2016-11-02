@@ -8,7 +8,8 @@ import { HeroService } from './hero.service';
     moduleId: module.id,
     selector: 'my-dashboard',
     templateUrl: '../html/dashboard.component.html',
-    providers: [HeroService],
+    styleUrls: [ '../html/dashboard.component.css' ],
+    providers: [ HeroService ],
 })
 export class DashboardComponent implements OnInit {
     heroes: Hero[] = [];
