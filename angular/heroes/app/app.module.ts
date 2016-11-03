@@ -1,5 +1,7 @@
 //! this is the entry point for the app
 
+import './rxjs-extensions';
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -27,6 +29,9 @@ import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from './hero-detail.component';
 
 import { HeroService } from './hero.service';
+import { HeroSearchService } from './hero-search.service'
+
+import { HeroSearchComponent } from './hero-search.component';
 
 // NgModule decarator declares the class as a "module"
 // A module is a consolodation of components similar to a python module.
@@ -48,8 +53,9 @@ import { HeroService } from './hero.service';
         DashboardComponent,
         HeroDetailComponent,
         HeroesComponent,
+        HeroSearchComponent,
     ],
-    providers: [ HeroService ],
+    providers: [ HeroService, HeroSearchService ],
     bootstrap: [ AppComponent ],
 })
 export class AppModule { }
