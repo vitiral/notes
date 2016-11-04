@@ -1,0 +1,11 @@
+
+<!-- blur means to move focus off of the element. If in the form `(blur)=`, it
+     triggers when focus is moved off it does an action.
+-->
+<input #heroInput (keyup.enter)="add(heroInput.value)"
+                  (blur)="add(heroInput.value); heroInput.value=''" />
+<ul>
+    <li *ngFor="let hero of heroes">
+        {{hero}}
+    </li>
+</ul>
