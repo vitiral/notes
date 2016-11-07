@@ -1,0 +1,8 @@
+[package]
+name = "toml"
+version = "0.1.0"
+authors = ["Garrett Berg <vitiral@gmail.com>"]
+
+[dependencies]
+toml = "0.2"
+rustc-serialize = "0.3"

@@ -1,1 +1,10 @@
-Got 57:26 through first video
+# Dependency injection
+- needed dependencies are listed in the `constructor` method
+- `providers` provides the list of dependencies to inject to a component or module
+- dependencies are injected into the parent and all children Injectables (including components)
+- in order to have your dependencies injected, you must mark it with `@Injectable` or `@Component`, etc
+- proivders technically provide the concrete-runtime version of a dependency value. Typically these
+    are just classes, and if their dependencies are listed and are Injectable then the dependencies
+    will just be automatically injected.
+    The typical `providers` list is shorthand for: `[{ provide: Logger, useClass: Logger }]`
+
