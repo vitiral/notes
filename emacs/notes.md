@@ -1,5 +1,6 @@
 
 # basic keybinding
+- `g w` calls `fill-paragraph` which auto-wraps all items to 80 characters
 - `C-x C-c` quit emacs
 - `C-g` cancel command
 - `M-x` execute extended command, i.e. run any elisp function by name

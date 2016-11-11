@@ -20,3 +20,4 @@ function shuffleArray(array) {
 
 print(shuffleArray(oldray))
 
+print(oldray.filter(function(n) {return n == "hello"})[0])

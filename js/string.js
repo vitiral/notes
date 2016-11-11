@@ -14,3 +14,5 @@ print(function (){
         return hi.slice(0, index)
     }
 }())
+
+print("version.string".replace(".", "-"))
