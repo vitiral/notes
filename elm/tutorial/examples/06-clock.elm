@@ -1,9 +1,9 @@
-import Html exposing (Html)
+import Html exposing (Html, div)
+import Html as HtEl
+import Html.Attributes as Hattr
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (Time, second)
-
-
 
 main =
   Html.program
@@ -13,26 +13,19 @@ main =
     , subscriptions = subscriptions
     }
 
-
-
 -- MODEL
-
 
 type alias Model = Time
 
-
+-- omg... I think init is actually a function???
 init : (Model, Cmd Msg)
 init =
   (0, Cmd.none)
 
-
-
 -- UPDATE
 
-
-type Msg
-  = Tick Time
-
+type Msg =
+  Tick Time
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -40,19 +33,14 @@ update msg model =
     Tick newTime ->
       (newTime, Cmd.none)
 
-
-
 -- SUBSCRIPTIONS
-
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Time.every second Tick
 
 
-
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
@@ -66,7 +54,10 @@ view model =
     handY =
       toString (50 + 40 * sin angle)
   in
-    svg [ viewBox "0 0 100 100", width "300px" ]
+    div [] 
+    [ svg [ viewBox "0 0 100 100", width "300px" ]
       [ circle [ cx "50", cy "50", r "45", fill "#0B79CE" ] []
       , line [ x1 "50", y1 "50", x2 handX, y2 handY, stroke "#023963" ] []
       ]
+    , div [] [ HtEl.text <| toString model ]
+    ]
