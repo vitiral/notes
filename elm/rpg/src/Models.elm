@@ -8,5 +8,5 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-  { players = [ Player 1 "Default" 1 ]
+  { players = []
   }
