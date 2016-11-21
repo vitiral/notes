@@ -15,6 +15,5 @@ update msg model =
         ( { model | players = updatedPlayers }
         , Cmd.map PlayersMsg subCmd 
         )
-    -- TODO: do something here
     RouteChange route ->
-      ( model, Cmd.none )
+      ( { model | route = route }, Cmd.none )
