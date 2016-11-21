@@ -7,6 +7,9 @@ import View exposing (view)
 import Update exposing (update)
 import Players.Commands exposing (fetchAll)
 
+import Routing
+
+
 
 init : (Model, Cmd Msg)
 init =
