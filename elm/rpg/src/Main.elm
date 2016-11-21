@@ -6,10 +6,8 @@ import Messages exposing (Msg(..), Route)
 import Models exposing (Model, initialModel)
 import View exposing (view)
 import Update exposing (update)
-import Players.Commands exposing (fetchAll)
 import Routing
-
-
+import Players.Commands exposing (fetchAll)
 
 init : Navigation.Location -> (Model, Cmd Msg)
 init location =
@@ -23,7 +21,6 @@ subscriptions model =
 
 -- MAIN
 
---main : Program Never Model Msg
 main =
     Navigation.program Routing.routerMsg
       { init = init
