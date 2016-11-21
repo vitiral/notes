@@ -15,3 +15,10 @@ update msg model =
         ( { model | players = updatedPlayers }
         , Cmd.map PlayersMsg subCmd 
         )
+    -- TODO: do something here
+    PlayersRoute ->
+      ( model, Cmd.none )
+    PlayerRoute id ->
+      ( model, Cmd.none )
+    NotFoundRoute ->
+      ( model, Cmd.none )

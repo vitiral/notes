@@ -3,16 +3,10 @@ module Routing exposing (..)
 import String
 import Navigation
 import UrlParser as UP exposing ((</>))
-import Players.Models exposing (PlayerId)
+import Messages exposing (Msg(..))
 
 
-type Route
-  = PlayersRoute
-  | PlayerRoute PlayerId
-  | NotFoundRoute
-
-
-route : UP.Parser (Route -> a) a
+route : UP.Parser (Msg -> a) a
 route =
   UP.oneOf
     [ UP.map PlayersRoute (UP.s "")
@@ -21,10 +15,8 @@ route =
     ]
 
 
-hashParser : Navigation.Location -> Maybe Route
-hashParser location =
-  UP.parseHash route location
-
---parser : Navigation.Parser (Result String Route)
---parser =
---  Navigation.makeParser hashParser
+parser : Navigation.Location -> Msg
+parser location =
+  case UP.parseHash route location of
+    Just a -> a
+    Nothing -> NotFoundRoute
