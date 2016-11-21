@@ -1,19 +1,20 @@
 module Main exposing (..)
 
-import Html exposing (program)
-import Messages exposing (Msg(..))
+import Navigation
+--import Html exposing (program)
+import Messages exposing (Msg(..), Route)
 import Models exposing (Model, initialModel)
 import View exposing (view)
 import Update exposing (update)
 import Players.Commands exposing (fetchAll)
-
 import Routing
 
 
 
-init : (Model, Cmd Msg)
-init =
-    (initialModel, Cmd.map PlayersMsg fetchAll)
+init : Navigation.Location -> (Model, Cmd Msg)
+init location =
+    (initialModel (Routing.router location)
+    , Cmd.map PlayersMsg fetchAll )
 
 
 subscriptions : Model -> Sub Msg
@@ -22,9 +23,9 @@ subscriptions model =
 
 -- MAIN
 
-main : Program Never Model Msg
+--main : Program Never Model Msg
 main =
-    program
+    Navigation.program Routing.routerMsg
       { init = init
       , view = view
       , update = update

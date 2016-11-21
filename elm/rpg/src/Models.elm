@@ -6,10 +6,11 @@ import Routing
 
 type alias Model =
   { players: List Player
-  --, route: Route
+  , route: Route
   }
 
-initialModel : Model
-initialModel =
+initialModel : Route -> Model
+initialModel route =
   { players = []
+  , route = route
   }
