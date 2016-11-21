@@ -16,9 +16,5 @@ update msg model =
         , Cmd.map PlayersMsg subCmd 
         )
     -- TODO: do something here
-    PlayersRoute ->
-      ( model, Cmd.none )
-    PlayerRoute id ->
-      ( model, Cmd.none )
-    NotFoundRoute ->
+    RouteChange route ->
       ( model, Cmd.none )
