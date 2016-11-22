@@ -40,8 +40,7 @@ fetchAll =
 save : Player -> Cmd Msg
 save player = 
   let
-    body = Http.jsonBody
-      <| memberEncoded player
+    body = Http.jsonBody <| memberEncoded player
 
     request = Http.request
       { method = "PATCH"
@@ -53,7 +52,6 @@ save player =
       , withCredentials = False
       }
   in
-    -- turn this into a `Task Error a`
     Http.send SavePlayer request
 
 

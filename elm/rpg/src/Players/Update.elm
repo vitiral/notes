@@ -3,7 +3,8 @@ module Players.Update exposing (..)
 import Navigation
 
 import Players.Messages exposing (Msg(..))
-import Players.Models exposing (Player)
+import Players.Models exposing (Player, PlayerId)
+import Players.Commands exposing (save)
 
 update : Msg -> List Player -> ( List Player, Cmd Msg )
 update msg players =
@@ -20,10 +21,11 @@ update msg players =
     ShowPlayer id ->
       ( players, Navigation.newUrl ("#players/" ++ (toString id)) )
 
-    ChangeLevel id change ->
-      -- TODO: do something here
-      ( players, Cmd.none)
-  
+    ChangeLevel id amount ->
+      ( players
+      , Cmd.batch (changeLevelCommands id amount players)
+      )
+
     SavePlayer result -> case result of
       Err err ->
         -- TODO: do something here
@@ -32,3 +34,16 @@ update msg players =
       Ok newPlayer ->
         ( List.map (\p -> if p.id == newPlayer.id then newPlayer else p) players
         , Cmd.none )
+
+changeLevelCommands : PlayerId -> Int -> List Player -> List (Cmd Msg)
+changeLevelCommands id amount players =
+  let
+    cmdForPlayer player =
+      if player.id == id then
+        save { player | level = player.level + amount }
+      else
+        Cmd.none
+  in
+    List.map cmdForPlayer players
+
+
