@@ -20,3 +20,15 @@ update msg players =
     ShowPlayer id ->
       ( players, Navigation.newUrl ("#players/" ++ (toString id)) )
 
+    ChangeLevel id change ->
+      -- TODO: do something here
+      ( players, Cmd.none)
+  
+    SavePlayer result -> case result of
+      Err err ->
+        -- TODO: do something here
+        ( players, Cmd.none)
+
+      Ok newPlayer ->
+        ( List.map (\p -> if p.id == newPlayer.id then newPlayer else p) players
+        , Cmd.none )
