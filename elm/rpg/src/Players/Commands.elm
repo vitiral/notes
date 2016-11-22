@@ -79,14 +79,9 @@ collectionDecoder =
 memberDecoder : Decode.Decoder Player
 memberDecoder =
   Decode.map3 Player
-    (Decode.field "id" (Decode.map toFuckingId Decode.string))
-    --(Decode.field "id" Decode.int)
+    (Decode.field "id" Decode.int)
     (Decode.field "name" Decode.string)
     (Decode.field "level" Decode.int)
-  --decode Player
-    ----|> required "id" (Decode.customDecoder Decode.string String.toInt)
-    --|> required "name" Decode.string
-    --|> required "level" Decode.int
 
 -- TODO: this should do the right thing...
 toFuckingId strId =
