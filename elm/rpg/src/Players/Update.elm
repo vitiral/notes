@@ -32,7 +32,9 @@ update msg players =
         ( players, Cmd.none)
 
       Ok newPlayer ->
-        ( List.map (\p -> if p.id == newPlayer.id then newPlayer else p) players
+        ( List.map 
+          (\p -> if p.id == newPlayer.id then newPlayer else p) 
+          players
         , Cmd.none )
 
 changeLevelCommands : PlayerId -> Int -> List Player -> List (Cmd Msg)

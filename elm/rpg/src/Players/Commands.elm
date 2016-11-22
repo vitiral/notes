@@ -40,8 +40,9 @@ fetchAll =
 save : Player -> Cmd Msg
 save player = 
   let
-    body = Http.jsonBody <| memberEncoded player
+    body = Http.jsonBody (memberEncoded player)
 
+    --request = Http.post (saveUrl player.id) body memberDecoder
     request = Http.request
       { method = "PATCH"
       , headers = [ Http.header "Content-Type" "application/json" ]
@@ -60,13 +61,13 @@ save player =
 memberEncoded : Player -> Encode.Value
 memberEncoded player =
   let
-    list =
+    attrs =
       [ ( "id", Encode.int player.id )
       , ( "name", Encode.string player.name )
       , ( "level", Encode.int player.level)
       ]
   in
-    Encode.object list
+    Encode.object attrs
 
   
 
