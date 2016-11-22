@@ -14,3 +14,7 @@
 2 w 	Others can write to the file
 1 x 	Others can execute the file
 ```
+
+Prevent editing entirely:
+
+chattr +i /etc/resolv.conf
