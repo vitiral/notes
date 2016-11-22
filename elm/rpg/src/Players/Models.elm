@@ -10,6 +10,13 @@ type alias Player =
   , level : Int
   }
 
+type alias PlayerRaw =
+  { id : String
+  , name : String
+  , level : Int
+  }
+
+
 new : Player
 new =
   { id = 0

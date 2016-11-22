@@ -79,7 +79,27 @@ collectionDecoder =
 
 memberDecoder : Decode.Decoder Player
 memberDecoder =
-  decode Player
-    |> required "id" Decode.int
-    |> required "name" Decode.string
-    |> required "level" Decode.int
+  Decode.map3 Player
+    (Decode.field "id" (Decode.map toFuckingId Decode.string))
+    (Decode.field "name" Decode.string)
+    (Decode.field "level" Decode.int)
+  --decode Player
+    ----|> required "id" (Decode.customDecoder Decode.string String.toInt)
+    --|> required "name" Decode.string
+    --|> required "level" Decode.int
+
+-- TODO: this should do the right thing...
+toFuckingId strId =
+  let
+    id = String.toInt strId
+  in
+    case id of
+      Ok id -> id
+      Err _ -> 0
+
+
+
+
+--decodeId =
+--  Decode string
+--    |> andThen

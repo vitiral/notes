@@ -10,3 +10,4 @@ type Msg
   | ShowPlayer PlayerId
   | ChangeLevel PlayerId Int
   | SavePlayer (Result Http.Error Player)
+  | ErrorMsg

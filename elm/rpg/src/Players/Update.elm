@@ -29,7 +29,7 @@ update msg players =
     SavePlayer result -> case result of
       Err err ->
         -- TODO: do something here
-        ( players, Cmd.none)
+        ( players, Cmd.Cmd ErrorMsg )
 
       Ok newPlayer ->
         ( List.map 
