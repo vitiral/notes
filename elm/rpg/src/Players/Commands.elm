@@ -80,6 +80,7 @@ memberDecoder : Decode.Decoder Player
 memberDecoder =
   Decode.map3 Player
     (Decode.field "id" (Decode.map toFuckingId Decode.string))
+    --(Decode.field "id" Decode.int)
     (Decode.field "name" Decode.string)
     (Decode.field "level" Decode.int)
   --decode Player
