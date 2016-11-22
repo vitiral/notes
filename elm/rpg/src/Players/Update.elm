@@ -28,24 +28,30 @@ update msg players =
 
     SavePlayer result -> case result of
       Err err ->
-        -- TODO: do something here
-        ( players, Cmd.Cmd ErrorMsg )
+        -- TODO: do something else here
+        ( players, Navigation.newUrl "error"  )
 
       Ok newPlayer ->
-        ( List.map 
-          (\p -> if p.id == newPlayer.id then newPlayer else p) 
-          players
+        ( updatePlayer newPlayer players
         , Cmd.none )
 
-changeLevelCommands : PlayerId -> Int -> List Player -> List (Cmd Msg)
-changeLevelCommands id amount players =
-  let
-    cmdForPlayer player =
-      if player.id == id then
-        save { player | level = player.level + amount }
-      else
-        Cmd.none
-  in
-    List.map cmdForPlayer players
 
+changeLevelCommands playerId howMuch players =
+    let
+      cmdForPlayer existingPlayer =
+        if existingPlayer.id == playerId then
+          save { existingPlayer | level = existingPlayer.level + howMuch }
+        else
+          Cmd.none
+    in
+      List.map cmdForPlayer players
 
+updatePlayer updatedPlayer players =
+    let
+        select existingPlayer =
+            if existingPlayer.id == updatedPlayer.id then
+                updatedPlayer
+            else
+                existingPlayer
+    in
+        List.map select players

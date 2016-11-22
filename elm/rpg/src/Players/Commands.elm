@@ -42,7 +42,6 @@ save player =
   let
     body = Http.jsonBody (memberEncoded player)
 
-    --request = Http.post (saveUrl player.id) body memberDecoder
     request = Http.request
       { method = "PATCH"
       , headers = [ Http.header "Content-Type" "application/json" ]
@@ -95,7 +94,7 @@ toFuckingId strId =
   in
     case id of
       Ok id -> id
-      Err _ -> 0
+      Err _ -> -1
 
 
 
