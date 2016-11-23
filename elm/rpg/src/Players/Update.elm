@@ -54,21 +54,21 @@ update msg players =
 
 
 changeLevelCommands playerId howMuch players =
-    let
-      cmdForPlayer existingPlayer =
-        if existingPlayer.id == playerId then
-          save { existingPlayer | level = existingPlayer.level + howMuch }
-        else
-          Cmd.none
-    in
-      List.map cmdForPlayer players
+  let
+    cmdForPlayer existingPlayer =
+      if existingPlayer.id == playerId then
+        save { existingPlayer | level = existingPlayer.level + howMuch }
+      else
+        Cmd.none
+  in
+    List.map cmdForPlayer players
 
 updatePlayer updatedPlayer players =
-    let
-        select existingPlayer =
-            if existingPlayer.id == updatedPlayer.id then
-                updatedPlayer
-            else
-                existingPlayer
-    in
-        List.map select players
+  let
+    select existingPlayer =
+      if existingPlayer.id == updatedPlayer.id then
+        updatedPlayer
+      else
+        existingPlayer
+  in
+    List.map select players

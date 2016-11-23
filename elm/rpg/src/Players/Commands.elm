@@ -43,8 +43,10 @@ save player =
     body = Http.jsonBody (memberEncoded player)
 
     request = Http.request
-      { method = "PATCH"
-      , headers = [ Http.header "Content-Type" "application/json" ]
+      { method = "PUT"
+      , headers = 
+        [ Http.header "Content-Type" "application/json"
+        ]
       , url = saveUrl player.id
       , body = body
       , expect = Http.expectJson memberDecoder
