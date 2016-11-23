@@ -6,3 +6,4 @@ authors = ["Garrett Berg <vitiral@gmail.com>"]
 [dependencies]
 nickel = "*"
 rustc-serialize = "0.3"
+lazy_static = "0.2.2"
