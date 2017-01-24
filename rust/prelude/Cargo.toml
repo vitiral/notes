@@ -1,0 +1,7 @@
+[package]
+name = "prelude"
+version = "0.1.0"
+authors = ["Garrett Berg <vitiral@gmail.com>"]
+
+[dependencies]
+prelude = "0.1"
