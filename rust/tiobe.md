@@ -1,5 +1,7 @@
-  year |  month | place | perc
+  year |  month | place | perc  | Notes
 ---------------------------------
+  2017    Jan     41      0.310   More popular that Bash!
+  2016    Dec     43      0.316
   2016    Nov     43      0.294
   2016    Oct     42      0.296
   2016    Sept    45      0.258
