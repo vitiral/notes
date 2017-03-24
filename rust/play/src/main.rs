@@ -1,5 +1,6 @@
 
 use std::path;
+use std::borrow::Cow;
 
 fn test() -> bool {
     if true {
@@ -22,6 +23,17 @@ fn testit() {
     // identical whether you strip the trailing `/`
     assert_eq!(path.strip_prefix("/oh/hello").unwrap(), path::Path::new("there/bob"));
     assert_eq!(path.strip_prefix("/oh/hello/").unwrap(), path::Path::new("there/bob"));
+
+
+    // Cow shenanigans
+    let mut cow: Cow<[_]> = Cow::Owned(vec![1,2,3]);
+    {
+        let hello = cow.to_mut();
+        assert_eq!(hello, &[1, 2, 3]);
+    }
+
+    let v = Vec::from(cow);
+    assert_eq!(v, &[1, 2, 3]);
 }
 
 fn main() {
