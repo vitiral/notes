@@ -1,5 +1,8 @@
   year |  month | place | perc  | Notes
 ---------------------------------
+  2017    June    37      0.479   mention as moving up!
+  2017    May     40      0.412   up rank and perc!
+  2017    April   41      0.375   % down but rank up?
   2017    March   43      0.382   % up but rank down?
   2017    Feb     40      0.358
   2017    Jan     41      0.310   More popular that Bash!
