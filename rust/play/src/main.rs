@@ -1,6 +1,15 @@
 
 use std::path;
 use std::borrow::Cow;
+use std::result::Result::{self, Ok, Err};
+
+fn enum_variant(v: bool) -> Result<(), ()> {
+    if v {
+        Ok(())
+    } else {
+        Err(())
+    }
+}
 
 fn test() -> bool {
     if true {
@@ -34,6 +43,9 @@ fn testit() {
 
     let v = Vec::from(cow);
     assert_eq!(v, &[1, 2, 3]);
+
+    assert_eq!(enum_variant(true), Ok(()));
+    assert_eq!(enum_variant(false), Err(()));
 }
 
 fn main() {
