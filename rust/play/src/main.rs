@@ -33,6 +33,10 @@ fn testit() {
     assert_eq!(path.strip_prefix("/oh/hello").unwrap(), path::Path::new("there/bob"));
     assert_eq!(path.strip_prefix("/oh/hello/").unwrap(), path::Path::new("there/bob"));
 
+    match 'z' {
+        'a' ... 'z' => {},
+        _ => panic!("agh"),
+    };
 
     // Cow shenanigans
     let mut cow: Cow<[_]> = Cow::Owned(vec![1,2,3]);
