@@ -1,0 +1,100 @@
+    Finished debug [unoptimized + debuginfo] target(s) in 0.0 secs
+     Running target/debug/deps/prelude-2a7beccf29195cce
+
+running 1 test
+test test_stuff ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests prelude
+error[E0465]: multiple rlib candidates for `prelude` found
+ --> /home/garrett/notes/rust/prelude/src/lib.rs:1:1
+  |
+1 | extern crate prelude;
+  | ^^^^^^^^^^^^^^^^^^^^^
+  |
+note: candidate #1: /home/garrett/notes/rust/prelude/target/debug/deps/libprelude-2af0a03261fedbfc.rlib
+ --> /home/garrett/notes/rust/prelude/src/lib.rs:1:1
+  |
+1 | extern crate prelude;
+  | ^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2: /home/garrett/notes/rust/prelude/target/debug/deps/libprelude.rlib
+ --> /home/garrett/notes/rust/prelude/src/lib.rs:1:1
+  |
+1 | extern crate prelude;
+  | ^^^^^^^^^^^^^^^^^^^^^
+
+error[E0463]: can't find crate for `prelude`
+ --> /home/garrett/notes/rust/prelude/src/lib.rs:1:1
+  |
+1 | extern crate prelude;
+  | ^^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error: aborting due to 2 previous errors
+
+thread '<unnamed>' panicked at 'Box<Any>', ../src/librustc_errors/lib.rs:461
+stack backtrace:
+   1:     0x7f189232a7aa - std::sys::imp::backtrace::tracing::imp::write::h917062bce4ff48c3
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/sys/unix/backtrace/tracing/gcc_s.rs:42
+   2:     0x7f189233c94f - std::panicking::default_hook::{{closure}}::h0bacac31b5ed1870
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:247
+   3:     0x7f1892339206 - std::panicking::default_hook::h5897799da33ece67
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:263
+   4:     0x7f18923398b7 - std::panicking::rust_panic_with_hook::h109e116a3a861224
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:451
+   5:     0x7f188bc293db - std::panicking::begin_panic::hf31a40fe197b6cca
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:413
+   6:     0x7f188bc3aaaf - rustc_errors::Handler::abort_if_errors::h3613a6d988859611
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_errors/lib.rs:461
+   7:     0x7f188fad4079 - rustc_metadata::locator::Context::report_errs::hd8111f5349cfa971
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_metadata/locator.rs:410
+   8:     0x7f188fac56ce - rustc_metadata::creader::CrateLoader::resolve_crate::h7fd34532ed681d97
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_metadata/creader.rs:351
+   9:     0x7f188facd69c - <rustc_metadata::creader::CrateLoader<'a> as rustc::middle::cstore::CrateLoader>::process_item::h157dddb3a57c65a4
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_metadata/creader.rs:1015
+  10:     0x7f1891245c4e - rustc_resolve::build_reduced_graph::<impl rustc_resolve::Resolver<'b>>::build_reduced_graph_for_item::h96b728d66b4c8381
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_resolve/build_reduced_graph.rs:233
+  11:     0x7f189124c951 - <rustc_resolve::build_reduced_graph::BuildReducedGraphVisitor<'a, 'b> as syntax::visit::Visitor>::visit_item::ha580ced821dad236
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_resolve/build_reduced_graph.rs:702
+  12:     0x7f189124cf1e - <rustc_resolve::build_reduced_graph::BuildReducedGraphVisitor<'a, 'b> as syntax::visit::Visitor>::visit_item::ha580ced821dad236
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/visit.rs:140
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/visit.rs:59
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/visit.rs:256
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_resolve/build_reduced_graph.rs:703
+  13:     0x7f189124150e - rustc_resolve::macros::<impl syntax::ext::base::Resolver for rustc_resolve::Resolver<'a>>::visit_expansion::h5453348ed0bfa716
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/ext/expand.rs:93
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_resolve/macros.rs:110
+  14:     0x7f188c03f9be - syntax::ext::expand::MacroExpander::collect_invocations::h9384ac47fc8e9be0
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/ext/expand.rs:313
+  15:     0x7f188c03c2b8 - syntax::ext::expand::MacroExpander::expand::hde16e53a7123afb4
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/ext/expand.rs:224
+  16:     0x7f188c03bdcd - syntax::ext::expand::MacroExpander::expand_crate::hd4343a1ada5fbe2e
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libsyntax/ext/expand.rs:208
+  17:     0x7f189276e6af - rustc_driver::driver::phase_2_configure_and_expand::{{closure}}::h73af350ca24423c1
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_driver/driver.rs:683
+  18:     0x7f189262b9ac - rustc_driver::driver::phase_2_configure_and_expand::hfec1fec54edc5101
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc/util/common.rs:38
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustc_driver/driver.rs:646
+  19:     0x7f18927490f9 - rustdoc::test::run::h9e0b5e540e59a149
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustdoc/test.rs:91
+  20:     0x7f189275a7b8 - rustdoc::main_args::h5b64e24a3ddbeabd
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustdoc/lib.rs:267
+  21:     0x7f189263926e - std::panicking::try::do_call::h271b3cdb70f602be
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/librustdoc/lib.rs:104
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panic.rs:295
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:356
+  22:     0x7f189234485a - __rust_maybe_catch_panic
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libpanic_unwind/lib.rs:97
+  23:     0x7f1892658f6b - <F as alloc::boxed::FnBox<A>>::call_box::h8dac5b86e9f01838
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panicking.rs:332
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/panic.rs:351
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/thread/mod.rs:287
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/liballoc/boxed.rs:595
+  24:     0x7f1892338474 - std::sys::imp::thread::Thread::new::thread_start::ha102a6120fc52763
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/liballoc/boxed.rs:605
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/sys_common/thread.rs:21
+                        at /buildslave/rust-buildbot/slave/stable-dist-rustc-linux/build/obj/../src/libstd/sys/unix/thread.rs:84
+  25:     0x7f188b3d5453 - start_thread
+  26:     0x7f18920007de - __GI___clone
+  27:                0x0 - <unknown>
+error: test failed

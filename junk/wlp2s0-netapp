@@ -1,0 +1,9 @@
+
+
+Description='hidden-netapp'
+Interface=wlp2s0
+Connection=wireless
+Security=none
+ESSID='netapp'
+IP=dhcp
+Hidden=yes

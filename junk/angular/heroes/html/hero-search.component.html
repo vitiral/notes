@@ -1,0 +1,33 @@
+<!--<div id="search-component">-->
+<!--    <h4>Hero Search</h4>-->
+<!--    <input #searchBox id="search-box" (keyup)="search(searchBox.value)" />-->
+<!--    <div>-->
+<!--        <div *ngFor="let hero of heroes | async"-->
+<!--                (click)="gotoDetail(hero)" class="search-result" >-->
+<!--            {{hero.name}}-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+    <div id="search-component">
+      <h4>Hero Search</h4>
+	  <!-- '#' is a "template reference variable. This grants direct access
+	       to an element *in the html only*. We see here that we combine
+		   it with the `search` method to explicitly pass values.
+
+		   The other option would have been to use the special `$event` variable
+		   and take that value into search, which would have accessed the value
+		   through `event.target.value` or with types 
+		   `(<HTMLInputElement>event.target).value`
+
+		   Obviously the "box reference" is more clear.
+	  -->
+      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
+      <div>
+        <div *ngFor="let hero of heroes | async"
+             (click)="gotoDetail(hero)" class="search-result" >
+          {{hero.name}}
+        </div>
+      </div>
+    </div>

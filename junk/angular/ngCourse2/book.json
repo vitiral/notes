@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    "image-captions",
+    "highlight",
+    "theme-rangle-io",
+    "ga"
+  ],
+  "styles": {
+    "ebook": "styles/ebook.css",
+    "pdf": "styles/pdf.css"
+  },
+  "theme": "theme-rangle-io",
+  "pluginsConfig": {
+    "ga": {
+      "token": "UA-41067508-7"
+    },
+    "theme-rangle-io": {
+      "showLevel": true
+    },
+    "image-captions": {
+      "images": {
+        "1.1.1": {
+          "skip": true
+        }
+      }
+    }
+  },
+  "structure": {
+    "readme": "intro.md"
+  },
+  "gitbook": ">= 3.0.0"
+}

@@ -1,0 +1,9 @@
+[package]
+name = "api"
+version = "0.1.0"
+authors = ["Garrett Berg <vitiral@gmail.com>"]
+
+[dependencies]
+nickel = "*"
+rustc-serialize = "0.3"
+lazy_static = "0.2.2"
