@@ -4,3 +4,30 @@
 - `cp` - copy file. Use `-r` for recursive copy
 - `dd` - copies from source to destination, block by block,
     without regard to filesystem types or operating systems
+
+# putting a large file on a system
+Fill up the `/` directory. Let's break this command down:
+
+export oversize=.*;   # we are declaring oversize until the ";"
+
+$[   # linux variable syntax
+
+# get the size of /var/log -> only the second column -> delete the first row -> remove the "G"
+( $(df -h /var/log | awk '{print $2}' | sed 1d | sed 's/G//') 
+
+# add 2 to the value then convert to M (instead of G). This will over-fill the drive by at least 2 extra GB
++ 2) * 1024]; 
+
+# create a random password from urandom and remove newlines
+export pass=.*; 
+export pass=${pass//$'\n'/};
+
+# use open ssl to generate random data from the password (faster than urandom directly)
+dd if=<(openssl enc -aes-256-ctr -pass pass:$pass -nosalt < /dev/zero) 
+
+# put it in bogusly_big_file
+bs=1M count=$oversize iflag=fullblock | sudo tee /bogusly_big_file > /dev/null"
+
+```
+"export oversize=$[ ( $(df -h /var/log | awk '{print $2}' | sed 1d | sed 's/G//') + 2) * 1024]; export pass=\"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)\"; export pass=${pass//$'\n'/}; dd if=<(openssl enc -aes-256-ctr -pass pass:$pass -nosalt < /dev/zero) bs=1M count=$oversize iflag=fullblock | sudo tee /bogusly_big_file > /dev/null"
+```
