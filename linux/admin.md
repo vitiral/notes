@@ -4,6 +4,10 @@ service management is through `systemctl`
 - start
 - restart
 
+# common commands
+- `chown`: change ownership. `chown $GROUP: folder/path -R` to give GROUP/USER ownership
+  recursively
+
 # groups
 All user account related information are stored in the following files:
 
