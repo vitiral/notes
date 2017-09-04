@@ -31,6 +31,21 @@ virt-install  \
   --connect qemu:///session
 ```
 
+## create gentoo domain
+
+```
+virt-install  \
+  --name gentoo-linux 		\
+  --memory 2048             \ 
+  --vcpus=1,maxvcpus=2      \
+  --cpu host                \
+  --cdrom install-amd64-minimal-20170817.iso \
+  --disk size=5,format=qcow2  \
+  --network user            \
+  --virt-type kvm           \
+  --connect qemu:///system
+```
+
 ## create windows domain
 Works!
 ```
