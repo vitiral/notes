@@ -124,3 +124,11 @@ The most important built-in function, which describes a single derevation (a bui
     - lists are allowed but are concatenated (??) and separated by spaces (??)
     - true is passed as the string `"1"`, false and null are passed as the empty
       string `""`
+
+# Rust specific stuff
+- [This][1] blog post gives me some hope.
+- [A crate](https://nest.pijul.com/pmeunier/nix-rust) that generates nix expressions
+  from rust code and might have an associated [mkRustCrate][2] nix function
+
+[1]:https://jakob.gillich.me/post/2016-03-22-self-contained-development-environments-using-nix/
+[2]: https://github.com/NixOS/nixpkgs/pull/24991
