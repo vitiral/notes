@@ -1,7 +1,8 @@
   year |  month | place | perc  | Notes
 ---------------------------------
-  2017    Sept    49      0.417%
-  2017    Aug     56      ...
+  2017    Oct     46      0.409   Gained place, lost perc
+  2017    Sept    49      0.417
+  2017    Aug     58      0.376   Wow, what a drop...
   2017    June    37      0.479   mention as moving up!
   2017    May     40      0.412   up rank and perc!
   2017    April   41      0.375   % down but rank up?
