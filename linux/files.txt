@@ -1,9 +1,9 @@
-
-# moving files
+# basic commands
 - `mv` - move file or folder
 - `cp` - copy file. Use `-r` for recursive copy
 - `dd` - copies from source to destination, block by block,
     without regard to filesystem types or operating systems
+- `du -sh <folder>`: find size of folder in human readable way
 
 # putting a large file on a system
 Fill up the `/` directory. Let's break this command down:
