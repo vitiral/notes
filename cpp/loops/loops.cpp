@@ -28,27 +28,27 @@ int main()
     // calculated total number of cols
     const string::size_type cols = greeting.size() + pad * 2 + 2;
 
-    int r = 0;
     // invariant: r rows have been written
-    while (r < rows) {
+    for (int r = 0; r < rows; ++r) {
         string::size_type c = 0;
         // invariant: we have already written `c` chars to the row
         while ( c < cols) {
-            if (r == 0 || r == rows - 1 || c == 0 || c == cols -1 ) {
-                // border column or row
-                cout << "*";
-                ++c;
-            } else if (r == pad + 1 && c == pad + 1) {
+            if (r == pad + 1 && c == pad + 1) {
+                // write the greeting
                 cout << greeting;
                 c += greeting.size();
             } else {
-                // pad column/row
-                cout << " ";
+                if (r == 0 || r == rows - 1 || c == 0 || c == cols -1 ) {
+                    // border column or row
+                    cout << "*";
+                } else {
+                    // pad column/row
+                    cout << " ";
+                }
                 ++c;
             }
         }
         cout << endl;
-        ++r;
     }
 
     return 0;
