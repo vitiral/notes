@@ -29,7 +29,7 @@ int main()
     const string::size_type cols = greeting.size() + pad * 2 + 2;
 
     // invariant: r rows have been written
-    for (int r = 0; r < rows; ++r) {
+    for (int64_t r = 0; r < rows; ++r) {
         string::size_type c = 0;
         // invariant: we have already written `c` chars to the row
         while ( c < cols) {
