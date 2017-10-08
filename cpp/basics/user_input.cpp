@@ -17,6 +17,7 @@ using std::endl;
 
 /* string::     */  using std::string;
 /* ??           */  using std::streamsize;
+/* ??           */  using std::istream;
 /* vector::     */  using std::vector;
 /* algorithm::  */  using std::sort;
 /* stdexcept::  */  using std::domain_error;
@@ -61,6 +62,36 @@ double course_grade(const double mid, const double fin, const vector<double>& hw
     return course_grade(mid, fin, median(hw /* !auto-clone! */));
 }
 
+// read homework grades into a vector
+istream& read_homework(istream& in, vector<double>&/*mut*/ hw) {
+    // There might already be an error condition with in (??? wtf ???)
+    // so I guess we don't do anything in that case lolz
+    if (in) {
+        // For some insane reason this makes sense I guess?
+        // ... not really -- the caller should totally control
+        // this...
+        hw.clear();
+
+        // Read homework grades
+
+        double x;
+        // note: instance of `istream` can evaluate to an integer, which gets
+        // converted into a bool The value is based on the last-read value.
+        // Object Oriented + side effect + return-vals from operators
+        // for-the-win yes? ... oh ya, EXTREMELY clear, thankyou.
+        while (cin >> x) {
+            hw.push_back(x);
+        }
+
+        // from tutorail: clear the stream so that input will work for the next
+        // student...  Okay, I guess since we are ignoring errors that makes
+        // sense.
+        in.clear();
+    }
+    return in;
+}
+
+
 
 int main() {
     cout << "Enter first name: ";
@@ -76,26 +107,27 @@ int main() {
     // ask for homework grades
     cout << "Enter homework grades, followed by EOF: ";
     vector<double> homework;
-    double x; // value to read into
 
     // invarant: we have read `count` grades so far, sum is their sum.
-    // note: instance `cin` can evaluate to an integer, which gets converted into a bool
-    // The value is based on the last-read value.
-    // Object Oriented for-the-win yes?
-    while (cin >> x) {
-        homework.push_back(x);
-    }
+    read_homework(cin, homework);
 
     // write the result
     streamsize prec = cout.precision();
     // note the "auto reference" -- references act similar to the ones
     // in rust, but in C++ they are supposedly more like a
     // "non-copy alias that you can pass between functions"... weird.
-    cout << "Your final grade is "
-        << setprecision(3)
-        /* << course_grade(mid, fin, median(homework)) */
-        << course_grade(mid, fin, /* ! auto reference ! */ homework)
-        << setprecision(prec)
-        << endl;
+    try {
+        cout << "Your final grade is "
+            << setprecision(3)
+            /* << course_grade(mid, fin, median(homework)) */
+            << course_grade(mid, fin, /* ! auto reference ! */ homework)
+            << setprecision(prec)
+            << endl;
+    } catch(domain_error) {
+        cout << endl
+            << "An error happened but I won't tell you, nanananana!"
+            << endl;
+        return 1;
+    }
     return 0;
 }
