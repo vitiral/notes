@@ -27,6 +27,7 @@ double median(vector<double> vec) {
     // I get the feeling that `size_type` changes depending on the size of the
     // item in vector... incredible -- I never even considered that.
     typedef vector<double>::size_type vec_sz;
+
     vec_sz size = vec.size();
 
     if (0 == size) {
@@ -60,35 +61,6 @@ double course_grade(const double mid, const double fin, const vector<double>& hw
         throw domain_error("student has done no homework");
     }
     return course_grade(mid, fin, median(hw /* !auto-clone! */));
-}
-
-// read homework grades into a vector
-istream& read_homework(istream& in, vector<double>&/*mut*/ hw) {
-    // There might already be an error condition with in (??? wtf ???)
-    // so I guess we don't do anything in that case lolz
-    if (in) {
-        // For some insane reason this makes sense I guess?
-        // ... not really -- the caller should totally control
-        // this...
-        hw.clear();
-
-        // Read homework grades
-
-        double x;
-        // note: instance of `istream` can evaluate to an integer, which gets
-        // converted into a bool The value is based on the last-read value.
-        // Object Oriented + side effect + return-vals from operators
-        // for-the-win yes? ... oh ya, EXTREMELY clear, thankyou.
-        while (cin >> x) {
-            hw.push_back(x);
-        }
-
-        // from tutorail: clear the stream so that input will work for the next
-        // student...  Okay, I guess since we are ignoring errors that makes
-        // sense.
-        in.clear();
-    }
-    return in;
 }
 
 
