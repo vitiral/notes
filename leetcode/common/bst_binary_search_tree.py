@@ -12,6 +12,60 @@ The actual definition is:
 
 Therefore:
 - each node has a distinct data
+
+
+Self balancing binary tree: the AVL Tree
+If we are inserting `I*`
+
+Left-Left
+
+        uG_
+       /   \
+      U*    uU
+     / \     \
+   uC   oC    X
+   /
+  gC
+ /
+I*
+
+
+Left-Right
+
+        uG_
+       /   \
+      U*    uU
+     / \     \
+   uC   oC    X
+    \
+     gC
+      \
+       I*
+
+1. Perform standard BST insert for `I*`
+2. Starting from `I*`
+    - Travel up and find the first unbalanced node `U`
+    - Let `uC` be the child of `U` that comes on the path from `I*` to `U`
+    - Let `gC` be the grandchild of `U` that comes on the path from `I* to `U`
+3. Re-balance the tree by performing appropriate rotations on the subtree
+   rooted with `U`. There can be 4 possible cases that needs to be handled
+    a) both the child (uC) and grandchild (gC) of U go left (Left Left Case)
+    b) the child (uC) is left, but uG is right of uC (Left Right Case)
+    c) both the child (uC) and grandchild (gC) of U go right (Right Right Case)
+    d) the child (uC) is right, but uG is left of uC (Right Left Case)
+
+To rebalance in each case:
+- Left-Left: simply rotate U right
+- Left-Right: roate uC left, then rotate U right
+- Right-Right: rotate U left
+- Right-Left: rotate uC right, then rotate U left
+
+After any rotation, the heights are updated via:
+- left.height = max(height(left.left), height(left.right)) + 1;
+- right.height = max(height(right.left), height(right.right)) + 1;
+
+It *seems* like we should be able to know the height from rotations
+alone, but alas that seems non-trivial
 """
 
 INT_MAX = 4294967296
