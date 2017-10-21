@@ -1,3 +1,39 @@
+# Summary
+
+**General Strategy**
+- Write down question with all requirements
+- Do trivial example by hand + graphed out, reducing scope if needed
+- Analyze problem and brainstorm possible data structres / algorithms
+- Divide and conquer when possible
+
+**Finding X in string/array**
+- sliding window: move a window along the data
+- growing midpoint: grow a midpoint at different points in the data
+- data structure: HashMap/Set are very commonly useful
+
+**Conversion Questions**
+- General strategy (simple cases manually, reducing scope, etc)
+- Do alignment work up front, it's always worth it
+
+**Binary Search Trees**
+- Validating: "narrow a window" of min/max values, or use inorder traversal
+- See how tree rotation can solve the problem
+- Self balancing trees: find depths and use left/right to determine how to rotate
+- Balanced definition: the heights of two child subtrees differ by at most 1
+
+**Data Structures**
+- array
+- que/stack/deque
+- tree (Binary Tree, Binary Heap)
+- hashmap / hashset
+- directed/undirected graph (don't know much about)
+
+**Sorting Algorithms**
+- O(n^2)     / O(1): quicksort > insertion sort > selection sort > bubble sort
+- O(n log n) / O(1): heapsort
+- O(n log n) / O(n): timsort > mergesort
+- integer case: counting sort, radix sort bucket sort can be as low as O(n+k)
+
 ## General Stratey for questions
 - Always start off by *writing down* the question and then branching it
   with more questions
@@ -29,7 +65,7 @@ basic strategies for solving problems that have come up:
 - For "finding X in string/vec/etc" there are three main strategies:
     - "sliding window" O(n): see if the the solution can be found by moving
       a window along the data, looking for the solution
-    - "growing windows" O(n^2): do a brute-force ish method of starting at
+    - "growing midpoint" O(n^2): do a brute-force ish method of starting at
       all the "midpoints" and growing windows around them, looking for
       the solution
     - Try to use a data structure or otherwise munge the data
@@ -51,6 +87,7 @@ basic strategies for solving problems that have come up:
       is infinite but the min is the parent node. As soon as you cut left
       the max is permanantly decreased, etc
 
+
 ## Data Structures
 - array: contiguous memory with a set size. inserting/deleting can take up to
   O(n), appending takes O(1), locating takes O(1), searching O(n)
@@ -61,7 +98,7 @@ basic strategies for solving problems that have come up:
   are called "leaves"
   - binary tree: a tree where each node can have up to two branches.
   - complete tree: all levels are filled except the last
-  - depth-first traversals: recursive "visiting of nodes.
+  - depth-first traversals: recursive "visiting of nodes."
     - inorder (left, self, right), preorder (self, left, right),
       postorder (left, right, self)
     - inorder traversal will result in a sorted output
