@@ -27,31 +27,38 @@ def partition(arr, low, hi):
         INDEX, not the LENGTH of the array!
     """
     # note: low, hi and piviot are constants
+    # j==gtp
+    # i==ltp
     piviot = arr[hi]
 
-    i = low # place for swapping
+    # less-than-partition
+    ltp = low # place for swapping
 
-    # invariant: at the beginning of the loop i==j, so if arr[i] <= piviot then
+    # invariant: at the beginning of the loop ltp==gtp, so if arr[ltp] <= piviot then
     # we KEEP THE VALUE WHERE IT IS by swapping it WITH ITSELF. This continues
-    # until we find a place where arr[j == i] <= piviot.
+    # until we find a place where arr[gtp == ltp] <= piviot.
     #
     # This is strange, as normal programer's intuition tells you that things
     # change if we *enter* if-statement.  But really the only way things stay
     # identical is if we NEVER enter the if-statement -- in that case we
     # continually swap elements with *themselves*
-    for j in range(low, hi):
-        # loop invariant: i == j if no changes have been made
+    #
+    # Second pass notes: with better names this makes much more sense.
+    # The goal at the END of each loop is to guarantee that arr[ltp]
+    # is ACTUALLY <= piviot
+    for gtp in range(low, hi):
+        # loop invariant: i == gtp if no changes have been made
         # loop invariant: ELSE i points to a value > piviot
-        if arr[j] <= piviot:
-            # loop invariant: i == j if all values have been <= piviot
+        if arr[gtp] <= piviot:
+            # loop invariant: ltp == gtp if all values have been <= piviot
             # loop invariant: THEREFORE no values get moved/changed
             #                 (we are swapping values with themselves)
-            arr[i], arr[j] = arr[j], arr[i]
-            i += 1
+            arr[ltp], arr[gtp] = arr[gtp], arr[ltp]
+            ltp += 1
 
-    # invariant: i == j if no changes have been made
-    arr[i], arr[hi] = arr[hi], arr[i]
-    return i
+    # invariant: ltp == gtp if no changes have been made
+    arr[ltp], arr[hi] = arr[hi], arr[ltp]
+    return ltp
 
 def partition_im_dumb(arr, low, hi):
     """BAD BAD BAD -- doesn't work.
