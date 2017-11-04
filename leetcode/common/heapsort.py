@@ -49,6 +49,8 @@ def max_heapify(arr, root_i, max_i):
     invariant: this assumes that all nodes with indexes > root_i
         have already been heapified, so we are just moving any small
         data found at root_i FROM root_i DOWN the heap.
+
+    Basically this percolates-down the value at root_i.
     """
     # find the largest index by first assuming it is at root
     largest_i = root_i

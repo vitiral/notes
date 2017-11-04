@@ -111,6 +111,7 @@ basic strategies for solving problems that have come up:
       child. You can use level+=1 in each loop to keep track of level.
     - breadth-first is especially useful for "infinite" trees... although
       the above method wouldn't work well would it!
+      ... actually it seems to be the only way?
   - in a binary tree, node N can have following relatives:
     - U: the uncle of the node (grandparent's other child)
     - G: the parent of the parent
@@ -149,7 +150,7 @@ basic strategies for solving problems that have come up:
   - finding the max (in a max-heap) is O(1). Removing it is O(log n)
   - inserting a value is O(log n)
   - can be represented in a single contiguous array.
-    `parent=k, left=2*k+1, right=2*k+2, parent(parent)=(k - 1)//2`
+    `node=k, left=2*k+1, right=2*k+2, parent=(k - 1)//2`
 - binary search tree: binary tree where all nodes in the left sub-tree
   are less than any given node and all nodes in the right sub-tree are
   greater.
@@ -157,8 +158,6 @@ basic strategies for solving problems that have come up:
     valid
   - rotations are a critical operation, and are used for balancing a tree
     as well as in self-balancing (red-black) trees.
-    - left rotation of A:
-        - breaking the grandparent/
 
 
 ## Sorting algorithms:
@@ -183,8 +182,8 @@ basic strategies for solving problems that have come up:
   - Typically the fastest sorting method for small arrays.
     - used internally in quicksort (and Timsort/MergeRunSort) to sort the
       sub-arrays when the arrays are small (typically smaller than 10 elements)
-  - Can be used directly on linked lists by simply starting with
-    an empty list and taking values off of the input list one at a time
+  - Can be used directly on (doubly) linked lists by simply starting with an
+    empty list and taking values off of the input list one at a time
     and inserting/shifting them to the correct place.
 - Mergesort: very simple really.
     - O(n log n) performance but O(n) memory usage (theoretically, harder to
