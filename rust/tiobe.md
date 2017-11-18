@@ -1,5 +1,6 @@
   year |  month | place | perc  | Notes
 ---------------------------------
+  2017    Nov     31      0.698   Holy popularity, Batman!
   2017    Oct     46      0.409   Gained place, lost perc
   2017    Sept    49      0.417
   2017    Aug     58      0.376   Wow, what a drop...

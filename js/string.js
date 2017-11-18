@@ -3,6 +3,7 @@ text = 'hello there bob-dole'
 print(text.indexOf('h'))
 print(text.indexOf('-'))
 print(text.slice(0, text.indexOf('-')))
+print(text.slice(0, text.indexOf('bob-dole')))
 
 hi = 'hello'
 print(hi.indexOf('-'))
