@@ -1,0 +1,12 @@
+[package]
+authors = ["Garrett Berg <googberg@gmail.com>"]
+p
+name = "test_failure"
+version = "0.1.0"
+
+[dependencies]
+failure = {git = "https://github.com/withoutboats/failure"}
+failure_derive = {git = "https://github.com/withoutboats/failure_derive"}
+serde = "1.0.20"
+serde_derive = "1.0.20"
+toml = "0.4.5"
