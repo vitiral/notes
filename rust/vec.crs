@@ -1,0 +1,20 @@
+#!/usr/bin/env run-cargo-script
+//! This is also just to check that cargo script even works
+//!
+//! ```cargo
+//! [dependencies]
+//! regex = "*"
+//! ```
+
+extern crate regex;
+
+#[test]
+fn it_works() {
+    let mut v = vec![];
+    v.insert(0, 'a');
+    assert_eq!(v, vec!['a']);
+    v.insert(1, 'a');
+    assert_eq!(v, vec!['a', 'a']);
+    v.insert(1, 'b');
+    assert_eq!(v, vec!['a', 'b', 'a']);
+}
