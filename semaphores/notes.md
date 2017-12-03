@@ -266,3 +266,267 @@ spawn(consumer):
 
 ## 4.2 Readers-Writers Problem
 
+Syncronization constraints:
+1. Any number of readers can be in the critical section simultaneously.
+2. Writers must have exclusive access to the critical section.
+
+
+At a quick glance it looks like we can do this with a simple protected count
+of each. How do we wait though?
+
+This seems like a barrier problem:
+- while we are reading, readers can use the section at-will
+- while we are writing, only one writer can use the section
+
+```
+reading = false
+writing = false
+num_readers = 0
+num_writers = 0
+
+readers_turnstyle = Semaphore(0)
+writer_exclusive = Semaphore(0)
+
+mutex = Semaphore(1)
+
+spawn(reader):
+    with mutex:
+        num_readers += 1
+        if !writing && !reading:
+            reading = true
+            readers_turnstyle.signal()
+
+    readers_turnstyle.wait()
+    readers_turnstyle.signal()
+
+    CRITICAL
+
+    with mutex:
+        num_readers -= 1
+        if num_readers == 0:
+            reading = false
+            readers_turnstyle.wait()  # remove the extra increment
+            if num_writers > 0:
+                writing = true
+                writer_exclusive.signal()
+
+spawn(writer):
+    with mutex:
+        num_writers += 1
+        if !writing && !reading:
+            writing = true
+            writer_exclusive.signal()
+
+    # only one writer can be signaled at a time
+    writer_exclusive.wait()
+
+    CRITICAL
+
+    with mutex:
+        num_writers -= 1
+        if num_writers > 0:
+            writer_exclusive.signal()
+        else:
+            writing = false
+            if num_readers > 0:
+                reading = true
+                reading_turnstyle.signal()
+```
+
+After using the initialized variables in **hint**:
+```
+readers = 0                     # how many readers are in the room
+readers_mutex = Semaphore (1)   # protects readers
+# roomEmpty is
+# - 1 if no readers in critical section
+# - 0 otherwise (how is this possible???)
+#
+# So, wait means "wait for room to be empty", signal means "room is empty"
+roomEmpty = Semaphore (1)
+
+spawn(reader):
+    with readers_mutex:
+        readers += 1
+        if readers == 1:
+            # first in locks
+            # note that the readers_mutex prevents other readers from accessing
+            roomEmpty.wait()
+
+    CRITICAL
+
+    with readers_mutex:
+        readers -= 1
+        if readers == 0:
+            roomEmpty.signal()
+
+spawn(writer):
+    # Extremely simple... note that writer *does not use the mutex*
+    roomEmpty.wait()
+    CRITICAL
+    roomEmpty.signal()
+```
+
+This pattern is called **lightswitch**, i.e. the first person into the room
+turns on the light, the last one out turns it off.
+
+```
+class Lightswitch:
+    def __init__(self):
+        self.count = 0
+        self.mutex = Semaphore(1)
+
+    def lock(self, semaphore):
+        with self.mutex:
+            self.count += 1
+            if self.count == 1:
+                semaphore.wait()
+
+    def unlock(self, semaphore):
+        with self.mutex:
+            self.count -= 1
+            if self.count == 0:
+                semaphore.signal()
+```
+
+
+And the new code:
+```
+roomEmpty = Semaphore(1)
+switch = Lightswitch()
+
+spawn(writer):
+    roomEmpty.wait()
+    CRITICAL
+    roomEmpty.signal()
+
+spawn(reader):
+    switch.lock(roomEmpty)
+    CRITICAL
+    switch.unlock(roomEmpty)
+```
+
+
+### Starvation
+The previous solution can easily lead to starvation, where a writer
+never gets to enter the room.
+
+To fix this, we should not allow new readers if there is a writer waiting.
+
+This is a first stab, although I feel like this will introduce a deadlock.
+```
+write_mutex = Semaphore(1)
+writers = 0
+read_mutex = Semaphore(1)
+readers = 0
+roomEmpty = Semaphore(1)
+
+writerPriority = Semaphore(1)
+
+spawn(writer):
+    with write_mutex:
+        writers += 1
+    writerPriority.wait()
+    roomEmpty.wait()
+    CRITICAL
+    with write_mutex:
+        writers -= 1
+    roomEmpty.signal()
+    writerPriority.signal()
+
+spawn(reader):
+    with read_mutex:
+        readers += 1
+        if readers == 1:
+            roomEmpty.wait()
+        with write_mutex:
+            if writers > 0:
+                writerPriority.wait()
+
+    CRITICAL
+
+    with read_mutex:
+        readers -= 1
+        if readers == 0:
+            roomEmpty.signal()
+
+```
+
+With the hint things are becomming more clear: use a turnstyle for the readers
+*that the writers can lock*.
+
+```
+readSwitch = Lightswitch()
+turnstyle = Semaphore(1)    # a turnstyle for readers and a mutex for writers.
+roomEmpty = Semaphore(1)
+
+spawn(writer):
+    turnstyle.wait()    # block readers
+    roomEmpty.wait()
+    turnstyle.signal()  # allow readers through again
+    CRITICAL
+    roomEmpty.signal()
+
+spawn(reader):
+    turnstyle.wait()
+    turnstyle.signal()
+    switch.lock(roomEmpty)
+    CRITICAL
+    switch.unlock(roomEmpty)
+
+```
+
+## 4.4 Dining Philosophers
+
+Some analysis:
+- deadlock is possible if all threads run at once, i.e. all threads get their
+  right fork
+- If we only allow n-1 philosophers to run at once, we can guarantee there is no
+  deadlock since at least one philosopher will be able to continue.
+- On that note, we could use a group-switch, where one group is "even" and the
+  other group is "odd"
+
+```
+spawn(philosopher)
+    while True:
+        think()
+        get_forks()
+        eat()
+        put_forks()
+
+# we need to write get_forks and put_forks
+forks = [Semaphore(1) for _ in range(5)]
+
+otherAvilable = Semaphore(1)
+evensEating = Switch()
+oddsEating = Switch()
+barrier = Barrier(5)
+
+def left(i):
+    """Get the i'th philosopher's left fork"""
+    return i
+
+def right(i):
+    """Get the i'th philosopher's right fork"""
+    return (i + 1) % 5
+
+def get_forks(i):
+    barrier.wait()
+    if i % 2 == 0:
+        evensEating.lock(otherAvailable)
+    else:
+        oddsEating.lock(otherAvailable)
+    # we still need the forks for 1 and 5
+    fork[right(i)].wait()
+    fork[left(i)].wait()
+
+def put_forks(i):
+    if i % 2:
+        evensEating.unlock(otherAvailable)
+    else:
+        oddsEating.unlock(otherAvailable)
+    fork[right(i)].signal()
+    fork[left(i)].signal()
+```
+
+Another solution is to limit the number of philosophers to 4, but you COULD
+have only one philosopher eating (2 are guaranteed to eat in this solution).
