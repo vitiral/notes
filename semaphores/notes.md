@@ -534,3 +534,19 @@ potentially
 Another solution is to limit the number of philosophers to 4, but you COULD
 have only one philosopher eating (2 are guaranteed to eat in this solution).
 
+
+## Cigarette Smokers Problem
+
+Agent
+```
+agentSem = Semaphore (1)
+tobacco = Semaphore (0)
+paper = Semaphore (0)
+match = Semaphore (0)
+```
+
+Tobaco Smoker:
+```
+match.wait()
+paper.wait()
+```

@@ -1,4 +1,6 @@
 digraph graph_name {
+  // makes lines look baller -- strait lines, orthogonal angles only
+  splines=ortho;
   graph [
     charset = "UTF-8";
     label = "sample graph",
