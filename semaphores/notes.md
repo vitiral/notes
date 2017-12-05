@@ -528,5 +528,9 @@ def put_forks(i):
     fork[left(i)].signal()
 ```
 
+We can improve this even further -- we know that the only fork that can be
+potentially
+
 Another solution is to limit the number of philosophers to 4, but you COULD
 have only one philosopher eating (2 are guaranteed to eat in this solution).
+
