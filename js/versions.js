@@ -4,16 +4,16 @@ current_build = {
   //"version": "8.7.0.25"
 }
 
-builds = [
-  {buildID: 1, version: "7.4.1.2"},
-  {buildID: 2, version: "8.2.0.198"},
-  {buildID: 3, version: "8.4.0.68"},
-  {buildID: 4, version: "8.5.0.13"},
-  {buildID: 5, version: "8.6.0.25"},
-  {buildID: 6, version: "9.0.0.1554"},
-  {buildID: 7, version: "9.1.0.38"},
-  {buildID: 8, version: "9.2.0.43"},
-  {buildID: 0, version: "9.3.0.40"},
+version_strs = [
+  "7.4.1.2",
+  "8.2.0.198",
+  "8.4.0.68",
+  "8.5.0.13",
+  "8.6.0.25",
+  "9.0.0.1554",
+  "9.1.0.38",
+  "9.2.0.43",
+  "9.3.0.40",
 ]
 
 // copy pasta
@@ -65,30 +65,20 @@ out = function() {
     return a.join(".");
   }
 
-  removeIndexes = function(ray, indexes) {
-    var out = [];
-    for (var i=0; i < ray.length; i++) {
-      if (indexes.indexOf(i) == -1) {
-        out.push(ray[i]);
-      }
-    }
-    return out;
-  }
-
   var current_version = getVersionRay(current_build.version);
   var fluorine_ga = getVersionRay("9.0.0.1554");
   var fluorine_patch1 = getVersionRay("9.1.0.38");
   var fluorine_patch2 = getVersionRay("9.2.0.43");
+  var versions = map(getVersionRay, version_strs);
 
   // FOGBUGS 24037: remove fluorine patch 0 and 1 if build > patch 2
-  var check_24037 = function(build) {
-    var version = getVersionRay(build.version);
-    return !(compareArrays(version, fluorine_ga) == 0 || compareArrays(version, fluorine_patch1) == 0);
+  var check_24037 = function(v) {
+    return !(compareArrays(v, fluorine_ga) == 0 || compareArrays(v, fluorine_patch1) == 0);
   }
 
-  var out = filter(check_24037, builds);
+  var out = filter(check_24037, versions);
 
-  return out;
+  return map(getVersionStr, out);
 }()
 
 print("out:", JSON.stringify(out));
