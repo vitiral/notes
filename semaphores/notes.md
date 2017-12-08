@@ -545,8 +545,204 @@ paper = Semaphore (0)
 match = Semaphore (0)
 ```
 
-Tobaco Smoker:
+Example (need) Tobaco Smoker that doesn't work
 ```
 match.wait()
 paper.wait()
+```
+
+### First try at solution after hint
+
+```
+isTobacco = isPaper = isMatch = False
+has_tobacco = Semaphore(0)
+has_paper = Semaphore(0)
+has_match = Semaphore(0)
+
+spawn(detect_tobacco):
+    tobacco.wait()
+    isTobacco = True
+    tobacco.signal()
+
+spawn(detect_paper):
+    paper.wait()
+    isPaper = True
+    paper.signal()
+
+spawn(detect_match):
+    match.wait()
+    isMatch = True
+    match.signal()
+
+spawn(scheduler):
+    while isMatch + isPaper + isTobacco < 2:
+        sleep()
+
+    if isTobacco && isPaper:
+        has_match.signal()
+    elif isTobacco && isMatch:
+        has_paper.signal()
+    elif isPaper && isMatch:
+        has_tobacco.signal()
+    else:
+        assert False
+
+spawn(paper_smoker):
+    has_paper.wait()
+    match.wait()
+    tobacco.wait()
+```
+
+
+
+Their solution is better
+```
+numTobacco = numPaper = numMatch = 0
+has_tobacco = Semaphore(0)
+has_paper = Semaphore(0)
+has_match = Semaphore(0)
+mutex = Semaphore(1)
+
+spawn(paperListener):
+    paper.wait()
+    mutex.wait()
+    if numTobaco > 0:
+        numTobaco -= 1  # we use one
+        has_match.signal()
+    elif isMatch:
+        numMatch -= 1  # we use one
+        has_tobacco.signal()
+    else:
+        numPaper += 1
+    mutex.signal()
+
+spawn(paperSmoker):
+    has_paper.wait()
+    makeCigarette()
+    agent.signal()
+    smoke()
+```
+
+## Dining Savages Problem
+
+- Savages cannot invoke getServingFromPot if the pot is empty.
+- The cook can invoke putServingsInPot only if the pot is empty
+
+```
+# Basics
+spawn(savage):
+    while True:
+        getServingFromPot()
+        eat()
+
+spawn(cook):
+    while True:
+        putServingsInPot(M)
+```
+
+First stab at solution
+```
+mutex = Semaphore(1)
+servingsInPot = Semaphore(0)
+servingsLeft = 0
+potEmpty = Semaphore(1)
+
+spawn(cook):
+    while True:
+        potEmpty.wait()
+        mutex.wait()
+            putServingsInPot(N)
+            servingsLeft += N
+            servingsInPot.signal(N)
+        mutex.signal()
+
+spawn(savage):
+    while True:
+        mutex.wait()
+            if servingsLeft == 0:
+                # found an empty pot, signal the cook
+                potEmpty.signal()
+            # take one anyway: servingsLeft has to be able to be negative
+            servingsLeft -= 1
+        mutex.signal()
+
+        servingsInPot.wait()
+        getServingFromPot()
+        eat()
+
+
+
+def getServingsFromPot():
+
+```
+
+## Barbershop Problem
+- waiting room with `n` chairs
+- barber room with barber chair, who is only one who can do work.
+- if no customers -> barber goes to sleep
+- if customer enters and all `n` chairs filled, they leave -- else they sit in
+  a chair
+- if barber is asleep, a customer awakes the barber
+
+Simplify:
+- customers call `getHairCut` or `leave` (or `balk`)
+- barber thread invokes `cutHair`
+    - when `cutHair` is invoked there should be exactly one thread invoking
+      `getHairCut`
+
+
+Notes:
+- I think this is solved by a basic queue
+- The barber should sleep until a customer "sits down"
+
+```
+
+mutex = Semaphore(1)
+waiting = Queue()
+customers = Semaphore(0)
+customerDone = Semaphore(0)
+barberDone = Semaphore(0)
+
+spawn(customer):
+    mutex.wait()
+    if len(waiting) == n:
+        mutex.signal()
+        return balk()
+    else:
+        sem = Semaphore(0)
+        waiting.push(sem)
+        customers.signal()
+    mutex.signal()
+
+    sem.wait()
+    # barber.wait()
+    getHairCut()
+    customerDone.signal()
+    barberDone.wait()
+
+
+spawn(barber):
+    while True:
+        customers.wait()
+        mutex.wait()
+            customer = waiting.pop()
+        mutex.signal()
+        customer.signal()
+        cutHair()
+        barberDone.signal()
+        customerDone.wait()
+```
+
+## 5.6 Building H20
+We have to create a barrier that enforces that a complete water molecule is ready
+before proceeding
+
+```
+
+spawn(hydrogen):
+    pass
+
+spawn(oxygen):
+    pass
+
 ```
