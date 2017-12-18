@@ -1,19 +1,22 @@
-
 # Domain Creation
 Get the `--os-variant`
 ```
 osinfo-query --fields=name,short-id,version os
 ```
 
-## Initial setup 
+## Initial setup
+- install
+    - `libvirt`
+    - `virt-install`: command line interface for setting up images
+    - `virt-viewer`: lightweight interface for interacting with virtual environment
 - download windows iso from:
     https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise
-- enable the default pool: 
+- enable the default pool:
     - `virsh pool-autostart default`
     - `virsh pool-start default`
-- create the volume: 
+- create the volume:
     - `virsh vol-create-as default windows 30GiB --format vmdk`
-- enable the default network: 
+- enable the default network:
     - `virsh net-autostart default`
     - `virsh net-start default`
 
@@ -27,7 +30,7 @@ virt-install  \
   --cdrom $HOME/Downloads/archlinux-2017.08.01-x86_64.iso \
   --disk size=2,format=qcow2  \
   --network user            \
-  --virt-type kvm           \                       
+  --virt-type kvm           \
   --connect qemu:///session
 ```
 
@@ -36,7 +39,7 @@ virt-install  \
 ```
 virt-install  \
   --name gentoo-linux 		\
-  --memory 2048             \ 
+  --memory 2048             \
   --vcpus=1,maxvcpus=2      \
   --cpu host                \
   --cdrom install-amd64-minimal-20170817.iso \
@@ -63,7 +66,7 @@ virt-install \
 ```
 
 ```
-virt-install \                 
+virt-install \
     --name=windows10
     --memory=2098 \
     --cpu=host
@@ -89,7 +92,7 @@ Create a snapshot
 virsh snapshot-create-as --domain $DOMAIN \
 --name "$SNAP_NAME" \
 --description "some description" \
---live 
+--live
 ```
 
 To revert a domain to a snapshot, enter:
