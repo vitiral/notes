@@ -1,0 +1,59 @@
+lib/unistd.o: lib/unistd.c \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/stdc-predef.h \
+ config.h lib/unistd.h lib/unistd.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/unistd.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/features.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/sys/cdefs.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/wordsize.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/long-double.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs-64.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/posix_opt.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/environments.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/typesizes.h \
+ /nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stddef.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/confname.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/getopt_posix.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/getopt_core.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/unistd.h
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/stdc-predef.h:
+
+config.h:
+
+lib/unistd.h:
+
+lib/unistd.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/unistd.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/features.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/sys/cdefs.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/wordsize.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/long-double.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs-64.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/posix_opt.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/environments.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/typesizes.h:
+
+/nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stddef.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/confname.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/getopt_posix.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/getopt_core.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/unistd.h:

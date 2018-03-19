@@ -1,0 +1,59 @@
+lib/basename-lgpl.o: lib/basename-lgpl.c \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/stdc-predef.h \
+ config.h lib/dirname.h \
+ /nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stdbool.h \
+ /nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stddef.h \
+ lib/dosname.h lib/string.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/string.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/libc-header-start.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/features.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/sys/cdefs.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/wordsize.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/long-double.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs-64.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types/locale_t.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types/__locale_t.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/strings.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/strings_fortified.h \
+ /nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/string_fortified.h
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/stdc-predef.h:
+
+config.h:
+
+lib/dirname.h:
+
+/nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stdbool.h:
+
+/nix/store/bm7pb1s7rx1ad80706b5xqrznq7fgpgx-gcc-7.3.0/lib/gcc/x86_64-unknown-linux-gnu/7.3.0/include/stddef.h:
+
+lib/dosname.h:
+
+lib/string.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/string.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/libc-header-start.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/features.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/sys/cdefs.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/wordsize.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/long-double.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/gnu/stubs-64.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types/locale_t.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/types/__locale_t.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/strings.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/strings_fortified.h:
+
+/nix/store/p85kjy91dfvs4in358zyfxlksvibw0zn-glibc-2.26-131-dev/include/bits/string_fortified.h:
