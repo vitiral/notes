@@ -1,3 +1,4 @@
+import os
 import sys
 import inspect
 from pprint import pprint as pp
@@ -8,7 +9,6 @@ def foo():
     global stack
     stack = inspect.stack()
     1/0
-
 
 try:
     f = foo()

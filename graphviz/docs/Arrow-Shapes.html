@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
+<!--
+    This is a generated document.  Do not edit.
+-->
+<html version="2.0"><div id="saka-gui-root" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 2147483647; opacity: 1; pointer-events: none;"><div><div><style>
+@font-face {
+  font-family: Roboto; -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased;
+  font-style: normal; font-weight: normal; src: url(moz-extension://0c92cada-5f12-4da3-9cea-61965cef735a/Roboto-Regular.tff) format('tff');
+}
+.saka-hint-body {
+  all: initial;
+position: absolute;
+z-index: 2147483647;
+opacity: 1;
+font-family: Roboto, sans-serif;
+font-weight: 900;
+padding: 0.15rem 0.25rem;
+border: 0px solid;
+text-align: center;
+text-decoration: none;
+text-transform: uppercase;
+vertical-align: middle;
+font-size: 12px;
+color: #3f51F5;
+background-color: #ffffff;
+border-color: #ffffff;
+box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+border-radius: 4px;
+transform: translate3d(0%, -50%, 0)
+}
+.saka-hint-normal-char {
+  
+}
+.saka-hint-active-char {
+  opacity: 0.5
+}</style><div style="position: absolute; left: 0px; top: 0px;"></div></div></div></div><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Arrow Shapes</title>
+</head>
+<body bgcolor="white">
+<a name="top"></a>
+<h1 align="CENTER">Arrow Shapes</h1>
+<hr>
+Arrow shapes can be specified and named using the following simple
+grammar. 
+Terminals are shown in bold font and nonterminals in italics.
+Literal characters are given in single quotes.
+Square brackets [ and ] enclose optional items.
+Vertical bars | separate alternatives.
+<table>
+<tbody><tr>
+  <td align="RIGHT"><i>arrowname</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>aname</i> [ <i>aname</i> [ <i>aname</i> [ <i>aname</i> ] ] ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>aname</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">[ <i>modifiers</i> ] <i>shape</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>modifiers</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">[ <b>'o'</b> ] [ <i>side</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>side</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><b>'l'</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>'r'</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>shape</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><b>box</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>crow</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>curve</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>icurve</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>diamond</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>dot</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>inv</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>none</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>normal</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>tee</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>vee</b></td>
+</tr>
+</tbody></table>
+<p>
+The primitive shapes are:
+</p><center>
+<table>
+  <tbody><tr>
+    <td>"box"</td><td><img src="Arrow-Shapes_files/a_box.gif">
+    </td><td>"crow"</td><td><img src="Arrow-Shapes_files/a_crow.gif">
+    </td><td>"curve"</td><td><img src="Arrow-Shapes_files/a_curve.gif">
+    </td><td>"diamond"</td><td><img src="Arrow-Shapes_files/a_diamond.gif">
+  </td></tr>
+  <tr>
+  </tr>
+  <tr>
+    <td>"dot"</td><td><img src="Arrow-Shapes_files/a_dot.gif">
+    </td><td>"icurve"</td><td><img src="Arrow-Shapes_files/a_icurve.gif">
+    </td><td>"inv"</td><td><img src="Arrow-Shapes_files/a_inv.gif">
+    </td><td>"none"</td><td><img src="Arrow-Shapes_files/a_none.gif">
+  </td></tr>
+  <tr>
+  </tr>
+  <tr>
+    <td>"normal"</td><td><img src="Arrow-Shapes_files/a_normal.gif">
+    </td><td>"tee"</td><td><img src="Arrow-Shapes_files/a_tee.gif">
+    </td><td>"vee"</td><td><img src="Arrow-Shapes_files/a_open.gif">
+  </td></tr>
+</tbody></table>
+</center>
+<p>
+As for the modifiers:
+</p><dl>
+<dt>'l'
+  </dt><dd> Clip the shape, leaving only the part to the left of the edge.
+</dd><dt>'r'
+  </dt><dd> Clip the shape, leaving only the part to the right of the edge.
+</dd><dt>'o'
+  </dt><dd> Use an open (non-filled) version of the shape.
+</dd></dl>
+Left and right are defined as those directions determined by looking
+from the edge towards the point where the arrow "touches" the node.
+<p>
+As an example, the arrow shape <tt>lteeoldiamond</tt> is parsed as
+<tt>'l' 'tee' 'o' 'l' 'diamond'</tt> and corresponds to the shape
+</p><center>
+<img src="Arrow-Shapes_files/a_lteeoldiamond.gif">
+</center>
+Note that the first arrow shape specified occurs closest to the node.
+Subsequent arrow shapes, if specified, occur further from the node.
+Also, a shape of <tt>none</tt> uses space, so, for example, the arrowhead <tt>nonenormal</tt>
+is not the same as <tt>normal</tt>.
+<p>
+Not all syntactically legal combinations of modifiers are meaningful
+or semantically valid.
+For example, none of the modifiers make any sense with <tt>none</tt>.
+The following table indicates which modifiers are allowed with which shapes.
+</p><p>
+</p><center>
+<table border="2">
+<tbody><tr align="CENTER">
+ <th>Modifier</th>
+ <th>box
+ </th><th>crow
+ </th><th>curve
+ </th><th>diamond
+ </th><th>dot
+ </th><th>icurve
+ </th><th>inv
+ </th><th>none
+ </th><th>normal
+ </th><th>tee
+ </th><th>vee
+</th></tr>
+<tr align="CENTER"><td>'l'/'r'</td><td>X</td><td>X</td><td>X</td><td>X</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td><td>X</td><td>X</td><td>X</td></tr>
+<tr align="CENTER"><td>'o'    </td><td>X</td><td>&nbsp;</td><td>&nbsp;</td><td>X</td><td>X</td><td>X</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+</tbody></table>
+</center>
+<p>
+This yields 42 different arrow shapes. The optional second, third, fourth shapes
+can independently be any of the 42, except the last cannot be <tt>none</tt> as
+this would create a redundant shape.
+Thus, there are 41 · 42<sup>3</sup> + 41 · 42<sup>2</sup> + 41 · 42 + 42 = 3,111,696 different combinations.
+
+</p><p>
+The following display contains the 42 combinations possible with a single
+arrow shape. The node attached to the arrow is not drawn but would appear
+on the right side of the edge.
+</p><p>
+</p><center>
+<table>
+  <tbody><tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_box.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_lbox.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rbox.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_obox.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_olbox.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_orbox.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>box
+    </td><td>lbox
+    </td><td>rbox
+    </td><td>obox
+    </td><td>olbox
+    </td><td>orbox
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_crow.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_lcrow.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rcrow.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>crow
+    </td><td>lcrow
+    </td><td>rcrow
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_diamond.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_ldiamond.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rdiamond.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_odiamond.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_oldiamond.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_ordiamond.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>diamond
+    </td><td>ldiamond
+    </td><td>rdiamond
+    </td><td>odiamond
+    </td><td>oldiamond
+    </td><td>ordiamond
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_dot.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_odot.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>dot
+    </td><td>odot
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_inv.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_linv.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rinv.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_oinv.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_olinv.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_orinv.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>inv
+    </td><td>linv
+    </td><td>rinv
+    </td><td>oinv
+    </td><td>olinv
+    </td><td>orinv
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_none.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>none
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_normal.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_lnormal.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rnormal.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_onormal.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_olnormal.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_ornormal.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>normal
+    </td><td>lnormal
+    </td><td>rnormal
+    </td><td>onormal
+    </td><td>olnormal
+    </td><td>ornormal
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_tee.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_ltee.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rtee.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>tee
+    </td><td>ltee
+    </td><td>rtee
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_vee.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_lvee.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rvee.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>vee
+    </td><td>lvee
+    </td><td>rvee
+  </td></tr>
+  <tr align="CENTER">
+    <td><img src="Arrow-Shapes_files/aa_curve.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_lcurve.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_rcurve.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_icurve.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_licurve.gif">
+    </td><td><img src="Arrow-Shapes_files/aa_ricurve.gif">
+  </td></tr>
+  <tr align="CENTER">
+    <td>curve
+    </td><td>lcurve
+    </td><td>rcurve
+    </td><td>icurve
+    </td><td>licurve
+    </td><td>ricurve
+  </td></tr>
+</tbody></table>
+</center>
+
+
+</body></html>

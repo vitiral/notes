@@ -1,0 +1,2662 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
+<!--
+    This is a generated document.  Do not edit.
+-->
+<html version="2.0"><div id="saka-gui-root" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 2147483647; opacity: 1; pointer-events: none;"><div><div><style>
+@font-face {
+  font-family: Roboto; -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased;
+  font-style: normal; font-weight: normal; src: url(moz-extension://0c92cada-5f12-4da3-9cea-61965cef735a/Roboto-Regular.tff) format('tff');
+}
+.saka-hint-body {
+  all: initial;
+position: absolute;
+z-index: 2147483647;
+opacity: 1;
+font-family: Roboto, sans-serif;
+font-weight: 900;
+padding: 0.15rem 0.25rem;
+border: 0px solid;
+text-align: center;
+text-decoration: none;
+text-transform: uppercase;
+vertical-align: middle;
+font-size: 12px;
+color: #3f51F5;
+background-color: #ffffff;
+border-color: #ffffff;
+box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+border-radius: 4px;
+transform: translate3d(0%, -50%, 0)
+}
+.saka-hint-normal-char {
+  
+}
+.saka-hint-active-char {
+  opacity: 0.5
+}</style><div style="position: absolute; left: 0px; top: 0px;"></div></div></div></div><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Node, Edge and Graph Attributes</title>
+</head>
+<body bgcolor="white">
+<a name="top"></a>
+<h1 align="CENTER">Node, Edge and Graph Attributes</h1>
+<hr>
+The table below describes the attributes used by various Graphviz tools.
+The table gives the name of the attribute, the graph components (node,
+edge, etc.) which use the attribute and the type of the attribute
+(strings representing legal values of that type). Where applicable, the table
+also gives a default value for the attribute, a minimum allowed setting
+for numeric attributes, and certain restrictions on the use of the attribute.
+<p>
+Note that attribute names are case-sensitive. 
+This is usually true for attribute values as well, unless noted.
+</p><p>
+All Graphviz attributes are specified by name-value pairs. Thus, to
+set the fillcolor of a node <tt>abc</tt>, one would use
+<table>
+<tbody><tr><td><tt>abc [fillcolor = red]</tt></td></tr>
+</tbody></table>
+Similarly, to set the arrowhead style of an edge <tt>abc -&gt; def</tt>,
+one would use
+<table>
+<tbody><tr><td><tt>abc -&gt; def [arrowhead = diamond]</tt></td></tr>
+</tbody></table>
+Further details concerning the setting of attributes can be found
+in the description of the
+<a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT language.</a>
+</p><p>
+At present, most device-independent units are either inches or
+<a name="points"></a>
+<a href="http://en.wikipedia.org/wiki/Point_(typography)">points</a>,
+which we take as 72 points per inch.
+</p><p>
+<a name="h:undir_note"><strong>Note:</strong></a> Some attributes, such as
+<a href="#d:dir">dir</a> or <a href="#d:arrowtail">arrowtail</a>, are
+ambiguous when used in
+<a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT</a>
+with an undirected graph since the head and tail of an edge are meaningless.
+As a convention, the first time an undirected edge appears, the
+<a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT</a>
+parser will assign the left node as the tail node and the right node as
+the head. For example, the edge <tt>A -- B</tt> will have tail <tt>A</tt>
+and head <tt>B</tt>. It is the user's responsibility to handle such
+edges consistently. If the edge appears later, in the format
+<table>
+<tbody><tr><td><tt>B -- A [taillabel = "tail"]</tt></td></tr>
+</tbody></table>
+the drawing will attach the tail label to node <tt>A</tt>.
+To avoid possible confusion when such attributes are required, the user
+is encouraged to use a directed graph.
+If it is important to make the graph appear undirected, this can be
+done using the <a href="#d:dir">dir</a>, <a href="#d:arrowtail">arrowtail</a>
+or <a href="#d:arrowhead">arrowhead</a> attributes.
+</p><p>
+The tools accept standard C representations for <em>int</em> and
+<em>double</em> types.
+For the <a name="k:bool"><em>bool</em></a> type, TRUE values are
+represented by "true" or "yes" (case-insensitive)
+and any non-zero integer, and FALSE values by "false" or "no" (case-insensitive)
+and zero.
+In addition, there are a variety of specialized types such as
+<em>arrowType</em>, <em>color</em>,
+<em>point</em> and <em>rankdir</em>. Legal values for these types are given
+at the end.
+</p><p>
+In the <a name="h:uses"><strong>Used By</strong></a> field, the
+characters E, N, G, S and C
+represent edges, nodes, the root graph, subgraphs
+and cluster subgraphs, respectively.
+This field indicates which graph component uses the attribute.
+</p><p>
+In the <strong>Notes</strong> field, an annotation of <em>write only</em> 
+indicates that the attribute is used for output, and is not used or read by any
+of the layout programs.
+</p><hr width="70%" size="3" align="CENTER">
+
+<table align="CENTER">
+<tbody><tr><th>Name</th><th><a href="#h:uses">Used By</a></th><th>Type</th><th align="CENTER">Default</th><th>Minimum</th><th>Notes</th></tr>
+ <tr><td><a name="a:Damping" href="#d:Damping">Damping</a>
+</td><td>G</td><td>double</td><td align="CENTER">0.99</td><td>0.0</td><td>neato only</td> </tr>
+ <tr><td><a name="a:K" href="#d:K">K</a>
+</td><td>GC</td><td>double</td><td align="CENTER">0.3</td><td>0</td><td>sfdp, fdp only</td> </tr>
+ <tr><td><a name="a:URL" href="#d:URL">URL</a>
+</td><td>ENGC</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, postscript, map only</td> </tr>
+ <tr><td><a name="a:_background" href="#d:_background">_background</a>
+</td><td>G</td><td>string</td><td align="CENTER">&lt;none&gt;</td><td></td><td></td> </tr>
+ <tr><td><a name="a:area" href="#d:area">area</a>
+</td><td>NC</td><td>double</td><td align="CENTER">1.0</td><td>&gt;0</td><td>patchwork only</td> </tr>
+ <tr><td><a name="a:arrowhead" href="#d:arrowhead">arrowhead</a>
+</td><td>E</td><td><a href="#k:arrowType">arrowType</a>
+</td><td align="CENTER">normal</td><td></td><td></td> </tr>
+ <tr><td><a name="a:arrowsize" href="#d:arrowsize">arrowsize</a>
+</td><td>E</td><td>double</td><td align="CENTER">1.0</td><td>0.0</td><td></td> </tr>
+ <tr><td><a name="a:arrowtail" href="#d:arrowtail">arrowtail</a>
+</td><td>E</td><td><a href="#k:arrowType">arrowType</a>
+</td><td align="CENTER">normal</td><td></td><td></td> </tr>
+ <tr><td><a name="a:bb" href="#d:bb">bb</a>
+</td><td>G</td><td><a href="#k:rect">rect</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:bgcolor" href="#d:bgcolor">bgcolor</a>
+</td><td>GC</td><td><a href="#k:color">color</a>
+<br><a href="#k:colorList">colorList</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td></td> </tr>
+ <tr><td><a name="a:center" href="#d:center">center</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:charset" href="#d:charset">charset</a>
+</td><td>G</td><td>string</td><td align="CENTER">"UTF-8"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:clusterrank" href="#d:clusterrank">clusterrank</a>
+</td><td>G</td><td><a href="#k:clusterMode">clusterMode</a>
+</td><td align="CENTER">local</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:color" href="#d:color">color</a>
+</td><td>ENC</td><td><a href="#k:color">color</a>
+<br><a href="#k:colorList">colorList</a>
+</td><td align="CENTER">black</td><td></td><td></td> </tr>
+ <tr><td><a name="a:colorscheme" href="#d:colorscheme">colorscheme</a>
+</td><td>ENCG</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:comment" href="#d:comment">comment</a>
+</td><td>ENG</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:compound" href="#d:compound">compound</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:concentrate" href="#d:concentrate">concentrate</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:constraint" href="#d:constraint">constraint</a>
+</td><td>E</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:decorate" href="#d:decorate">decorate</a>
+</td><td>E</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:defaultdist" href="#d:defaultdist">defaultdist</a>
+</td><td>G</td><td>double</td><td align="CENTER">1+(avg. len)*sqrt(|V|)</td><td>epsilon</td><td>neato only</td> </tr>
+ <tr><td><a name="a:dim" href="#d:dim">dim</a>
+</td><td>G</td><td>int</td><td align="CENTER">2</td><td>2</td><td>sfdp, fdp, neato only</td> </tr>
+ <tr><td><a name="a:dimen" href="#d:dimen">dimen</a>
+</td><td>G</td><td>int</td><td align="CENTER">2</td><td>2</td><td>sfdp, fdp, neato only</td> </tr>
+ <tr><td><a name="a:dir" href="#d:dir">dir</a>
+</td><td>E</td><td><a href="#k:dirType">dirType</a>
+</td><td align="CENTER">forward(directed)<br>none(undirected)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:diredgeconstraints" href="#d:diredgeconstraints">diredgeconstraints</a>
+</td><td>G</td><td>string<br><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:distortion" href="#d:distortion">distortion</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.0</td><td>-100.0</td><td></td> </tr>
+ <tr><td><a name="a:dpi" href="#d:dpi">dpi</a>
+</td><td>G</td><td>double</td><td align="CENTER">96.0<br>0.0</td><td></td><td>svg, bitmap output only</td> </tr>
+ <tr><td><a name="a:edgeURL" href="#d:edgeURL">edgeURL</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:edgehref" href="#d:edgehref">edgehref</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:edgetarget" href="#d:edgetarget">edgetarget</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:edgetooltip" href="#d:edgetooltip">edgetooltip</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, cmap only</td> </tr>
+ <tr><td><a name="a:epsilon" href="#d:epsilon">epsilon</a>
+</td><td>G</td><td>double</td><td align="CENTER">.0001 * # nodes(mode == KK)<br>.0001(mode == major)</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:esep" href="#d:esep">esep</a>
+</td><td>G</td><td><a href="#k:addDouble">addDouble</a>
+<br><a href="#k:addPoint">addPoint</a>
+</td><td align="CENTER">+3</td><td></td><td>not dot</td> </tr>
+ <tr><td><a name="a:fillcolor" href="#d:fillcolor">fillcolor</a>
+</td><td>NEC</td><td><a href="#k:color">color</a>
+<br><a href="#k:colorList">colorList</a>
+</td><td align="CENTER">lightgrey(nodes)<br>black(clusters)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:fixedsize" href="#d:fixedsize">fixedsize</a>
+</td><td>N</td><td><a href="#k:bool">bool</a>
+<br>string</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:fontcolor" href="#d:fontcolor">fontcolor</a>
+</td><td>ENGC</td><td><a href="#k:color">color</a>
+</td><td align="CENTER">black</td><td></td><td></td> </tr>
+ <tr><td><a name="a:fontname" href="#d:fontname">fontname</a>
+</td><td>ENGC</td><td>string</td><td align="CENTER">"Times-Roman"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:fontnames" href="#d:fontnames">fontnames</a>
+</td><td>G</td><td>string</td><td align="CENTER">""</td><td></td><td>svg only</td> </tr>
+ <tr><td><a name="a:fontpath" href="#d:fontpath">fontpath</a>
+</td><td>G</td><td>string</td><td align="CENTER">system-dependent</td><td></td><td></td> </tr>
+ <tr><td><a name="a:fontsize" href="#d:fontsize">fontsize</a>
+</td><td>ENGC</td><td>double</td><td align="CENTER">14.0</td><td>1.0</td><td></td> </tr>
+ <tr><td><a name="a:forcelabels" href="#d:forcelabels">forcelabels</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td></td> </tr>
+ <tr><td><a name="a:gradientangle" href="#d:gradientangle">gradientangle</a>
+</td><td>NCG</td><td>int</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:group" href="#d:group">group</a>
+</td><td>N</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:headURL" href="#d:headURL">headURL</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:head_lp" href="#d:head_lp">head_lp</a>
+</td><td>E</td><td><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:headclip" href="#d:headclip">headclip</a>
+</td><td>E</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td></td> </tr>
+ <tr><td><a name="a:headhref" href="#d:headhref">headhref</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:headlabel" href="#d:headlabel">headlabel</a>
+</td><td>E</td><td><a href="#k:lblString">lblString</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:headport" href="#d:headport">headport</a>
+</td><td>E</td><td><a href="#k:portPos">portPos</a>
+</td><td align="CENTER">center</td><td></td><td></td> </tr>
+ <tr><td><a name="a:headtarget" href="#d:headtarget">headtarget</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:headtooltip" href="#d:headtooltip">headtooltip</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, cmap only</td> </tr>
+ <tr><td><a name="a:height" href="#d:height">height</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.5</td><td>0.02</td><td></td> </tr>
+ <tr><td><a name="a:href" href="#d:href">href</a>
+</td><td>GCNE</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, postscript, map only</td> </tr>
+ <tr><td><a name="a:id" href="#d:id">id</a>
+</td><td>GCNE</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, postscript, map only</td> </tr>
+ <tr><td><a name="a:image" href="#d:image">image</a>
+</td><td>N</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:imagepath" href="#d:imagepath">imagepath</a>
+</td><td>G</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:imagepos" href="#d:imagepos">imagepos</a>
+</td><td>N</td><td>string</td><td align="CENTER">"mc"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:imagescale" href="#d:imagescale">imagescale</a>
+</td><td>N</td><td><a href="#k:bool">bool</a>
+<br>string</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:inputscale" href="#d:inputscale">inputscale</a>
+</td><td>G</td><td>double</td><td align="CENTER">&lt;none&gt;</td><td></td><td>fdp, neato only</td> </tr>
+ <tr><td><a name="a:label" href="#d:label">label</a>
+</td><td>ENGC</td><td><a href="#k:lblString">lblString</a>
+</td><td align="CENTER">"\N" (nodes)<br>"" (otherwise)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labelURL" href="#d:labelURL">labelURL</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:label_scheme" href="#d:label_scheme">label_scheme</a>
+</td><td>G</td><td>int</td><td align="CENTER">0</td><td>0</td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:labelangle" href="#d:labelangle">labelangle</a>
+</td><td>E</td><td>double</td><td align="CENTER">-25.0</td><td>-180.0</td><td></td> </tr>
+ <tr><td><a name="a:labeldistance" href="#d:labeldistance">labeldistance</a>
+</td><td>E</td><td>double</td><td align="CENTER">1.0</td><td>0.0</td><td></td> </tr>
+ <tr><td><a name="a:labelfloat" href="#d:labelfloat">labelfloat</a>
+</td><td>E</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labelfontcolor" href="#d:labelfontcolor">labelfontcolor</a>
+</td><td>E</td><td><a href="#k:color">color</a>
+</td><td align="CENTER">black</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labelfontname" href="#d:labelfontname">labelfontname</a>
+</td><td>E</td><td>string</td><td align="CENTER">"Times-Roman"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labelfontsize" href="#d:labelfontsize">labelfontsize</a>
+</td><td>E</td><td>double</td><td align="CENTER">14.0</td><td>1.0</td><td></td> </tr>
+ <tr><td><a name="a:labelhref" href="#d:labelhref">labelhref</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:labeljust" href="#d:labeljust">labeljust</a>
+</td><td>GC</td><td>string</td><td align="CENTER">"c"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labelloc" href="#d:labelloc">labelloc</a>
+</td><td>NGC</td><td>string</td><td align="CENTER">"t"(clusters)<br>"b"(root graphs)<br>"c"(nodes)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:labeltarget" href="#d:labeltarget">labeltarget</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:labeltooltip" href="#d:labeltooltip">labeltooltip</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, cmap only</td> </tr>
+ <tr><td><a name="a:landscape" href="#d:landscape">landscape</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layer" href="#d:layer">layer</a>
+</td><td>ENC</td><td><a href="#k:layerRange">layerRange</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layerlistsep" href="#d:layerlistsep">layerlistsep</a>
+</td><td>G</td><td>string</td><td align="CENTER">","</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layers" href="#d:layers">layers</a>
+</td><td>G</td><td><a href="#k:layerList">layerList</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layerselect" href="#d:layerselect">layerselect</a>
+</td><td>G</td><td><a href="#k:layerRange">layerRange</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layersep" href="#d:layersep">layersep</a>
+</td><td>G</td><td>string</td><td align="CENTER">" :\t"</td><td></td><td></td> </tr>
+ <tr><td><a name="a:layout" href="#d:layout">layout</a>
+</td><td>G</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:len" href="#d:len">len</a>
+</td><td>E</td><td>double</td><td align="CENTER">1.0(neato)<br>0.3(fdp)</td><td></td><td>fdp, neato only</td> </tr>
+ <tr><td><a name="a:levels" href="#d:levels">levels</a>
+</td><td>G</td><td>int</td><td align="CENTER">MAXINT</td><td>0.0</td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:levelsgap" href="#d:levelsgap">levelsgap</a>
+</td><td>G</td><td>double</td><td align="CENTER">0.0</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:lhead" href="#d:lhead">lhead</a>
+</td><td>E</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:lheight" href="#d:lheight">lheight</a>
+</td><td>GC</td><td>double</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:lp" href="#d:lp">lp</a>
+</td><td>EGC</td><td><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:ltail" href="#d:ltail">ltail</a>
+</td><td>E</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:lwidth" href="#d:lwidth">lwidth</a>
+</td><td>GC</td><td>double</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:margin" href="#d:margin">margin</a>
+</td><td>NCG</td><td>double<br><a href="#k:point">point</a>
+</td><td align="CENTER">&lt;device-dependent&gt;</td><td></td><td></td> </tr>
+ <tr><td><a name="a:maxiter" href="#d:maxiter">maxiter</a>
+</td><td>G</td><td>int</td><td align="CENTER">100 * # nodes(mode == KK)<br>200(mode == major)<br>600(fdp)</td><td></td><td>fdp, neato only</td> </tr>
+ <tr><td><a name="a:mclimit" href="#d:mclimit">mclimit</a>
+</td><td>G</td><td>double</td><td align="CENTER">1.0</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:mindist" href="#d:mindist">mindist</a>
+</td><td>G</td><td>double</td><td align="CENTER">1.0</td><td>0.0</td><td>circo only</td> </tr>
+ <tr><td><a name="a:minlen" href="#d:minlen">minlen</a>
+</td><td>E</td><td>int</td><td align="CENTER">1</td><td>0</td><td>dot only</td> </tr>
+ <tr><td><a name="a:mode" href="#d:mode">mode</a>
+</td><td>G</td><td>string</td><td align="CENTER">major</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:model" href="#d:model">model</a>
+</td><td>G</td><td>string</td><td align="CENTER">shortpath</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:mosek" href="#d:mosek">mosek</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:newrank" href="#d:newrank">newrank</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:nodesep" href="#d:nodesep">nodesep</a>
+</td><td>G</td><td>double</td><td align="CENTER">0.25</td><td>0.02</td><td></td> </tr>
+ <tr><td><a name="a:nojustify" href="#d:nojustify">nojustify</a>
+</td><td>GCNE</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:normalize" href="#d:normalize">normalize</a>
+</td><td>G</td><td>double<br><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>not dot</td> </tr>
+ <tr><td><a name="a:notranslate" href="#d:notranslate">notranslate</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>neato only</td> </tr>
+ <tr><td><a name="a:nslimit" href="#d:nslimit">nslimit</a>
+<br><a name="a:nslimit1" href="#d:nslimit1">nslimit1</a>
+</td><td>G</td><td>double</td><td align="CENTER"></td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:ordering" href="#d:ordering">ordering</a>
+</td><td>GN</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:orientation" href="#d:orientation">orientation</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.0</td><td>360.0</td><td></td> </tr>
+ <tr><td><a name="aa:orientation" href="#dd:orientation">orientation</a>
+</td><td>G</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:outputorder" href="#d:outputorder">outputorder</a>
+</td><td>G</td><td><a href="#k:outputMode">outputMode</a>
+</td><td align="CENTER">breadthfirst</td><td></td><td></td> </tr>
+ <tr><td><a name="a:overlap" href="#d:overlap">overlap</a>
+</td><td>G</td><td>string<br><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td>not dot</td> </tr>
+ <tr><td><a name="a:overlap_scaling" href="#d:overlap_scaling">overlap_scaling</a>
+</td><td>G</td><td>double</td><td align="CENTER">-4</td><td>-1.0e10</td><td>prism only</td> </tr>
+ <tr><td><a name="a:overlap_shrink" href="#d:overlap_shrink">overlap_shrink</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td>prism only</td> </tr>
+ <tr><td><a name="a:pack" href="#d:pack">pack</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+<br>int</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:packmode" href="#d:packmode">packmode</a>
+</td><td>G</td><td><a href="#k:packMode">packMode</a>
+</td><td align="CENTER">node</td><td></td><td></td> </tr>
+ <tr><td><a name="a:pad" href="#d:pad">pad</a>
+</td><td>G</td><td>double<br><a href="#k:point">point</a>
+</td><td align="CENTER">0.0555 (4 points)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:page" href="#d:page">page</a>
+</td><td>G</td><td>double<br><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td></td> </tr>
+ <tr><td><a name="a:pagedir" href="#d:pagedir">pagedir</a>
+</td><td>G</td><td><a href="#k:pagedir">pagedir</a>
+</td><td align="CENTER">BL</td><td></td><td></td> </tr>
+ <tr><td><a name="a:pencolor" href="#d:pencolor">pencolor</a>
+</td><td>C</td><td><a href="#k:color">color</a>
+</td><td align="CENTER">black</td><td></td><td></td> </tr>
+ <tr><td><a name="a:penwidth" href="#d:penwidth">penwidth</a>
+</td><td>CNE</td><td>double</td><td align="CENTER">1.0</td><td>0.0</td><td></td> </tr>
+ <tr><td><a name="a:peripheries" href="#d:peripheries">peripheries</a>
+</td><td>NC</td><td>int</td><td align="CENTER">shape default(nodes)<br>1(clusters)</td><td>0</td><td></td> </tr>
+ <tr><td><a name="a:pin" href="#d:pin">pin</a>
+</td><td>N</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td>fdp, neato only</td> </tr>
+ <tr><td><a name="a:pos" href="#d:pos">pos</a>
+</td><td>EN</td><td><a href="#k:point">point</a>
+<br><a href="#k:splineType">splineType</a>
+</td><td align="CENTER"></td><td></td><td></td> </tr>
+ <tr><td><a name="a:quadtree" href="#d:quadtree">quadtree</a>
+</td><td>G</td><td><a href="#k:quadType">quadType</a>
+<br><a href="#k:bool">bool</a>
+</td><td align="CENTER">normal</td><td></td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:quantum" href="#d:quantum">quantum</a>
+</td><td>G</td><td>double</td><td align="CENTER">0.0</td><td>0.0</td><td></td> </tr>
+ <tr><td><a name="a:rank" href="#d:rank">rank</a>
+</td><td>S</td><td><a href="#k:rankType">rankType</a>
+</td><td align="CENTER"></td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:rankdir" href="#d:rankdir">rankdir</a>
+</td><td>G</td><td><a href="#k:rankdir">rankdir</a>
+</td><td align="CENTER">TB</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:ranksep" href="#d:ranksep">ranksep</a>
+</td><td>G</td><td>double<br><a href="#k:doubleList">doubleList</a>
+</td><td align="CENTER">0.5(dot)<br>1.0(twopi)</td><td>0.02</td><td>twopi, dot only</td> </tr>
+ <tr><td><a name="a:ratio" href="#d:ratio">ratio</a>
+</td><td>G</td><td>double<br>string</td><td align="CENTER"></td><td></td><td></td> </tr>
+ <tr><td><a name="a:rects" href="#d:rects">rects</a>
+</td><td>N</td><td><a href="#k:rect">rect</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:regular" href="#d:regular">regular</a>
+</td><td>N</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">false</td><td></td><td></td> </tr>
+ <tr><td><a name="a:remincross" href="#d:remincross">remincross</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:repulsiveforce" href="#d:repulsiveforce">repulsiveforce</a>
+</td><td>G</td><td>double</td><td align="CENTER">1.0</td><td>0.0</td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:resolution" href="#d:resolution">resolution</a>
+</td><td>G</td><td>double</td><td align="CENTER">96.0<br>0.0</td><td></td><td>svg, bitmap output only</td> </tr>
+ <tr><td><a name="a:root" href="#d:root">root</a>
+</td><td>GN</td><td>string<br><a href="#k:bool">bool</a>
+</td><td align="CENTER">&lt;none&gt;(graphs)<br>false(nodes)</td><td></td><td>circo, twopi only</td> </tr>
+ <tr><td><a name="a:rotate" href="#d:rotate">rotate</a>
+</td><td>G</td><td>int</td><td align="CENTER">0</td><td></td><td></td> </tr>
+ <tr><td><a name="a:rotation" href="#d:rotation">rotation</a>
+</td><td>G</td><td>double</td><td align="CENTER">0</td><td></td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:samehead" href="#d:samehead">samehead</a>
+</td><td>E</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:sametail" href="#d:sametail">sametail</a>
+</td><td>E</td><td>string</td><td align="CENTER">""</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:samplepoints" href="#d:samplepoints">samplepoints</a>
+</td><td>N</td><td>int</td><td align="CENTER">8(output)<br>20(overlap and image maps)</td><td></td><td></td> </tr>
+ <tr><td><a name="a:scale" href="#d:scale">scale</a>
+</td><td>G</td><td>double<br><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td>not dot</td> </tr>
+ <tr><td><a name="a:searchsize" href="#d:searchsize">searchsize</a>
+</td><td>G</td><td>int</td><td align="CENTER">30</td><td></td><td>dot only</td> </tr>
+ <tr><td><a name="a:sep" href="#d:sep">sep</a>
+</td><td>G</td><td><a href="#k:addDouble">addDouble</a>
+<br><a href="#k:addPoint">addPoint</a>
+</td><td align="CENTER">+4</td><td></td><td>not dot</td> </tr>
+ <tr><td><a name="a:shape" href="#d:shape">shape</a>
+</td><td>N</td><td><a href="#k:shape">shape</a>
+</td><td align="CENTER">ellipse</td><td></td><td></td> </tr>
+ <tr><td><a name="a:shapefile" href="#d:shapefile">shapefile</a>
+</td><td>N</td><td>string</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:showboxes" href="#d:showboxes">showboxes</a>
+</td><td>ENG</td><td>int</td><td align="CENTER">0</td><td>0</td><td>dot only</td> </tr>
+ <tr><td><a name="a:sides" href="#d:sides">sides</a>
+</td><td>N</td><td>int</td><td align="CENTER">4</td><td>0</td><td></td> </tr>
+ <tr><td><a name="a:size" href="#d:size">size</a>
+</td><td>G</td><td>double<br><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td></td> </tr>
+ <tr><td><a name="a:skew" href="#d:skew">skew</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.0</td><td>-100.0</td><td></td> </tr>
+ <tr><td><a name="a:smoothing" href="#d:smoothing">smoothing</a>
+</td><td>G</td><td><a href="#k:smoothType">smoothType</a>
+</td><td align="CENTER">"none"</td><td></td><td>sfdp only</td> </tr>
+ <tr><td><a name="a:sortv" href="#d:sortv">sortv</a>
+</td><td>GCN</td><td>int</td><td align="CENTER">0</td><td>0</td><td></td> </tr>
+ <tr><td><a name="a:splines" href="#d:splines">splines</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+<br>string</td><td align="CENTER"></td><td></td><td></td> </tr>
+ <tr><td><a name="a:start" href="#d:start">start</a>
+</td><td>G</td><td><a href="#k:startType">startType</a>
+</td><td align="CENTER">""</td><td></td><td>fdp, neato only</td> </tr>
+ <tr><td><a name="a:style" href="#d:style">style</a>
+</td><td>ENCG</td><td><a href="#k:style">style</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:stylesheet" href="#d:stylesheet">stylesheet</a>
+</td><td>G</td><td>string</td><td align="CENTER">""</td><td></td><td>svg only</td> </tr>
+ <tr><td><a name="a:tailURL" href="#d:tailURL">tailURL</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:tail_lp" href="#d:tail_lp">tail_lp</a>
+</td><td>E</td><td><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:tailclip" href="#d:tailclip">tailclip</a>
+</td><td>E</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER">true</td><td></td><td></td> </tr>
+ <tr><td><a name="a:tailhref" href="#d:tailhref">tailhref</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:taillabel" href="#d:taillabel">taillabel</a>
+</td><td>E</td><td><a href="#k:lblString">lblString</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:tailport" href="#d:tailport">tailport</a>
+</td><td>E</td><td><a href="#k:portPos">portPos</a>
+</td><td align="CENTER">center</td><td></td><td></td> </tr>
+ <tr><td><a name="a:tailtarget" href="#d:tailtarget">tailtarget</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:tailtooltip" href="#d:tailtooltip">tailtooltip</a>
+</td><td>E</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, cmap only</td> </tr>
+ <tr><td><a name="a:target" href="#d:target">target</a>
+</td><td>ENGC</td><td><a href="#k:escString">escString</a>
+<br>string</td><td align="CENTER">&lt;none&gt;</td><td></td><td>svg, map only</td> </tr>
+ <tr><td><a name="a:tooltip" href="#d:tooltip">tooltip</a>
+</td><td>NEC</td><td><a href="#k:escString">escString</a>
+</td><td align="CENTER">""</td><td></td><td>svg, cmap only</td> </tr>
+ <tr><td><a name="a:truecolor" href="#d:truecolor">truecolor</a>
+</td><td>G</td><td><a href="#k:bool">bool</a>
+</td><td align="CENTER"></td><td></td><td>bitmap output only</td> </tr>
+ <tr><td><a name="a:vertices" href="#d:vertices">vertices</a>
+</td><td>N</td><td><a href="#k:pointList">pointList</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:viewport" href="#d:viewport">viewport</a>
+</td><td>G</td><td><a href="#k:viewPort">viewPort</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:voro_margin" href="#d:voro_margin">voro_margin</a>
+</td><td>G</td><td>double</td><td align="CENTER">0.05</td><td>0.0</td><td>not dot</td> </tr>
+ <tr><td><a name="a:weight" href="#d:weight">weight</a>
+</td><td>E</td><td>int<br>double</td><td align="CENTER">1</td><td>0(dot,twopi)<br>1(neato,fdp)</td><td></td> </tr>
+ <tr><td><a name="a:width" href="#d:width">width</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.75</td><td>0.01</td><td></td> </tr>
+ <tr><td><a name="a:xdotversion" href="#d:xdotversion">xdotversion</a>
+</td><td>G</td><td>string</td><td align="CENTER"></td><td></td><td>xdot only</td> </tr>
+ <tr><td><a name="a:xlabel" href="#d:xlabel">xlabel</a>
+</td><td>EN</td><td><a href="#k:lblString">lblString</a>
+</td><td align="CENTER">""</td><td></td><td></td> </tr>
+ <tr><td><a name="a:xlp" href="#d:xlp">xlp</a>
+</td><td>NE</td><td><a href="#k:point">point</a>
+</td><td align="CENTER"></td><td></td><td>write only</td> </tr>
+ <tr><td><a name="a:z" href="#d:z">z</a>
+</td><td>N</td><td>double</td><td align="CENTER">0.0</td><td>-MAXFLOAT<br>-1000</td><td></td> </tr>
+</tbody></table>
+<hr>
+<h1>Attribute Descriptions</h1>
+<dl>
+<dt><a name="d:Damping" href="#a:Damping"><strong>Damping</strong></a>
+</dt><dd>  Factor damping force motions. On each iteration, a nodes movement
+  is limited to this factor of its potential motion. By being less than
+  1.0, the system tends to ``cool'', thereby preventing cycling.
+
+</dd><dt><a name="d:K" href="#a:K"><strong>K</strong></a>
+</dt><dd>  Spring constant used in virtual physical model. It roughly corresponds
+  to an ideal edge length (in inches), in that increasing K tends to
+  increase the distance between nodes.
+  Note that the edge attribute <a href="#d:len">len</a> can be used to
+  override this value for adjacent nodes.
+
+</dd><dt><a name="d:URL" href="#a:URL"><strong>URL</strong></a>
+</dt><dd>  Hyperlinks incorporated into device-dependent output.
+  At present, used in ps2, cmap, i*map and svg formats.
+  For all these formats, URLs can be attached to nodes, edges and
+  clusters. URL attributes can also be attached to the root graph in ps2,
+  cmap and i*map formats. This serves as the base URL for relative URLs in the
+  former, and as the default image map file in the latter.
+  <p>
+  For svg, cmapx and imap output, the active area for a node is its
+  visible image.
+  For example, an unfilled
+  node with no drawn boundary will only be active on its label.
+  For other output, the active area is its bounding box.
+  The active area for a cluster is its bounding box.
+  For edges, the active areas are small circles where the edge contacts its head
+  and tail nodes. In addition, for svg, cmapx and imap, the active area
+  includes a thin polygon approximating the edge. The circles may
+  overlap the related node, and the edge URL dominates.
+  If the edge has a label, this will also be active.
+  Finally, if the edge has a head or tail label, this will also be active.
+  </p><p>
+  Note that, for edges, the attributes <a href="#d:headURL">headURL</a>,
+  <a href="#d:tailURL">tailURL</a>, <a href="#d:labelURL">labelURL</a> and
+  <a href="#d:edgeURL">edgeURL</a> allow control of various parts of an
+  edge.
+  Also note that, if active areas of two edges overlap, it is unspecified
+  which area dominates.
+
+</p></dd><dt><a name="d:_background" href="#a:_background"><strong>_background</strong></a>
+</dt><dd>  A string in the <a href="https://graphviz.gitlab.io/_pages/doc/info/output.html#d:xdot">xdot format</a> specifying an arbitrary background.  
+  During rendering, the canvas is first filled as described in the
+  <a href="#d:bgcolor">bgcolor attribute</a>. 
+  Then, if <b>_background</b> is defined, the graphics
+  operations described in the string are performed on the canvas.
+
+</dd><dt><a name="d:area" href="#a:area"><strong>area</strong></a>
+</dt><dd>  Indicates the preferred area for a node or empty cluster when laid out by patchwork.
+
+</dd><dt><a name="d:arrowhead" href="#a:arrowhead"><strong>arrowhead</strong></a>
+</dt><dd>  Style of arrowhead on the head node of an edge.
+  This will only appear if the <a href="#d:dir">dir</a> attribute
+  is "forward" or "both".
+  See the <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:arrowsize" href="#a:arrowsize"><strong>arrowsize</strong></a>
+</dt><dd>  Multiplicative scale factor for arrowheads.
+
+</dd><dt><a name="d:arrowtail" href="#a:arrowtail"><strong>arrowtail</strong></a>
+</dt><dd>  Style of arrowhead on the tail node of an edge.
+  This will only appear if the <a href="#d:dir">dir</a> attribute
+  is "back" or "both".
+  See the <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:bb" href="#a:bb"><strong>bb</strong></a>
+</dt><dd>  Bounding box of drawing in points.
+
+</dd><dt><a name="d:bgcolor" href="#a:bgcolor"><strong>bgcolor</strong></a>
+</dt><dd>  When attached to the root graph, this color is used as the background for
+  entire canvas. When a cluster attribute, it is used as the initial
+  background for the cluster. If a cluster has a filled
+  <a href="#d:style">style</a>, the
+  cluster's <a href="#d:fillcolor">fillcolor</a> will overlay the
+  background color.
+  <p>
+  If the value is a <a href="#k:colorList">colorList</a>, a gradient fill is
+  used. By default, this is a linear fill; setting <tt>style=radial</tt> will
+  cause a radial fill. At present, only two colors are used. If the second
+  color (after a colon) is missing, the default color is used for it.
+  See also the <a href="#d:gradientangle">gradientangle</a> attribute
+  for setting the gradient angle. 
+  </p><p>
+  For certain output formats, such as PostScript, no fill is done for
+  the root graph unless
+  <b>bgcolor</b> is explicitly set. For bitmap formats, however, 
+  the bits need to be
+  initialized to something, so the canvas is filled with white by default.
+  This means that if the bitmap output is included in some other
+  document, all of the bits within the bitmap's bounding box will be
+  set, overwriting whatever color or graphics were already on the page.
+  If this effect is not desired, and you only want to set bits explicitly
+  assigned in drawing the graph, set <b>bgcolor</b>="transparent".
+
+</p></dd><dt><a name="d:center" href="#a:center"><strong>center</strong></a>
+</dt><dd>  If true, the drawing is centered in the output canvas.
+
+</dd><dt><a name="d:charset" href="#a:charset"><strong>charset</strong></a>
+</dt><dd>  Specifies the character encoding used when interpreting string input
+  as a text label. The default value is <tt>"UTF-8"</tt>.
+  The other legal value is <tt>"iso-8859-1"</tt> or,
+  equivalently,
+  <tt>"Latin1"</tt>. The <b>charset</b> attribute is case-insensitive.
+  Note that if the character encoding used in the input does not
+  match the <b>charset</b> value, the resulting output may be very strange.
+
+</dd><dt><a name="d:clusterrank" href="#a:clusterrank"><strong>clusterrank</strong></a>
+</dt><dd>  Mode used for handling clusters. If <b>clusterrank</b> is "local", a
+  subgraph whose name begins with "cluster" is given special treatment.
+  The subgraph is laid out separately, and then integrated as a unit into
+  its parent graph, with a bounding rectangle drawn about it.
+  If the cluster has a <a href="#d:label">label</a> parameter, this label
+  is displayed within the rectangle.
+  Note also that there can be clusters within clusters.
+  At present, the modes "global" and "none"
+  appear to be identical, both turning off the special cluster processing.
+
+</dd><dt><a name="d:color" href="#a:color"><strong>color</strong></a>
+</dt><dd>  Basic drawing color for graphics, not text. For the latter, use the
+  <a href="#d:fontcolor">fontcolor</a> attribute.
+  <p>
+  For edges, the value
+  can either be a single color or a <a href="#k:colorList">colorList</a>.
+  In the latter case, if colorList has no fractions,
+  the edge is drawn using parallel splines or lines,
+  one for each color in the list, in the order given.
+  The head arrow, if any, is drawn using the first color in the list,
+  and the tail arrow, if any, the second color. This supports the common
+  case of drawing opposing edges, but using parallel splines instead of
+  separately routed multiedges. 
+  If any fraction is used, the colors are drawn in series, with each color
+  being given roughly its specified fraction of the edge.
+  For example, the graph
+  </p><pre>  digraph G {
+    a -&gt; b [dir=both color="red:blue"]
+    c -&gt; d [dir=none color="green:red;0.25:blue"]
+  }
+  </pre>
+  yields<br>
+  <img src="node_edge_graph_attributes_files/colorlist.gif">
+
+</dd><dt><a name="d:colorscheme" href="#a:colorscheme"><strong>colorscheme</strong></a>
+</dt><dd>  This attribute specifies a color scheme namespace. If defined, it specifies
+  the context for interpreting color names. In particular, if a
+  <a href="#k:color">color</a> value has form <tt>"xxx"</tt> or <tt>"//xxx"</tt>,
+  then the
+  color <tt>xxx</tt> will be evaluated according to the current color scheme.
+  If no color scheme is set, the standard X11 naming is used.
+  For example, if <tt>colorscheme=bugn9</tt>, then <tt>color=7</tt>
+  is interpreted as <tt>"/bugn9/7"</tt>.
+
+</dd><dt><a name="d:comment" href="#a:comment"><strong>comment</strong></a>
+</dt><dd>  Comments are inserted into output. Device-dependent
+
+</dd><dt><a name="d:compound" href="#a:compound"><strong>compound</strong></a>
+</dt><dd>  If true, allow edges between clusters. (See <a href="#d:lhead">lhead</a>
+  and <a href="#d:ltail">ltail</a> below.)
+
+</dd><dt><a name="d:concentrate" href="#a:concentrate"><strong>concentrate</strong></a>
+</dt><dd>  If true, use edge concentrators.
+  This merges multiedges into a single edge and causes partially parallel
+  edges to share part of their paths. The latter feature is not yet available
+  outside of dot.
+
+</dd><dt><a name="d:constraint" href="#a:constraint"><strong>constraint</strong></a>
+</dt><dd>  If false, the edge is not used in ranking the nodes. For example,
+  in the graph
+  <pre>  digraph G {
+    a -&gt; c;
+    a -&gt; b;
+    b -&gt; c [constraint=false];
+  }
+  </pre>
+  the edge <code>b -&gt; c</code> does not add a constraint during rank
+  assignment, so the only constraints are that a be above b and c,
+  yielding the graph:<br>
+  <img src="node_edge_graph_attributes_files/constraint.gif">
+
+</dd><dt><a name="d:decorate" href="#a:decorate"><strong>decorate</strong></a>
+</dt><dd>  If true, attach edge label to edge by a 2-segment
+  polyline, underlining the label, then going to the closest point of spline.
+
+</dd><dt><a name="d:defaultdist" href="#a:defaultdist"><strong>defaultdist</strong></a>
+</dt><dd>  This specifies the distance between nodes in separate connected
+  components. If set too small, connected components may overlap.
+  Only applicable if <a href="#d:pack">pack</a>=false.
+
+</dd><dt><a name="d:dim" href="#a:dim"><strong>dim</strong></a>
+</dt><dd>  Set the number of dimensions used for the layout. The maximum value
+  allowed is 10.
+
+</dd><dt><a name="d:dimen" href="#a:dimen"><strong>dimen</strong></a>
+</dt><dd>  Set the number of dimensions used for rendering. 
+  The maximum value allowed is 10.
+  If both <tt>dimen</tt> and <tt>dim</tt> are set, the latter specifies
+  the dimension used for layout, and the former for rendering.
+  If only <tt>dimen</tt> is set, this is used for both layout and rendering
+  dimensions.
+  <p>
+  Note that, at present, all aspects of rendering are 2D. This includes
+  the shape and size of nodes, overlap removal, and edge routing. Thus,
+  for <tt>dimen &gt; 2</tt>, the only valid information is the <tt>pos</tt>
+  attribute of the nodes.
+  All other coordinates will be 2D and, at best, will reflect a projection
+  of a higher-dimensional point onto the plane.
+
+</p></dd><dt><a name="d:dir" href="#a:dir"><strong>dir</strong></a>
+</dt><dd>  Set edge type for drawing arrowheads. This indicates which ends of the
+  edge should be decorated with an arrowhead. The actual style of the
+  arrowhead can be specified using the <a href="#d:arrowhead">arrowhead</a>
+  and <a href="#d:arrowtail">arrowtail</a> attributes.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:diredgeconstraints" href="#a:diredgeconstraints"><strong>diredgeconstraints</strong></a>
+</dt><dd>  Only valid when <a href="#d:mode">mode</a>="ipsep".
+  If true, constraints are generated for each edge in the largest (heuristic)
+  directed acyclic subgraph such that the edge must point downwards.
+  If "hier", generates level constraints similar to those used with
+  <a href="#d:mode">mode</a>="hier". The main difference is that, in the latter
+  case, only these constraints are involved, so a faster solver can be used.
+
+</dd><dt><a name="d:distortion" href="#a:distortion"><strong>distortion</strong></a>
+</dt><dd>  Distortion factor for <a href="#d:shape"><b>shape</b></a>=polygon.
+  Positive values cause top part to
+  be larger than bottom; negative values do the opposite.
+
+</dd><dt><a name="d:dpi" href="#a:dpi"><strong>dpi</strong></a>
+</dt><dd>  This specifies the expected number of pixels per inch on a display device.
+  For bitmap output, this guarantees that text rendering will be
+  done more accurately, both in size and in placement. For SVG output,
+  it is used to guarantee that the dimensions in the output correspond to
+  the correct number of points or inches.
+
+</dd><dt><a name="d:edgeURL" href="#a:edgeURL"><strong>edgeURL</strong></a>
+</dt><dd>  If <b>edgeURL</b> is defined, this is the link used for the non-label
+  parts of an edge. This value overrides any <a href="#d:URL">URL</a>
+  defined for the edge.
+  Also, this value is used near the head or tail node unless overridden
+  by a <a href="#d:headURL">headURL</a> or <a href="#d:tailURL">tailURL</a> value,
+  respectively.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:edgehref" href="#a:edgehref"><strong>edgehref</strong></a>
+</dt><dd>  Synonym for <a href="#d:edgeURL">edgeURL</a>.
+
+</dd><dt><a name="d:edgetarget" href="#a:edgetarget"><strong>edgetarget</strong></a>
+</dt><dd>  If the edge has a <a href="#d:URL">URL</a> or <a href="#d:edgeURL">edgeURL</a>
+  attribute, this attribute determines which window of the
+  browser is used
+  for the URL attached to the non-label part of the edge.
+  Setting it to "_graphviz" will open a new window if it
+  doesn't already exist, or reuse it if it does.
+  If undefined, the value of the <a href="#d:target">target</a> is used.
+
+</dd><dt><a name="d:edgetooltip" href="#a:edgetooltip"><strong>edgetooltip</strong></a>
+</dt><dd>  Tooltip annotation attached to the non-label part of an edge.
+  This is used only if the edge has a <a href="#d:URL">URL</a>
+  or <a href="#d:edgeURL">edgeURL</a> attribute.
+
+</dd><dt><a name="d:epsilon" href="#a:epsilon"><strong>epsilon</strong></a>
+</dt><dd>  Terminating condition. If the length squared of all energy gradients are
+  &lt; <b>epsilon</b>, the algorithm stops.
+
+</dd><dt><a name="d:esep" href="#a:esep"><strong>esep</strong></a>
+</dt><dd>  Margin used around polygons for purposes of spline edge routing.
+  The interpretation is the same as given for <a href="#d:sep">sep</a>.
+  This should normally be strictly less than <a href="#d:sep">sep</a>.
+
+</dd><dt><a name="d:fillcolor" href="#a:fillcolor"><strong>fillcolor</strong></a>
+</dt><dd>  Color used to fill the background of a node or cluster
+  assuming <a href="#d:style">style</a>=filled, or a filled arrowhead.
+  If <b>fillcolor</b> is not defined, <a href="#d:color">color</a> is
+  used. (For clusters, if <b>color</b> is not defined,
+  <a href="#d:bgcolor">bgcolor</a> is used.) If this is not defined,
+  the default is used, except for
+  <a href="#d:shape"><b>shape</b></a>=point or when the output
+  format is MIF,
+  which use black by default.
+  <p>
+  If the value is a <a href="#k:colorList">colorList</a>, a gradient fill is
+  used. By default, this is a linear fill; setting <tt>style=radial</tt> will
+  cause a radial fill. At present, only two colors are used. If the second
+  color (after a colon) is missing, the default color is used for it.
+  See also the <a href="#d:gradientangle">gradientangle</a> attribute
+  for setting the gradient angle. 
+  </p><p>
+  Note that a cluster inherits the root graph's attributes if defined.
+  Thus, if the root graph has defined a <b>fillcolor</b>, this will override a
+  <b>color</b> or <b>bgcolor</b> attribute set for the cluster.
+
+</p></dd><dt><a name="d:fixedsize" href="#a:fixedsize"><strong>fixedsize</strong></a>
+</dt><dd>  If <tt>false</tt>, the size of a node is determined by smallest width and height
+  needed to contain its label and image, if any, with a margin specified by
+  the <a href="#d:margin"><tt>margin</tt></a> attribute. The width
+  and height must also be at least as large as the sizes specified by the
+  <a href="#d:width"><tt>width</tt></a> and
+  <a href="#d:height"><tt>height</tt></a> attributes, which specify
+  the minimum values for these parameters. 
+  <p>
+  If <tt>true</tt>, the node size is specified by the values of the
+  <a href="#d:width"><tt>width</tt></a>
+  and <a href="#d:height"><tt>height</tt></a> attributes only
+  and is not expanded to contain the text label.
+  There will be a warning if the label (with margin)
+  cannot fit within these limits.
+  </p><p>
+  If the <a href="https://graphviz.gitlab.io/_pages/doc/info/attrs.html#d:fixedsize"><tt>fixedsize</tt></a> attribute is set 
+  to <tt>shape</tt>, the <a href="#d:width"><tt>width</tt></a> and
+  <a href="#d:height"><tt>height</tt></a> attributes also determine the size
+  of the node shape, but the label can be much larger. Both the label and
+  shape sizes are used when avoiding node overlap, but all edges to the
+  node ignore the label and only contact the node shape. No warning is given
+  if the label is too large.
+
+</p></dd><dt><a name="d:fontcolor" href="#a:fontcolor"><strong>fontcolor</strong></a>
+</dt><dd>  Color used for text.
+
+</dd><dt><a name="d:fontname" href="#a:fontname"><strong>fontname</strong></a>
+</dt><dd>  Font used for text. This very much depends on the output format and, for
+  non-bitmap output such as PostScript or SVG, the availability of the font
+  when the graph is displayed or printed. As such, it is best to rely on
+  font faces that are generally available, such as Times-Roman, Helvetica or
+  Courier.
+  <p>
+  How font names are resolved also depends on the underlying library that handles
+  font name resolution.
+  If Graphviz was built using the
+  <a href="http://pdx.freedesktop.org/~fontconfig/fontconfig-user.html">fontconfig library</a>, 
+  the latter library will be used to search for the font. 
+  See the commands <b>fc-list</b>, <b>fc-match</b> and the other fontconfig commands for how
+  names are resolved and which fonts are available.
+  Other systems may provide their own font package, such as Quartz for OS X.
+  </p><p>
+  Note that various font attributes, such as weight and slant, can be built into the
+  font name. Unfortunately, the syntax varies depending on which font system is dominant. 
+  Thus, using <tt>fontname="times bold italic"</tt> will produce a bold, slanted Times font 
+  using Pango, the usual main font library. Alternatively,  
+  <tt>fontname="times:italic"</tt> will produce a slanted
+  Times font from fontconfig, while <tt>fontname="times-bold"</tt> will resolve to a bold
+  Times using Quartz. You will need
+  to ascertain which package is used by your Graphviz system and refer to the relevant
+  documentation.
+  </p><p>
+  If Graphviz is not built with a high-level font library, <tt>fontname</tt> will be
+  considered the name of a Type 1 or True Type font file.
+  If you specify <tt>fontname=schlbk</tt>, the tool will look for a
+  file named  <tt>schlbk.ttf</tt> or <tt>schlbk.pfa</tt> or <tt>schlbk.pfb</tt>
+  in one of the directories specified by
+  the <a href="#d:fontpath">fontpath</a> attribute.
+  The lookup does support various aliases for the common fonts.
+
+</p></dd><dt><a name="d:fontnames" href="#a:fontnames"><strong>fontnames</strong></a>
+</dt><dd>  Allows user control of how basic fontnames are represented in SVG output.
+  If <tt>fontnames</tt> is undefined or <tt>"svg"</tt>,
+  the output will try to use known SVG fontnames. For example, the
+  default font  <tt>"Times-Roman"</tt> will be mapped to the
+  basic SVG font <tt>"serif"</tt>. This can be overridden by setting
+  <tt>fontnames</tt> to  <tt>"ps"</tt> or  <tt>"gd"</tt>.
+  In the former case, known PostScript font names such as
+  <tt>"Times-Roman"</tt> will be used in the output.
+  In the latter case, the fontconfig font conventions
+  are used. Thus, <tt>"Times-Roman"</tt> would be treated as
+  <tt>"Nimbus Roman No9 L"</tt>. These last two options are useful
+  with SVG viewers that support these richer fontname spaces.
+
+</dd><dt><a name="d:fontpath" href="#a:fontpath"><strong>fontpath</strong></a>
+</dt><dd>  Directory list used by libgd to search for bitmap fonts if Graphviz
+  was not built with the fontconfig library.
+  If <b>fontpath</b> is not set, the environment
+  variable <tt>DOTFONTPATH</tt> is checked.
+  If that is not set, <tt>GDFONTPATH</tt> is checked.
+  If not set, libgd uses its compiled-in font path.
+  Note that fontpath is an attribute of the root graph.
+
+</dd><dt><a name="d:fontsize" href="#a:fontsize"><strong>fontsize</strong></a>
+</dt><dd>  Font size, <a href="#points">in points</a>, used for text.
+
+</dd><dt><a name="d:forcelabels" href="#a:forcelabels"><strong>forcelabels</strong></a>
+</dt><dd>  If true, all  <a href="#d:xlabel"><b>xlabel</b></a> attributes are placed, even if there is some overlap with nodes
+  or other labels.
+
+</dd><dt><a name="d:gradientangle" href="#a:gradientangle"><strong>gradientangle</strong></a>
+</dt><dd>  If a gradient fill is being used, this determines the angle of the fill. For linear fills, the colors transform
+  along a line specified by the angle and the center of the object. For radial fills, a value of zero causes the
+  colors to transform radially from the center; for non-zero values, the colors transform from a point near the
+  object's periphery as specified by the value.
+  <p>
+  If unset, the default angle is 0.
+
+</p></dd><dt><a name="d:group" href="#a:group"><strong>group</strong></a>
+</dt><dd>  If the end points of an edge belong to the same group, i.e., have the
+  same group attribute, parameters are set to avoid crossings and keep
+  the edges straight.
+
+</dd><dt><a name="d:headURL" href="#a:headURL"><strong>headURL</strong></a>
+</dt><dd>  If <b>headURL</b> is defined, it is
+  output as part of the head label of the edge.
+  Also, this value is used near the head node, overriding any
+  <a href="#d:URL">URL</a> value.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:head_lp" href="#a:head_lp"><strong>head_lp</strong></a>
+</dt><dd>  Position of an edge's head label, <a href="#points">in points</a>.
+  The position indicates the center of the label.
+
+</dd><dt><a name="d:headclip" href="#a:headclip"><strong>headclip</strong></a>
+</dt><dd>  If true, the head of an edge is clipped to the boundary of the head node;
+  otherwise, the end of the edge goes to the center of the node, or the
+  center of a port, if applicable.
+
+</dd><dt><a name="d:headhref" href="#a:headhref"><strong>headhref</strong></a>
+</dt><dd>  Synonym for <a href="#d:headURL">headURL</a>.
+
+</dd><dt><a name="d:headlabel" href="#a:headlabel"><strong>headlabel</strong></a>
+</dt><dd>  Text label to be placed near head of edge.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:headport" href="#a:headport"><strong>headport</strong></a>
+</dt><dd>  Indicates where on the head node to attach the head of the edge.
+  In the default case, the edge is aimed towards the center of the node,
+  and then clipped at the node boundary.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:headtarget" href="#a:headtarget"><strong>headtarget</strong></a>
+</dt><dd>  If the edge has a <a href="#d:headURL">headURL</a>,
+  this attribute determines which window of the
+  browser is used
+  for the URL. Setting it to "_graphviz" will open a new window if it
+  doesn't already exist, or reuse it if it does.
+  If undefined, the value of the <a href="#d:target">target</a> is used.
+
+</dd><dt><a name="d:headtooltip" href="#a:headtooltip"><strong>headtooltip</strong></a>
+</dt><dd>  Tooltip annotation attached to the head of an edge. This is used only
+  if the edge has a <a href="#d:headURL">headURL</a> attribute.
+
+</dd><dt><a name="d:height" href="#a:height"><strong>height</strong></a>
+</dt><dd>  Height of node, in inches. This is taken as the initial, minimum height
+  of the node. If <a href="#d:fixedsize"><b>fixedsize</b></a> is true, this
+  will be the final height of the node. Otherwise, if the node label
+  requires more height to fit, the node's height will be increased to
+  contain the label. Note also that, if the output format is dot, the
+  value given to <b>height</b> will be the final value.
+  <p>
+  If the node shape is regular, the width and height are made identical.
+  In this case, if either the width or the height is set explicitly,
+  that value is used.
+  In this case, if both the width or the height are set explicitly,
+  the maximum of the two values is used.
+  If neither is set explicitly, the minimum of the two default values
+  is used.
+
+</p></dd><dt><a name="d:href" href="#a:href"><strong>href</strong></a>
+</dt><dd>  Synonym for <a href="#d:URL">URL</a>.
+
+</dd><dt><a name="d:id" href="#a:id"><strong>id</strong></a>
+</dt><dd>  Allows the graph author to provide an id for graph objects which is to be included in the output.
+  Normal "\N", "\E", "\G" substitutions are applied.
+  If provided, it is the responsibility of the provider to keep
+  its values sufficiently unique for its intended downstream use.
+  Note, in particular, that "\E" does not provide a unique id for multi-edges.
+  If no id attribute is provided, then a unique internal id is used. However, 
+  this value is unpredictable by the graph writer.
+  An externally provided id is not used internally.
+  <p>
+  If the graph provides an id attribute, this will be used as a prefix for
+  internally generated attributes. By making these distinct, the user
+  can include multiple image maps in the same document.
+
+</p></dd><dt><a name="d:image" href="#a:image"><strong>image</strong></a>
+</dt><dd>  Gives the name of a file containing an image to be displayed inside
+  a node. The image file must be in one of the recognized 
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/output.html#d:image_fmts">formats</a>,
+  typically JPEG, PNG, GIF, BMP, SVG or Postscript, and be able to be converted
+  into the desired output format.
+  <p>
+  The file must contain the image size information. This is usually trivially
+  true for the bitmap formats. For PostScript, the file must contain a
+  line starting with <tt>%%BoundingBox: </tt> followed by four integers
+  specifying the lower left x and y coordinates and the upper right x and y
+  coordinates of the bounding box for the image, the coordinates being in
+  points. An SVG image file must contain <tt>width</tt> and <tt>height</tt>
+  attributes, typically as part of the <tt>svg</tt> element.
+  The values for these should have the form of a floating point number,
+  followed by optional units, e.g., <tt>width="76pt"</tt>. 
+  Recognized units are <tt>in</tt>, <tt>px</tt>,
+  <tt>pc</tt>, <tt>pt</tt>, <tt>cm</tt> and <tt>mm</tt> for inches, pixels,
+  picas, points, centimeters and millimeters, respectively.
+  The default unit is points.
+  </p><p>
+  Unlike with the <a href="#d:shapefile">shapefile</a> attribute,
+  the image is treated as node
+  content rather than the entire node. In particular, an image can
+  be contained in a node of any shape, not just a rectangle.
+
+</p></dd><dt><a name="d:imagepath" href="#a:imagepath"><strong>imagepath</strong></a>
+</dt><dd>  Specifies a list of directories in which to look for image files as specified by the
+  <a href="#d:image">image</a> attribute or using the <tt>IMG</tt> element in
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like labels</a>.
+  The string should be a list of (absolute or relative) pathnames, each separated by
+  a semicolon (for Windows) or a colon (all other OS). 
+  The first directory in which a file of the given name is found will be used to
+  load the image. If <tt>imagepath</tt> is not set, relative pathnames for the image
+  file will be interpreted with respect to the current working directory.
+
+</dd><dt><a name="d:imagepos" href="#a:imagepos"><strong>imagepos</strong></a>
+</dt><dd>  Attribute controlling how an image is positioned within its containing node.  This
+  only has an effect when the image is smaller than the containing node.  The
+  default is to be centered both horizontally and vertically.  Valid values:
+  <table>
+  <tbody><tr><td>tl</td><td>Top Left</td></tr>
+  <tr><td>tc</td><td>Top Centered</td></tr>
+  <tr><td>tr</td><td>Top Right</td></tr>
+  <tr><td>ml</td><td>Middle Left</td></tr>
+  <tr><td>mc</td><td>Middle Centered <i>(the default)</i></td></tr>
+  <tr><td>mr</td><td>Middle Right</td></tr>
+  <tr><td>bl</td><td>Bottom Left</td></tr>
+  <tr><td>bc</td><td>Bottom Centered</td></tr>
+  <tr><td>br</td><td>Bottom Right</td></tr>
+  </tbody></table>
+
+</dd><dt><a name="d:imagescale" href="#a:imagescale"><strong>imagescale</strong></a>
+</dt><dd>  Attribute controlling how an image fills its
+  containing node. In general, the image is given its natural size,
+  (cf. <a href="#d:dpi">dpi</a>),
+  and the node size is made large enough to contain its image, its
+  label, its margin, and its peripheries.
+  Its width and height will also be at least as large as its
+  minimum <a href="#d:width">width</a> and <a href="#d:height">height</a>.
+  If, however, <tt>fixedsize=true</tt>,
+  the width and height attributes specify the exact size of the node.
+  <p>
+  During rendering, in the default case (<tt>imagescale=false</tt>),
+  the image retains its natural size.
+  If <tt>imagescale=true</tt>,
+  the image is uniformly scaled (i.e., its aspect ratio is
+  preserved) to fit inside the node.
+  At least one dimension of the image will be as large as possible
+  given the size of the node.
+  When <tt>imagescale=width</tt>,
+  the width of the image is scaled to fill the node width.
+  The corresponding property holds when <tt>imagescale=height</tt>.
+  When <tt>imagescale=both</tt>,
+  both the height and the width are scaled separately to fill the node.
+  </p><p>
+  In all cases, if a dimension of the image is larger than the
+  corresponding dimension of the node, that dimension of the
+  image is scaled down to fit the node. As with the case of
+  expansion, if  <tt>imagescale=true</tt>, width and height are
+  scaled uniformly.
+
+</p></dd><dt><a name="d:inputscale" href="#a:inputscale"><strong>inputscale</strong></a>
+</dt><dd>  For layout algorithms that support initial input positions (specified by the <a href="#d:pos"><b>pos</b></a> attribute),
+  this attribute can be used to appropriately scale the values. By default, fdp and neato interpret
+  the x and y values of pos as being in inches. (<b>NOTE</b>: neato -n(2) treats the coordinates as
+  being in points, being the unit used by the layout algorithms for the pos attribute.) Thus, if
+  the graph has pos attributes in points, one should set <tt>inputscale=72</tt>.
+  This can also be set on the command line using the <a href="https://graphviz.gitlab.io/_pages/doc/info/command.html#minusK"><tt>-s</tt> flag</a> flag.
+  <p>
+  If not set, no scaling is done and the units on input are treated as inches.
+  A value of 0 is equivalent to <tt>inputscale=72</tt>.
+
+</p></dd><dt><a name="d:label" href="#a:label"><strong>label</strong></a>
+</dt><dd>  Text label attached to objects.
+  If a node's <a href="#d:shape">shape</a> is record, then the label can
+  have a <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#record">special format</a>
+  which describes the record layout.
+  <p>
+  Note that a node's default label is "\N", so the node's name or ID becomes
+  its label. Technically, a node's name can be an HTML string but this will not
+  mean that the node's label will be interpreted as an <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like label</a>. This is
+  because the node's actual label is an ordinary string, which will be replaced 
+  by the raw bytes stored in the node's name.
+  To get an HTML-like label, the label attribute value itself must be an HTML string.
+
+</p></dd><dt><a name="d:labelURL" href="#a:labelURL"><strong>labelURL</strong></a>
+</dt><dd>  If <b>labelURL</b> is defined, this is the link used for the label
+  of an edge. This value overrides any <a href="#d:URL">URL</a>
+  defined for the edge.
+
+</dd><dt><a name="d:label_scheme" href="#a:label_scheme"><strong>label_scheme</strong></a>
+</dt><dd>  The value indicates
+  whether to treat a node whose name has the form |edgelabel|* as a special node representing an edge label. 
+  The default (0) produces no effect.
+  If the attribute is set to 1, sfdp uses a penalty-based method to make that kind of node close to the 
+  center of its neighbor. With a value of 2, sfdp uses a penalty-based method to make that kind of node 
+  close to the old center of its neighbor. Finally, a value of 3 invokes a two-step process of overlap 
+  removal and straightening.
+
+</dd><dt><a name="d:labelangle" href="#a:labelangle"><strong>labelangle</strong></a>
+</dt><dd>  This, along with <a href="#d:labeldistance">labeldistance</a>, determine
+  where the
+  headlabel (taillabel) are placed with respect to the head (tail)
+  in polar coordinates. The origin in the coordinate system is
+  the point where the edge touches the node. The ray of 0 degrees
+  goes from the origin back along the edge, parallel to the edge
+  at the origin.
+  <p>
+  The angle, in degrees, specifies the rotation from the 0 degree ray,
+  with positive angles moving counterclockwise and negative angles
+  moving clockwise.
+
+</p></dd><dt><a name="d:labeldistance" href="#a:labeldistance"><strong>labeldistance</strong></a>
+</dt><dd>  Multiplicative scaling factor adjusting the distance that
+  the headlabel(taillabel) is from the head(tail) node.
+  The default distance is 10 points. See <a href="#d:labelangle">labelangle</a>
+  for more details.
+
+</dd><dt><a name="d:labelfloat" href="#a:labelfloat"><strong>labelfloat</strong></a>
+</dt><dd>  If true, allows edge labels to be less constrained in position.
+  In particular, it may appear on top of other edges.
+
+</dd><dt><a name="d:labelfontcolor" href="#a:labelfontcolor"><strong>labelfontcolor</strong></a>
+</dt><dd>  Color used for headlabel and taillabel.
+  If not set, defaults to edge's fontcolor.
+
+</dd><dt><a name="d:labelfontname" href="#a:labelfontname"><strong>labelfontname</strong></a>
+</dt><dd>  Font used for headlabel and taillabel.
+  If not set, defaults to edge's fontname.
+
+</dd><dt><a name="d:labelfontsize" href="#a:labelfontsize"><strong>labelfontsize</strong></a>
+</dt><dd>  Font size, <a href="#points">in points</a>, used for headlabel and taillabel.
+  If not set, defaults to edge's fontsize.
+
+</dd><dt><a name="d:labelhref" href="#a:labelhref"><strong>labelhref</strong></a>
+</dt><dd>  Synonym for <a href="#d:labelURL">labelURL</a>.
+
+</dd><dt><a name="d:labeljust" href="#a:labeljust"><strong>labeljust</strong></a>
+</dt><dd>  Justification for cluster labels. If "r", the label
+  is right-justified within bounding rectangle; if "l", left-justified;
+  else the label is centered.
+  Note that a subgraph inherits attributes from its parent. Thus, if
+  the root graph sets <b>labeljust</b> to "l", the subgraph inherits
+  this value.
+
+</dd><dt><a name="d:labelloc" href="#a:labelloc"><strong>labelloc</strong></a>
+</dt><dd>  Vertical placement of labels for nodes, root graphs and clusters.
+  <p>
+  For graphs and clusters, only "t" and "b" are allowed, corresponding
+  to placement at the top and bottom, respectively.
+  By default, root
+  graph labels go on the bottom and cluster labels go on the top.
+  Note that a subgraph inherits attributes from its parent. Thus, if
+  the root graph sets <b>labelloc</b> to "b", the subgraph inherits
+  this value.
+  </p><p>
+  For nodes, this attribute is used only when the height of the node
+  is larger than the height of its label. 
+  If <tt>labelloc</tt> is set to "t", "c", or "b", the label is aligned
+  with the top, centered, or aligned with the bottom of the node, respectively.
+  In the default case, the label is vertically centered.
+
+</p></dd><dt><a name="d:labeltarget" href="#a:labeltarget"><strong>labeltarget</strong></a>
+</dt><dd>  If the edge has a <a href="#d:URL">URL</a> or <a href="#d:labelURL">labelURL</a>
+  attribute, this attribute determines which window of the
+  browser is used
+  for the URL attached to the label.
+  Setting it to "_graphviz" will open a new window if it
+  doesn't already exist, or reuse it if it does.
+  If undefined, the value of the <a href="#d:target">target</a> is used.
+
+</dd><dt><a name="d:labeltooltip" href="#a:labeltooltip"><strong>labeltooltip</strong></a>
+</dt><dd>  Tooltip annotation attached to label of an edge.
+  This is used only if the edge has a <a href="#d:URL">URL</a>
+  or <a href="#d:labelURL">labelURL</a> attribute.
+
+</dd><dt><a name="d:landscape" href="#a:landscape"><strong>landscape</strong></a>
+</dt><dd>  If true, the graph is rendered in landscape mode. Synonymous with
+  <a href="#d:rotate"><tt>rotate=90</tt></a> or
+  <a href="#d:orientation"><tt>orientation=landscape</tt></a>.
+
+</dd><dt><a name="d:layer" href="#a:layer"><strong>layer</strong></a>
+</dt><dd>  Specifies layers in which the node, edge or cluster is present.
+
+</dd><dt><a name="d:layerlistsep" href="#a:layerlistsep"><strong>layerlistsep</strong></a>
+</dt><dd>  Specifies the separator characters used to split
+  an attribute of type <a href="#k:layerRange">layerRange</a> into a list of ranges.
+
+</dd><dt><a name="d:layers" href="#a:layers"><strong>layers</strong></a>
+</dt><dd>  Specifies a linearly ordered list of layer names attached to the graph
+  The graph is then output in separate layers. Only those components
+  belonging to the current output layer appear. For more information,
+  see the page <a href="https://graphviz.gitlab.io/faq/#FaqOverlays">How to use drawing layers (overlays)</a>.
+
+</dd><dt><a name="d:layerselect" href="#a:layerselect"><strong>layerselect</strong></a>
+</dt><dd>  Selects a list of layers to be emitted.
+
+</dd><dt><a name="d:layersep" href="#a:layersep"><strong>layersep</strong></a>
+</dt><dd>  Specifies the separator characters used to split the
+  <a href="#d:layers">layers</a> attribute into a list of layer names.
+
+</dd><dt><a name="d:layout" href="#a:layout"><strong>layout</strong></a>
+</dt><dd>  Specifies the name of the layout algorithm to use, such as "dot"
+  or "neato". Normally, graphs should be kept independent of a type of
+  layout. In some cases, however, it can be convenient to embed the type
+  of layout desired within the graph. For example, a graph containing
+  position information from a layout might want to record what the
+  associated layout algorithm was.
+  <p>
+  This attribute takes precedence over 
+  the <a href="https://graphviz.gitlab.io/_pages/doc/info/command.html#minusK">-K flag</a> 
+  or the actual command name used.
+
+</p></dd><dt><a name="d:len" href="#a:len"><strong>len</strong></a>
+</dt><dd>  Preferred edge length, in inches.
+
+</dd><dt><a name="d:levels" href="#a:levels"><strong>levels</strong></a>
+</dt><dd>  Number of levels allowed in the multilevel scheme.
+
+</dd><dt><a name="d:levelsgap" href="#a:levelsgap"><strong>levelsgap</strong></a>
+</dt><dd>  Specifies strictness of level constraints in neato
+  when <tt><a href="#d:mode">mode</a>="ipsep" or "hier"</tt>.
+  Larger positive values mean stricter constraints, which demand more
+  separation between levels. On the other hand, negative values will relax
+  the constraints by allowing some overlap between the levels.
+
+</dd><dt><a name="d:lhead" href="#a:lhead"><strong>lhead</strong></a>
+</dt><dd>  Logical head of an edge. When <a href="#d:compound"><b>compound</b></a> is true,
+  if <b>lhead</b> is defined and is the name of a cluster containing
+  the real head,
+  the edge is clipped to the boundary of the cluster.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:lheight" href="#a:lheight"><strong>lheight</strong></a>
+</dt><dd>  Height of graph or cluster label, in inches.
+
+</dd><dt><a name="d:lp" href="#a:lp"><strong>lp</strong></a>
+</dt><dd>  Label position, <a href="#points">in points</a>.
+  The position indicates the center of the label.
+
+</dd><dt><a name="d:ltail" href="#a:ltail"><strong>ltail</strong></a>
+</dt><dd>  Logical tail of an edge. When <a href="#d:compound"><b>compound</b></a> is true,
+  if <b>ltail</b> is defined and is the name of a cluster
+  containing the real tail,
+  the edge is clipped to the boundary of the cluster.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:lwidth" href="#a:lwidth"><strong>lwidth</strong></a>
+</dt><dd>  Width of graph or cluster label, in inches.
+
+</dd><dt><a name="d:margin" href="#a:margin"><strong>margin</strong></a>
+</dt><dd>  For graphs, this sets x and y margins of canvas, in inches. If the margin
+  is a single double, both margins are set equal to the given value.
+  <p>
+  Note that the margin is not part of the drawing but just empty space
+  left around the drawing. It basically corresponds to a translation of
+  drawing, as would be necessary to center a drawing on a page. Nothing
+  is actually drawn in the margin. To actually extend the background of
+  a drawing, see the <a href="#d:pad">pad</a> attribute.
+  </p><p>
+  For clusters, this specifies the space between the nodes in the cluster and
+  the cluster bounding box. By default, this is 8 points.
+  </p><p>
+  For nodes, this attribute specifies space left around the node's label.
+  By default, the value is <tt>0.11,0.055</tt>.
+
+</p></dd><dt><a name="d:maxiter" href="#a:maxiter"><strong>maxiter</strong></a>
+</dt><dd>  Sets the number of iterations used.
+
+</dd><dt><a name="d:mclimit" href="#a:mclimit"><strong>mclimit</strong></a>
+</dt><dd>  Multiplicative scale factor used to alter the MinQuit (default = 8)
+  and MaxIter (default = 24) parameters used during crossing
+  minimization. These correspond to the
+  number of tries without improvement before quitting and the
+  maximum number of iterations in each pass.
+
+</dd><dt><a name="d:mindist" href="#a:mindist"><strong>mindist</strong></a>
+</dt><dd>  Specifies the minimum separation between all nodes.
+
+</dd><dt><a name="d:minlen" href="#a:minlen"><strong>minlen</strong></a>
+</dt><dd>  Minimum edge length (rank difference between head and tail).
+
+</dd><dt><a name="d:mode" href="#a:mode"><strong>mode</strong></a>
+</dt><dd>  Technique for optimizing the layout. For neato, if <b>mode</b> is <tt>"major"</tt>,
+  neato uses stress majorization. If <b>mode</b> is <tt>"KK"</tt>,
+  neato uses a version of the gradient descent method. The only advantage
+  to the latter technique is that it is sometimes appreciably faster for
+  small (number of nodes &lt; 100) graphs. A significant disadvantage is that
+  it may cycle.
+  <p>
+  There are two experimental modes in neato, "hier", which adds a top-down
+  directionality similar to the layout used in dot, and "ipsep", which
+  allows the graph to specify minimum vertical and horizontal distances
+  between nodes. (See the <a href="#d:sep">sep</a> attribute.)
+  </p><p>
+  For sfdp, the default <b>mode</b> is <tt>"spring"</tt>, which corresponds to using
+  a spring-electrical model. Setting <b>mode</b> to <tt>"maxent"</tt> causes a similar
+  model to be run but one that also takes into account edge lengths specified by the
+  <tt>"len"</tt> attribute.
+
+</p></dd><dt><a name="d:model" href="#a:model"><strong>model</strong></a>
+</dt><dd>  This value specifies how the distance matrix is computed for the input
+  graph. The distance matrix specifies the ideal distance between every
+  pair of nodes. neato attemps to find a layout which best achieves
+  these distances. By default, it uses the length of the shortest path,
+  where the length of each edge is given by its <a href="#d:len">len</a>
+  attribute. If <b>model</b> is <tt>"circuit"</tt>, neato uses the
+  circuit resistance
+  model to compute the distances. This tends to emphasize clusters. If
+  <b>model</b> is <tt>"subset"</tt>, neato uses the subset model. This sets the
+  edge length to be the number of nodes that are neighbors of exactly one
+  of the end points, and then calculates the shortest paths. This helps
+  to separate nodes with high degree.
+  <p>
+  For more control of distances, one can use <tt>model=mds</tt>. In this
+  case, the <a href="#d:len">len</a> of an edge is used as the ideal distance
+  between its vertices. A shortest path calculation is only used for
+  pairs of nodes not connected by an edge. Thus, by supplying a complete
+  graph, the input can specify all of the relevant distances.
+
+</p></dd><dt><a name="d:mosek" href="#a:mosek"><strong>mosek</strong></a>
+</dt><dd>  If Graphviz is built with MOSEK defined, mode=ipsep and mosek=true,
+  the Mosek software (www.mosek.com) is use to solve the ipsep constraints.
+
+</dd><dt><a name="d:newrank" href="#a:newrank"><strong>newrank</strong></a>
+</dt><dd>  The original ranking algorithm in dot is recursive on clusters. This can produce fewer ranks
+  and a more compact layout, but sometimes at the cost of a head node being place on a higher
+  rank than the tail node. It also assumes that a node is not constrained in separate, 
+  incompatible subgraphs. For example, a node cannot be in a cluster and also be constrained by
+  <tt>rank=same</tt> with a node not in the cluster.
+  <p>
+  If <tt>newrank=true</tt>, the ranking algorithm does a single global ranking, ignoring clusters.
+  This allows nodes to be subject to multiple constraints. Rank constraints will usually take
+  precedence over edge constraints.
+
+</p></dd><dt><a name="d:nodesep" href="#a:nodesep"><strong>nodesep</strong></a>
+</dt><dd>  In dot, this specifies the minimum space between two adjacent nodes in the same rank, in inches.
+  <p>
+  For other layouts, this affects the spacing between loops on a single node, or multiedges between
+  a pair of nodes.
+
+</p></dd><dt><a name="d:nojustify" href="#a:nojustify"><strong>nojustify</strong></a>
+</dt><dd>  By default, the justification of multi-line labels is done within the
+  largest context that makes sense. Thus, in the label of a polygonal
+  node, a left-justified line will align with the left side of the node
+  (shifted by the prescribed <a href="#d:margin">margin</a>).
+  In record nodes, left-justified
+  line will line up with the left side of the enclosing column of fields.
+  If <b>nojustify</b> is <tt>"true"</tt>, multi-line labels will be justified
+  in the context of itself. For example, if the attribute is set,
+  the first label line is long, and the second is shorter and left-justified,
+  the second will align with the left-most character in the first line,
+  regardless of  how large the node might be.
+
+</dd><dt><a name="d:normalize" href="#a:normalize"><strong>normalize</strong></a>
+</dt><dd>  If set, normalize coordinates of final
+  layout so that the first point is at the origin, and then rotate the
+  layout so that the angle of the first edge is specified by the value of <tt>normalize</tt> in degrees.
+  If  <tt>normalize</tt> is not a number, it is evaluated as a  <tt>bool</tt>, with true
+  corresponding to 0 degrees. <b>NOTE:</b> Since the attribute is evaluated first as a number,
+  0 and 1 cannot be used for false and true.
+
+</dd><dt><a name="d:notranslate" href="#a:notranslate"><strong>notranslate</strong></a>
+</dt><dd>  By default, the final layout is translated so that the lower-left corner of the bounding box is
+  at the origin. This can be annoying if some nodes are pinned or if the user runs <tt>neato -n</tt>. 
+  To avoid this translation, set <tt>notranslate</tt> to true.
+
+</dd><dt><a name="d:nslimit" href="#a:nslimit"><strong>nslimit</strong></a>
+,</dt><dt><a name="d:nslimit1" href="#a:nslimit1"><strong>nslimit1</strong></a>
+</dt><dd>  Used to set number of iterations in
+  network simplex applications. <b>nslimit</b> is used in
+  computing node x coordinates, <b>nslimit1</b> for ranking nodes.
+  If defined, # iterations =  <b>nslimit(1)</b> * # nodes;
+  otherwise,  # iterations = MAXINT.
+
+</dd><dt><a name="d:ordering" href="#a:ordering"><strong>ordering</strong></a>
+</dt><dd>  If the value of the attribute is "out", then
+  the outedges of a node, that is, edges with the node as its tail node,
+  must appear
+  left-to-right in the same order in which they are defined in
+  the input.
+  If the value of the attribute is "in", then
+  the inedges of a node must appear
+  left-to-right in the same order in which they are defined in
+  the input.
+  If defined as a graph or subgraph attribute, the value is applied to all nodes
+  in the graph or subgraph. Note that the graph attribute takes
+  precedence over the node attribute.
+
+</dd><dt><a name="d:orientation" href="#a:orientation"><strong>orientation</strong></a>
+</dt><dd>  Angle, in degrees, used to rotate polygon node shapes. For 
+any number of polygon sides, 0 degrees rotation results in a flat base.
+
+</dd><dt><a name="dd:orientation" href="#aa:orientation"><strong>orientation</strong></a>
+</dt><dd>  If "[lL]*", set graph orientation to landscape
+  Used only if <a href="#d:rotate"><b>rotate</b></a> is not defined.
+
+</dd><dt><a name="d:outputorder" href="#a:outputorder"><strong>outputorder</strong></a>
+</dt><dd>  Specify order in which nodes and edges are drawn.
+
+</dd><dt><a name="d:overlap" href="#a:overlap"><strong>overlap</strong></a>
+</dt><dd>  Determines if and how node overlaps should be removed. Nodes are first
+  enlarged using the <a href="#d:sep"><b>sep</b></a> attribute.
+  If "true" , overlaps are retained.
+  If the value is "scale", overlaps are removed by uniformly scaling in x and y.
+  If the value converts to "false", and it is available, Prism, a proximity graph-based algorithm, is
+  used to remove node overlaps.
+  This can also be invoked explicitly with "overlap=prism".
+  This technique starts with a
+  small scaling up, controlled by the 
+  <a href="#d:overlap_scaling"><tt>overlap_scaling</tt></a> attribute,
+  which can remove a significant portion of the overlap.
+  The prism option also accepts an optional non-negative integer suffix.
+  This can be used to control the number of attempts made at overlap
+  removal. By default, <tt>overlap="prism"</tt> is equivalent to
+  <tt>overlap="prism1000"</tt>. Setting <tt>overlap="prism0"</tt>
+  causes only the scaling phase to be run.
+  <p>
+  If Prism is not available, or the version of Graphviz is earlier than 2.28, "overlap=false"
+  uses a Voronoi-based technique.
+  This can always be invoked explicitly with "overlap=voronoi".
+  </p><p>
+  If the value is "scalexy", x and y are separately
+  scaled to remove overlaps.
+  </p><p>
+  If the value is "compress", the layout will be scaled down as much as
+  possible without introducing any overlaps, obviously assuming there are
+  none to begin with.
+  </p><p>
+  <b>N.B.</b>The remaining allowed values of <tt>overlap</tt>
+  correspond to algorithms which, at present, can produce bad aspect ratios.
+  In addition, we deprecate the use of the "ortho*" and "portho*".
+  </p><p>
+  If the value is "vpsc", overlap removal is done as a
+  quadratic optimization to minimize node displacement while removing
+  node overlaps.
+  </p><p>
+  If the value is "orthoxy" or "orthoyx", overlaps
+  are moved by optimizing two constraint problems, one for the x axis and
+  one for the y. The suffix indicates which axis is processed first.
+  If the value is "ortho", the technique is similar to "orthoxy" except a
+  heuristic is used to reduce the bias between the two passes.
+  If the value is "ortho_yx", the technique is the same as "ortho", except
+  the roles of x and y are reversed.
+  The values "portho", "porthoxy", "porthoxy", and "portho_yx" are similar
+  to the previous four, except only pseudo-orthogonal ordering is
+  enforced.
+  </p><p>
+  If the layout is done by neato with <a href="#d:mode">mode</a>="ipsep",
+  then one can use <tt>overlap=ipsep</tt>.
+  In this case, the overlap removal constraints are
+  incorporated into the layout algorithm itself.
+  N.B. At present, this only supports one level of clustering.
+  </p><p>
+  Except for fdp and sfdp, the layouts assume <tt>overlap="true"</tt> as the default.
+  Fdp first uses a number of passes using a built-in, force-directed technique
+  to try to remove overlaps. Thus, fdp accepts <b>overlap</b> with an integer
+  prefix followed by a colon, specifying the number of tries. If there is
+  no prefix, no initial tries will be performed. If there is nothing following
+  a colon, none of the above methods will be attempted. By default, fdp
+  uses <tt>overlap="9:prism"</tt>. Note that <tt>overlap="true"</tt>,
+  <tt>overlap="0:true"</tt> and <tt>overlap="0:"</tt> all turn off all overlap
+  removal.
+  </p><p>
+  By default, sfdp uses <tt>overlap="prism0"</tt>.
+  </p><p>
+  Except for the Voronoi and prism methods, all of these transforms preserve the
+  orthogonal ordering of the original layout. That is, if the x coordinates
+  of two nodes are originally the same, they will remain the same, and if
+  the x coordinate of one node is originally less than the x coordinate of
+  another, this relation will still hold in the transformed layout. The
+  similar properties hold for the y coordinates.
+  This is not quite true for the "porth*" cases. For these, orthogonal
+  ordering is only preserved among nodes related by an edge.
+
+</p></dd><dt><a name="d:overlap_scaling" href="#a:overlap_scaling"><strong>overlap_scaling</strong></a>
+</dt><dd>  When <tt>overlap=prism</tt>, the layout is scaled by this factor, thereby
+  removing a fair amount of node overlap, and making node overlap removal
+  faster and better able to retain the graph's shape.
+  <p>
+  If <tt>overlap_scaling</tt> is negative, the layout is scaled by
+  <tt>-1*overlap_scaling</tt> times the average label size.
+  If <tt>overlap_scaling</tt> is positive, the layout is scaled by
+  <tt>overlap_scaling</tt>.
+  If <tt>overlap_scaling</tt> is zero, no scaling is done.
+
+</p></dd><dt><a name="d:overlap_shrink" href="#a:overlap_shrink"><strong>overlap_shrink</strong></a>
+</dt><dd>  If true, the overlap removal algorithm will perform a compression pass to reduce the
+  size of the layout.
+
+</dd><dt><a name="d:pack" href="#a:pack"><strong>pack</strong></a>
+</dt><dd>  This is true if the value of pack is "true" (case-insensitive) or a
+  non-negative integer. If true, each connected component of the graph is
+  laid out separately, and then the graphs are packed together.
+  If pack has an integral value, this is used as the size,
+  in <a href="#points">points</a>, of
+  a margin around each part; otherwise, a default margin of 8 is used.
+  If pack is interpreted as false, the entire graph is laid out together.
+  The granularity and method of packing is influenced by the
+  <a href="#d:packmode">packmode</a> attribute.
+  <p>
+  For layouts which always do packing, such a twopi, the <b>pack</b>
+  attribute is just used to set the margin.
+
+</p></dd><dt><a name="d:packmode" href="#a:packmode"><strong>packmode</strong></a>
+</dt><dd>  This indicates how connected components should be packed
+  (cf. <a href="#k:packMode">packMode</a>). Note that defining
+  <b>packmode</b> will automatically turn on packing as though one had
+  set <b>pack=true</b>.
+
+</dd><dt><a name="d:pad" href="#a:pad"><strong>pad</strong></a>
+</dt><dd>  The pad attribute specifies how much, in inches, to extend the
+  drawing area around the minimal area needed to draw the graph.
+  If the pad is a single double, both the x and y pad values are set
+  equal to the given value. This area is part of the
+  drawing and will be filled with the background color, if appropriate.
+  <p>
+  Normally, a small pad is used for aesthetic reasons, especially when
+  a background color is used, to avoid having nodes and edges abutting
+  the boundary of the drawn region.
+
+</p></dd><dt><a name="d:page" href="#a:page"><strong>page</strong></a>
+</dt><dd>  Width and height of output pages, in inches. If only a single value
+  is given, this is used for both the width and height.
+  <p>
+  If this is set and is
+  smaller than the size of the layout, a rectangular array of pages of
+  the specified page size is overlaid on the layout, with origins
+  aligned in the lower-left corner, thereby partitioning the layout
+  into pages. The pages are then produced one at a time, in
+  <a href="#d:pagedir">pagedir</a> order.
+  </p><p>
+  At present, this only works for PostScript output. For other types of
+  output, one should use another tool to split the output into multiple
+  output files. Or use the <a href="#d:viewport">viewport</a> to generate
+  multiple files.
+
+</p></dd><dt><a name="d:pagedir" href="#a:pagedir"><strong>pagedir</strong></a>
+</dt><dd>  If the <a href="#d:page">page</a> attribute is set and applicable,
+  this attribute specifies the order in which the pages are emitted.
+  This is limited to one of the 8 row or column major orders.
+
+</dd><dt><a name="d:pencolor" href="#a:pencolor"><strong>pencolor</strong></a>
+</dt><dd>  Color used to draw the bounding box around a cluster.
+  If <b>pencolor</b> is not defined, <a href="#d:color"><b>color</b></a> is
+  used. If this is not defined, <a href="#d:bgcolor">bgcolor</a> is used.
+  If this is not defined, the default is used.
+  <p>
+  Note that a cluster inherits the root graph's attributes if defined.
+  Thus, if the root graph has defined a <b>pencolor</b>, this will override a
+  <b>color</b> or <b>bgcolor</b> attribute set for the cluster.
+
+</p></dd><dt><a name="d:penwidth" href="#a:penwidth"><strong>penwidth</strong></a>
+</dt><dd>  Specifies the width of the pen, in points, used to draw lines and curves,
+  including the boundaries of edges and clusters. The value is inherited
+  by subclusters.
+  It has no effect on text.
+  <p>
+  Previous to 31 January 2008, the effect of <tt>penwidth=<i>W</i></tt>
+  was achieved by including <tt>setlinewidth(<i>W</i>)</tt>
+  as part of a <a href="#d:style"><tt>style</tt></a> specification.
+  If both are used, <tt>penwidth</tt> will be used.
+
+</p></dd><dt><a name="d:peripheries" href="#a:peripheries"><strong>peripheries</strong></a>
+</dt><dd>  Set number of peripheries used in polygonal shapes and cluster
+  boundaries. Note that
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#epsf">user-defined shapes</a> are treated as a
+  form of box shape, so the default
+  peripheries value is 1 and the user-defined shape will be drawn in
+  a bounding rectangle. Setting <tt>peripheries=0</tt> will turn this off.
+  Also, 1 is the maximum peripheries value for clusters.
+
+</dd><dt><a name="d:pin" href="#a:pin"><strong>pin</strong></a>
+</dt><dd>  If true and the node has a pos attribute on input, neato or fdp prevents the
+  node from moving from the input position. This property can also be specified
+  in the pos attribute itself (cf. the <a href="#k:point">point</a> type).
+  <p>
+  <b>Note:</b> Due to an artifact of the implementation, 
+  previous to 27 Feb 2014, final coordinates
+  are translated to the origin. Thus, if you look at the output coordinates
+  given in the (x)dot or plain format, pinned nodes will not have the same
+  output coordinates as were given on input. If this is important, a
+  simple workaround is to maintain the coordinates of a pinned node. The vector
+  difference between the old and new coordinates will give the translation,
+  which can then be subtracted from all of the appropriate coordinates.
+  </p><p>
+  After 27 Feb 2014, this translation can be avoided in neato by setting the 
+  <a href="#d:notranslate">notranslate</a> to TRUE. However, if the graph
+  specifies <a href="#d:overlap">node overlap removal</a> or a change in 
+  <a href="#d:ratio">aspect ratio</a>, node coordinates may still change. 
+
+</p></dd><dt><a name="d:pos" href="#a:pos"><strong>pos</strong></a>
+</dt><dd>  Position of node, or spline control points.
+  For nodes, the position indicates the center of the node.
+  On output, the coordinates are in <a href="#points">points</a>.
+  <p>
+  In neato and fdp, pos can be used to set the initial position of a node.
+  By default, the coordinates are assumed to be in inches. However, the
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/command.html#d:s">-s</a> command line flag can be used to specify
+  different units. As the output coordinates are in points, 
+  feeding the output of a graph laid out by a Graphviz program into
+  neato or fdp will almost always require the -s flag.
+  </p><p>
+  When the <a href="https://graphviz.gitlab.io/_pages/doc/info/command.html#d:n">-n</a> command line flag is used with
+  neato, it is assumed the positions have been set by one of the layout
+  programs, and are therefore in points. Thus, <tt>neato -n</tt> can accept
+  input correctly without requiring a <tt>-s</tt> flag and, in fact,
+  ignores any such flag.
+
+</p></dd><dt><a name="d:quadtree" href="#a:quadtree"><strong>quadtree</strong></a>
+</dt><dd>  Quadtree scheme to use.
+  <p>
+  A TRUE bool value corresponds to "normal";
+  a FALSE bool value corresponds to "none".
+  As a slight exception to the normal interpretation of bool,
+  a value of "2" corresponds to "fast".
+
+</p></dd><dt><a name="d:quantum" href="#a:quantum"><strong>quantum</strong></a>
+</dt><dd>  If <b>quantum</b> &gt; 0.0, node label dimensions
+  will be rounded to integral multiples of the quantum.
+
+</dd><dt><a name="d:rank" href="#a:rank"><strong>rank</strong></a>
+</dt><dd>  Rank constraints on the nodes in a subgraph.
+  If <b>rank</b>="same", all nodes are placed on the same rank.
+  If <b>rank</b>="min", all nodes are placed on the minimum rank.
+  If <b>rank</b>="source", all nodes are placed on the minimum rank, and
+  the only nodes on the minimum rank belong to some subgraph whose
+  rank attribute is "source" or "min".
+  Analogous criteria hold for <b>rank</b>="max" and <b>rank</b>="sink".
+  (Note: the
+  minimum rank is topmost or leftmost, and the maximum rank is bottommost
+  or rightmost.)
+
+</dd><dt><a name="d:rankdir" href="#a:rankdir"><strong>rankdir</strong></a>
+</dt><dd>  Sets direction of graph layout. For example, if <b>rankdir</b>="LR",
+  and barring cycles, an edge <code>T -&gt; H;</code> will go
+  from left to right. By default, graphs are laid out from top to bottom.
+  <p>
+  This attribute also has a side-effect in determining how record nodes
+  are interpreted. See <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#record">record shapes</a>.
+
+</p></dd><dt><a name="d:ranksep" href="#a:ranksep"><strong>ranksep</strong></a>
+</dt><dd>  In dot, this gives the desired rank separation, in inches. This is
+  the minimum vertical distance between the bottom of the nodes in one
+  rank and the tops of nodes in the next. If the value
+  contains "equally", the centers of all ranks are spaced equally apart.
+  Note that both
+  settings are possible, e.g., ranksep = "1.2 equally".
+  <p>
+  In twopi, this attribute specifies the radial separation of concentric circles.
+  For twopi, <tt>ranksep</tt> can also be a list of doubles. The first double specifies
+  the radius of the inner circle; the second double specifies the increase in
+  radius from the first circle to the second; etc. If there are more circles than
+  numbers, the last number is used as the increment for the remainder.
+
+</p></dd><dt><a name="d:ratio" href="#a:ratio"><strong>ratio</strong></a>
+</dt><dd>  Sets the aspect ratio (drawing height/drawing width) for the drawing.
+  Note that this is adjusted before
+  the <a href="#d:size"><b>size</b></a> attribute constraints are enforced.
+  In addition, the calculations usually ignore the node sizes, so the
+  final drawing size may only approximate what is desired.
+  <p>
+  If <b>ratio</b> is numeric, it is taken as the desired aspect ratio.
+  Then, if the actual aspect ratio is less than the desired ratio,
+  the drawing height is scaled up to achieve the
+  desired ratio; if the actual ratio is greater than that desired ratio,
+  the drawing width is scaled up.
+  </p><p>
+  If <b>ratio</b> = "fill" and the <a href="#d:size"><b>size</b></a>
+  attribute is set, node positions are scaled, separately in both x
+  and y, so that the final drawing exactly fills the specified size.
+  If both <a href="#d:size"><b>size</b></a> values exceed the width
+  and height of the drawing, then both coordinate values of each
+  node are scaled up accordingly. However, if either size dimension
+  is smaller than the corresponding dimension in the drawing, one
+  dimension is scaled up so that the final drawing has the same aspect
+  ratio as specified by <a href="#d:size"><b>size</b></a>. 
+  Then, when rendered, the layout will be
+  scaled down uniformly in both dimensions to fit the given
+  <a href="#d:size"><b>size</b></a>, which may cause nodes and text
+  to shrink as well. This may not be what the user
+  wants, but it avoids the hard problem of how to reposition the
+  nodes in an acceptable fashion to reduce the drawing size.
+  </p><p>
+  If <b>ratio</b> = "compress" and the <a href="#d:size"><b>size</b></a>
+  attribute is set, dot attempts to compress the initial layout to fit
+  in the given size. This achieves a tighter packing of nodes but
+  reduces the balance and symmetry. This feature only works in dot.
+  </p><p>
+  If <b>ratio</b> = "expand", the <a href="#d:size"><b>size</b></a>
+  attribute is set, and both the width and the height of the graph are
+  less than the value in  <a href="#d:size"><b>size</b></a>, node positions are scaled
+  uniformly until at least
+  one dimension fits <a href="#d:size"><b>size</b></a> exactly.
+  Note that this is distinct from using <a href="#d:size"><b>size</b></a> as the
+  desired size, as here the drawing is expanded before edges are generated and
+  all node and text sizes remain unchanged.
+  </p><p>
+  If <b>ratio</b> = "auto", the <a href="#d:page"><b>page</b></a>
+  attribute is set and the graph cannot be drawn on a single page,
+  then <a href="#d:size"><b>size</b></a> is set to an ``ideal'' value.
+  In particular, the size in a given dimension will be the smallest integral
+  multiple of the page size in that dimension which is at least half the
+  current size. The two dimensions are then scaled independently to the
+  new size. This feature only works in dot.
+
+</p></dd><dt><a name="d:rects" href="#a:rects"><strong>rects</strong></a>
+</dt><dd>  Rectangles for fields of records, <a href="#points">in points</a>.
+
+</dd><dt><a name="d:regular" href="#a:regular"><strong>regular</strong></a>
+</dt><dd>  If true, force polygon to be regular, i.e., the vertices of the
+  polygon will lie on a circle whose center is the center of the node.
+
+</dd><dt><a name="d:remincross" href="#a:remincross"><strong>remincross</strong></a>
+</dt><dd>  If true and there are multiple clusters, run crossing
+  minimization a second time.
+
+</dd><dt><a name="d:repulsiveforce" href="#a:repulsiveforce"><strong>repulsiveforce</strong></a>
+</dt><dd>  The power of the repulsive force used in an extended Fruchterman-Reingold 
+  force directed model. Values larger than 1 tend to reduce 
+  the warping effect at the expense of less clustering.
+
+</dd><dt><a name="d:resolution" href="#a:resolution"><strong>resolution</strong></a>
+</dt><dd>  This is a synonym for the <a href="#d:dpi">dpi</a> attribute.
+
+</dd><dt><a name="d:root" href="#a:root"><strong>root</strong></a>
+</dt><dd>  This specifies nodes to be used as the center of the
+  layout and the root of the generated spanning tree. As a graph attribute,
+  this gives the name of the node. As a node attribute, it
+  specifies that the node should be used as a central node. In twopi,
+  this will actually be the central node. In circo, the block containing
+  the node will be central in the drawing of its connected component.
+  If not defined,
+  twopi will pick a most central node, and circo will pick a random node.
+  <p>
+  If the root attribute is defined as the empty string, twopi will reset it
+  to name of the node picked as the root node.
+  </p><p>
+  For twopi, it is possible to have multiple roots, presumably one for each
+  component. If more than one node in a component is marked as the root, twopi
+  will pick one.
+
+</p></dd><dt><a name="d:rotate" href="#a:rotate"><strong>rotate</strong></a>
+</dt><dd>  If 90, set drawing orientation to landscape.
+
+</dd><dt><a name="d:rotation" href="#a:rotation"><strong>rotation</strong></a>
+</dt><dd>  Causes the final layout to be rotated counter-clockwise by the specified number of degrees.
+
+</dd><dt><a name="d:samehead" href="#a:samehead"><strong>samehead</strong></a>
+</dt><dd>  Edges with the same head and the same <b>samehead</b> value are aimed
+  at the same point on the head. This has no effect on loops.
+  Each node can have at most 5 unique samehead values.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:sametail" href="#a:sametail"><strong>sametail</strong></a>
+</dt><dd>  Edges with the same tail and the same <b>sametail</b> value are aimed
+  at the same point on the tail. This has no effect on loops.
+  Each node can have at most 5 unique sametail values.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:samplepoints" href="#a:samplepoints"><strong>samplepoints</strong></a>
+</dt><dd>  If the input graph defines the <a href="#d:vertices"><b>vertices</b></a>
+  attribute, and output is dot or xdot, this gives
+  the number of points used for a node whose shape is a circle or ellipse.
+  It plays the same role in neato, when adjusting the layout to avoid
+  overlapping nodes, and in image maps.
+
+</dd><dt><a name="d:scale" href="#a:scale"><strong>scale</strong></a>
+</dt><dd>  If set, after the initial layout, the layout is scaled by the given factors.
+  If only a single number is given, this is used for both factors.
+
+</dd><dt><a name="d:searchsize" href="#a:searchsize"><strong>searchsize</strong></a>
+</dt><dd>  During network simplex, maximum number of edges with negative cut values
+  to search when looking for one with minimum cut value.
+
+</dd><dt><a name="d:sep" href="#a:sep"><strong>sep</strong></a>
+</dt><dd>  Specifies margin to leave around nodes when removing node overlap.
+  This guarantees a minimal non-zero distance between nodes.
+  <p>
+  If the attribute begins with a plus sign '+', an additive margin is
+  specified. That is, "+w,h" causes the node's bounding box to be increased 
+  by w
+  points on the left and right sides, and by h points on the top and bottom.
+  Without a plus sign, the node is scaled by 1 + w in the x coordinate
+  and 1 + h in the y coordinate.
+  </p><p>
+  If only a single number is given, this is used for both dimensions.
+  </p><p>
+  If unset but <a href="#d:esep">esep</a> is defined, the <tt>sep</tt> values
+  will be set to the <tt>esep</tt> values divided by <tt>0.8</tt>. 
+  If <tt>esep</tt> is unset, the default value is used.
+
+</p></dd><dt><a name="d:shape" href="#a:shape"><strong>shape</strong></a>
+</dt><dd>  Set the shape of a node.
+
+</dd><dt><a name="d:shapefile" href="#a:shapefile"><strong>shapefile</strong></a>
+</dt><dd>  (Deprecated) If defined, shapefile specifies a file containing user-supplied node content.
+  The <a href="#d:shape"><b>shape</b></a> of the node is set to box.
+  The image in the shapefile must be
+  rectangular. The image formats supported as well as the precise semantics of
+  how the file is used depends on the
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/output.html">output format</a>.  For further details, see
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/output.html#d:image_fmts">Image Formats</a> and
+  <a href="https://graphviz.gitlab.io/faq/#ext_image">External PostScript files</a>.
+  <p>
+  There is one exception to this usage.
+  If <b>shape</b> is set to "epsf", shapefile gives
+  a filename containing a definition of the node in PostScript.
+  The graphics defined must be contain all of the
+  node content, including any desired boundaries.
+  For further details, see
+  <a href="https://graphviz.gitlab.io/faq/#ext_ps_file">
+  External PostScript files</a>.
+
+</p></dd><dt><a name="d:showboxes" href="#a:showboxes"><strong>showboxes</strong></a>
+</dt><dd>  Print guide boxes in PostScript at the beginning of
+  routesplines if 1, or at the end if 2. (Debugging)
+
+</dd><dt><a name="d:sides" href="#a:sides"><strong>sides</strong></a>
+</dt><dd>  Number of sides if <a href="#d:shape"><b>shape</b></a>=polygon.
+
+</dd><dt><a name="d:size" href="#a:size"><strong>size</strong></a>
+</dt><dd>  Maximum width and height of drawing, in inches.
+  If only a single number is given, this is used for both the width
+  and the height.
+  <p>
+  If defined and the drawing is larger than the given size, 
+  the drawing is uniformly
+  scaled down so that it fits within the given size.
+  </p><p>
+  If <tt>size</tt> ends in an exclamation point (<tt>!</tt>),
+  then it is taken to be
+  the desired size. In this case, if both dimensions of the drawing are
+  less than <tt>size</tt>, the drawing is scaled up uniformly until at
+  least one dimension equals its dimension in <tt>size</tt>.
+  </p><p>
+  Note that there is some interaction between the <b>size</b> and
+  <a href="#d:ratio"><b>ratio</b></a> attributes.
+
+</p></dd><dt><a name="d:skew" href="#a:skew"><strong>skew</strong></a>
+</dt><dd>  Skew factor for <a href="#d:shape"><b>shape</b></a>=polygon. Positive values
+  skew top of polygon to right; negative to left.
+
+</dd><dt><a name="d:smoothing" href="#a:smoothing"><strong>smoothing</strong></a>
+</dt><dd>  Specifies a post-processing step used to smooth out an uneven distribution 
+  of nodes.
+
+</dd><dt><a name="d:sortv" href="#a:sortv"><strong>sortv</strong></a>
+</dt><dd>  If <a href="#d:packmode">packmode</a> indicates an array packing, 
+  this attribute specifies an
+  insertion order among the components, with smaller values inserted first.
+
+</dd><dt><a name="d:splines" href="#a:splines"><strong>splines</strong></a>
+</dt><dd>  Controls how, and if, edges are represented. If true, edges are drawn as
+  splines routed around nodes; if false, edges are drawn as line segments.
+  If set to <tt>none</tt> or "", no edges are drawn at all.
+  <p>
+  (1 March 2007) The values <tt>line</tt> and <tt>spline</tt> can be
+  used as synonyms for <tt>false</tt> and <tt>true</tt>, respectively.
+  In addition, the value <tt>polyline</tt> specifies that edges should be
+  drawn as polylines.
+  </p><p>
+  (28 Sep 2010) The value <tt>ortho</tt> specifies edges should be
+  routed as polylines of axis-aligned segments. Currently, the routing
+  does not handle ports or, in dot, edge labels.
+  </p><p>
+  (25 Sep 2012) The value <tt>curved</tt> specifies edges should be
+  drawn as curved arcs.
+  </p><p>
+  <table>
+  <tbody><tr>
+       <td><img src="node_edge_graph_attributes_files/spline_none.png" hspace="10" width="200" vspace="10">
+      </td><td><img src="node_edge_graph_attributes_files/spline_line.png" hspace="10" width="200" vspace="10">
+  </td></tr>
+  <tr>
+      <td align="center">splines=none<br>splines=""
+      </td><td align="center">splines=line<br>splines=false
+  </td></tr>
+  <tr>
+      <td><img src="node_edge_graph_attributes_files/spline_polyline.png" hspace="10" width="200" vspace="10">
+      </td><td><img src="node_edge_graph_attributes_files/spline_curved.png" hspace="10" width="200" vspace="10">
+  </td></tr>
+  <tr>
+      <td align="center">splines=polyline
+      </td><td align="center">splines=curved
+  </td></tr>
+  <tr>
+      <td><img src="node_edge_graph_attributes_files/spline_ortho.png" hspace="10" width="200" vspace="10">
+      </td><td><img src="node_edge_graph_attributes_files/spline_spline.png" hspace="10" width="200" vspace="10">
+  </td></tr>
+  <tr>
+      <td align="center">splines=ortho
+      </td><td align="center">splines=spline<br>splines=true
+  </td></tr>
+  </tbody></table>
+  
+  </p><p>
+  By default, the attribute is unset. How this is interpreted depends on
+  the layout. For dot, the default is to draw edges as splines. For all
+  other layouts, the default is to draw edges as line segments. Note that
+  for these latter layouts, if <tt>splines="true"</tt>, this
+  requires non-overlapping nodes (cf. <a href="#d:overlap"><b>overlap</b></a>).
+  If fdp is used for layout and <tt>splines="compound"</tt>, then the edges are
+  drawn to avoid clusters as well as nodes.
+
+</p></dd><dt><a name="d:start" href="#a:start"><strong>start</strong></a>
+</dt><dd>  Parameter used to determine the initial layout of nodes. If unset, the
+  nodes are randomly placed in a unit square with
+  the same seed is always used for the random number generator, so the
+  initial placement is repeatable.
+
+</dd><dt><a name="d:style" href="#a:style"><strong>style</strong></a>
+</dt><dd>  Set style information for components of the graph. For cluster subgraphs, if <tt>style="filled"</tt>, the
+  cluster box's background is filled.
+  <p>
+  If the default style attribute has been set for a component, an individual component can use
+  <tt>style=""</tt> to revert to the normal default. For example, if the graph has
+  </p><p>
+  <tt>edge [style="invis"]</tt>
+  </p><p>
+  making all edges invisible, a specific edge can overrride this via:
+  </p><p>
+  <tt>a -&gt; b [style=""]</tt>
+  </p><p>
+  Of course, the component can also explicitly set its <tt>style</tt> attribute to the desired value.
+
+</p></dd><dt><a name="d:stylesheet" href="#a:stylesheet"><strong>stylesheet</strong></a>
+</dt><dd>  A URL or pathname specifying an XML style sheet, used in SVG output.
+
+</dd><dt><a name="d:tailURL" href="#a:tailURL"><strong>tailURL</strong></a>
+</dt><dd>  If <b>tailURL</b> is defined, it is
+  output as part of the tail label of the edge.
+  Also, this value is used near the tail node, overriding any
+  <a href="#d:URL">URL</a> value.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:tail_lp" href="#a:tail_lp"><strong>tail_lp</strong></a>
+</dt><dd>  Position of an edge's tail label, <a href="#points">in points</a>.
+  The position indicates the center of the label.
+
+</dd><dt><a name="d:tailclip" href="#a:tailclip"><strong>tailclip</strong></a>
+</dt><dd>  If true, the tail of an edge is clipped to the boundary of the tail node;
+  otherwise, the end of the edge goes to the center of the node, or the
+  center of a port, if applicable.
+
+</dd><dt><a name="d:tailhref" href="#a:tailhref"><strong>tailhref</strong></a>
+</dt><dd>  Synonym for <a href="#d:tailURL">tailURL</a>.
+
+</dd><dt><a name="d:taillabel" href="#a:taillabel"><strong>taillabel</strong></a>
+</dt><dd>  Text label to be placed near tail of edge.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:tailport" href="#a:tailport"><strong>tailport</strong></a>
+</dt><dd>  Indicates where on the tail node to attach the tail of the edge.
+  See <a href="#h:undir_note">limitation</a>.
+
+</dd><dt><a name="d:tailtarget" href="#a:tailtarget"><strong>tailtarget</strong></a>
+</dt><dd>  If the edge has a <a href="#d:tailURL">tailURL</a>,
+  this attribute determines which window of the
+  browser is used
+  for the URL. Setting it to "_graphviz" will open a new window if it
+  doesn't already exist, or reuse it if it does.
+  If undefined, the value of the <a href="#d:target">target</a> is used.
+
+</dd><dt><a name="d:tailtooltip" href="#a:tailtooltip"><strong>tailtooltip</strong></a>
+</dt><dd>  Tooltip annotation attached to the tail of an edge. This is used only
+  if the edge has a <a href="#d:tailURL">tailURL</a> attribute.
+
+</dd><dt><a name="d:target" href="#a:target"><strong>target</strong></a>
+</dt><dd>  If the object has a URL, this attribute determines which window
+  of the browser is used for the URL.
+  See <a href="http://www.w3.org/TR/html401/present/frames.html#adef-target">W3C documentation</a>.
+
+</dd><dt><a name="d:tooltip" href="#a:tooltip"><strong>tooltip</strong></a>
+</dt><dd>  Tooltip annotation attached to the node or edge. If unset, Graphviz
+  will use the object's <a href="#d:label">label</a> if defined.
+  Note that if the label is a record specification or an HTML-like
+  label, the resulting tooltip may be unhelpful. In this case, if
+  tooltips will be generated, the user should set a <tt>tooltip</tt>
+  attribute explicitly.
+
+</dd><dt><a name="d:truecolor" href="#a:truecolor"><strong>truecolor</strong></a>
+</dt><dd>  If set explicitly to true or false, the value determines whether or not
+  internal bitmap rendering relies on a truecolor color model or uses
+  a color palette.
+  If the attribute is unset, truecolor is not used
+  unless there is a <a href="#d:shapefile">shapefile</a> property
+  for some node in the graph.
+  The output model will use the input model when possible.
+  <p>
+  Use of color palettes results in less memory usage during creation of the
+  bitmaps and smaller output files.
+  </p><p>
+  Usually, the only time it is necessary to specify the truecolor model
+  is if the graph uses more than 256 colors.
+  However, if one uses <a href="#d:bgcolor">bgcolor</a>=transparent with
+  a color palette, font
+  antialiasing can show up as a fuzzy white area around characters.
+  Using <b>truecolor</b>=true avoids this problem.
+
+</p></dd><dt><a name="d:vertices" href="#a:vertices"><strong>vertices</strong></a>
+</dt><dd>  If the input graph defines this attribute, the node is polygonal,
+  and output is dot or xdot, this attribute provides the
+  coordinates of the vertices of the node's polygon, in inches.
+  If the node is an ellipse or circle, the
+  <a href="#d:samplepoints">samplepoints</a> attribute affects
+  the output.
+
+</dd><dt><a name="d:viewport" href="#a:viewport"><strong>viewport</strong></a>
+</dt><dd>  Clipping window on final drawing. Note that this attribute supersedes any
+  <a href="#d:size">size</a> attribute. The width and height of the viewport specify
+  precisely the final size of the output. 
+
+</dd><dt><a name="d:voro_margin" href="#a:voro_margin"><strong>voro_margin</strong></a>
+</dt><dd>  Factor to scale up drawing to allow margin for expansion in
+  Voronoi technique. dim' = (1+2*margin)*dim.
+
+</dd><dt><a name="d:weight" href="#a:weight"><strong>weight</strong></a>
+</dt><dd>  Weight of edge. In dot, the heavier the weight, the shorter,
+  straighter and more vertical the edge is.
+  <b>N.B.</b> Weights in dot must be integers.
+  For twopi, a weight of 0 indicates the edge should not be used in constructing a
+  spanning tree from the root.
+  For other layouts, a larger weight encourages the layout to 
+  make the edge length closer to that specified by the 
+  <a href="#d:len">len</a> attribute.
+
+</dd><dt><a name="d:width" href="#a:width"><strong>width</strong></a>
+</dt><dd>  Width of node, in inches. This is taken as the initial, minimum width
+  of the node. If <a href="#d:fixedsize"><b>fixedsize</b></a> is true, this
+  will be the final width of the node. Otherwise, if the node label
+  requires more width to fit, the node's width will be increased to
+  contain the label. Note also that, if the output format is dot, the
+  value given to <b>width</b> will be the final value.
+  <p>
+  If the node shape is regular, the width and height are made identical.
+  In this case, if either the width or the height is set explicitly,
+  that value is used.
+  In this case, if both the width or the height are set explicitly,
+  the maximum of the two values is used.
+  If neither is set explicitly, the minimum of the two default values
+  is used.
+
+</p></dd><dt><a name="d:xdotversion" href="#a:xdotversion"><strong>xdotversion</strong></a>
+</dt><dd>  For xdot output, if this attribute is set, this determines the version of xdot used in output.
+  If not set, the attribute will be set to the xdot version used for output.
+
+</dd><dt><a name="d:xlabel" href="#a:xlabel"><strong>xlabel</strong></a>
+</dt><dd>  External label for a node or edge. For nodes, the label will be placed outside of the
+  node but near it. For edges, the label will be placed near the center of the edge.
+  This can be useful in dot to avoid the occasional problem when the use of edge labels
+  distorts the layout. For other layouts, the xlabel attribute can be viewed as a synonym
+  for the <a href="#d:label"><b>label</b></a> attribute.
+  <p>
+  These labels are added after all nodes and edges have been placed. The labels will be placed
+  so that they do not overlap any node or label. This means it may not be possible to place all
+  of them. To force placing all of them, use the  <a href="#d:forcelabels"><b>forcelabels</b></a> attribute.
+
+</p></dd><dt><a name="d:xlp" href="#a:xlp"><strong>xlp</strong></a>
+</dt><dd>  Position of an exterior label, <a href="#points">in points</a>.
+  The position indicates the center of the label.
+
+</dd><dt><a name="d:z" href="#a:z"><strong>z</strong></a>
+</dt><dd>  <b>Deprecated:</b>Use <a href="#d:pos"><b>pos</b></a> attribute, along
+  with <a href="#d:dimen"><b>dimen</b></a> and/or <a href="#d:dim"><b>dim</b></a>
+  to specify dimensions.
+  <p>
+  Provides z coordinate value for 3D layouts and displays. If the
+  graph has <a href="#d:dim"><b>dim</b></a> set to 3 (or more),
+  neato will use a node's <b>z</b> value
+  for the z coordinate of its initial position if
+  its <a href="#d:pos"><b>pos</b></a> attribute is also defined.
+  </p><p>
+  Even if no <b>z</b> values are specified in the input, it is necessary to
+  declare a <b>z</b> attribute for nodes, e.g, using <tt>node[z=""]</tt>
+  in order to get z values on output.
+  Thus, setting <tt>dim=3</tt> but not declaring <b>z</b> will
+  cause <tt>neato -Tvrml</tt> to
+  layout the graph in 3D but project the layout onto the xy-plane
+  for the rendering. If the <b>z</b> attribute is declared, the final rendering
+  will be in 3D.
+
+</p></dd></dl>
+<hr>
+<h1>Attribute Type Descriptions</h1>
+The following list gives the legal strings corresponding to values of
+the given types.
+The syntax for describing legal type strings is a mixture of literal strings,
+stdio encodings (e.g., <tt>%f</tt> for a double), and regular expressions.
+For regular expressions, <tt>(...)*</tt> indicates 0 or more copies of the expression
+enclosed in the parentheses,  <tt>(...)+</tt> indicates 1 or more, and
+<tt>(...)?</tt> denotes 0 or 1 copy.
+<dl>
+<dt><a name="k:addDouble"><strong>addDouble</strong></a>
+</dt><dd><p>A double with an optional prefix '+'.
+
+</p></dd><dt><a name="k:addPoint"><strong>addPoint</strong></a>
+</dt><dd><p>A <a href="#k:point">point</a> with an optional prefix '+'.
+
+</p></dd><dt><a name="k:arrowType"><strong>arrowType</strong></a>
+</dt><dd><table>
+    <tbody><tr><td>"normal"</td><td><img src="node_edge_graph_attributes_files/a_normal.gif">
+        </td><td>"inv"</td><td><img src="node_edge_graph_attributes_files/a_inv.gif"></td></tr>
+    <tr><td>"dot"</td><td><img src="node_edge_graph_attributes_files/a_dot.gif">
+        </td><td>"invdot"</td><td><img src="node_edge_graph_attributes_files/a_invdot.gif"></td></tr>
+    <tr><td>"odot"</td><td><img src="node_edge_graph_attributes_files/a_odot.gif">
+        </td><td>"invodot"</td><td><img src="node_edge_graph_attributes_files/a_invodot.gif"></td></tr>
+    <tr><td>"none"</td><td><img src="node_edge_graph_attributes_files/a_none.gif">
+        </td><td>"tee"</td><td><img src="node_edge_graph_attributes_files/a_tee.gif"></td></tr>
+    <tr><td>"empty"</td><td><img src="node_edge_graph_attributes_files/a_empty.gif">
+        </td><td>"invempty"</td><td><img src="node_edge_graph_attributes_files/a_invempty.gif"></td></tr>
+    <tr><td>"diamond"</td><td><img src="node_edge_graph_attributes_files/a_diamond.gif">
+        </td><td>"odiamond"</td><td><img src="node_edge_graph_attributes_files/a_odiamond.gif"></td></tr>
+    <tr><td>"ediamond"</td><td><img src="node_edge_graph_attributes_files/a_ediamond.gif">
+        </td><td>"crow"</td><td><img src="node_edge_graph_attributes_files/a_crow.gif"></td></tr>
+    <tr><td>"box"</td><td><img src="node_edge_graph_attributes_files/a_box.gif">
+        </td><td>"obox"</td><td><img src="node_edge_graph_attributes_files/a_obox.gif"></td></tr>
+    <tr><td>"open"</td><td><img src="node_edge_graph_attributes_files/a_open.gif">
+        </td><td>"halfopen"</td><td><img src="node_edge_graph_attributes_files/a_halfopen.gif"></td></tr>
+    <tr><td>"vee"</td><td><img src="node_edge_graph_attributes_files/a_open.gif">
+  </td></tr></tbody></table>
+  <p>
+  The examples above show a set of commonly used arrow shapes.
+  There is a grammar of <a href="https://graphviz.gitlab.io/_pages/doc/info/arrows.html">arrow shapes</a>
+  which can be used to describe a collection of 3,111,696 arrow combinations of the 
+  42 variations of the primitive set of 11 arrows. The basic arrows shown
+  above contain most of the primitive shapes
+  (<tt>box</tt>, <tt>crow</tt>, <tt>diamond</tt>,
+  <tt>dot</tt>, <tt>inv</tt>, <tt>none</tt>,
+  <tt>normal</tt>, <tt>tee</tt>, <tt>vee</tt>)
+  plus ones that can be derived from the grammar
+  (<tt>odot</tt>, <tt>invdot</tt>, <tt>invodot</tt>,
+  <tt>obox</tt>, <tt>odiamond</tt>)
+  plus some supported as special cases for backward-compatibility
+  (<tt>ediamond</tt>, <tt>open</tt>, <tt>halfopen</tt>,
+  <tt>empty</tt>, <tt>invempty</tt>).
+
+</p></dd><dt><a name="k:clusterMode"><strong>clusterMode</strong></a>
+</dt><dd>"local","global","none"
+
+</dd><dt><a name="k:color"><strong>color</strong></a>
+</dt><dd>Colors can be specified using one of four formats.
+         <table><tbody><tr><td>"#%2x%2x%2x"</td><td>Red-Green-Blue (RGB)</td></tr>
+         <tr><td>"#%2x%2x%2x%2x"</td><td>Red-Green-Blue-Alpha (RGBA)</td></tr>
+         <tr><td>"H[,&nbsp;]+S[,&nbsp;]+V"</td><td>Hue-Saturation-Value (HSV) 0.0 &lt;= H,S,V &lt;= 1.0</td></tr>
+         <tr><td>string</td><td><a href="https://graphviz.gitlab.io/_pages/doc/info/colors.html">color name</a></td></tr></tbody></table>
+   The specification for the RGB and RGBA formats are the format strings used by
+   <tt>sscanf</tt> to scan the color value. Thus, these values have the form
+   "#RGB" or "#RGBA", where R, G, B, and A each consist of 2 hexadecimal
+   digits, and can be separated by whitespace. HSV colors have the form of 3
+   numbers between 0 and 1, separated by whitespace or commas.
+  <p>
+  String-valued color specifications are case-insensitive and interpreted
+  in the context of the current color scheme, as specified by the
+  <a href="#d:colorscheme">colorscheme</a> attribute. If this is undefined,
+  the X11 naming scheme will be used.
+  An initial <tt>"/"</tt> character can be used to override the use of
+  the <tt>colorscheme</tt> attribute. In particular, a single initial
+  <tt>"/"</tt> will cause the string to be evaluated using the default
+  X11 naming. If the color value has the form <tt>"/ssss/yyyy"</tt>,
+  the name <tt>yyyy</tt> is interpreted using the schema <tt>ssss</tt>.
+  If the color scheme name is empty, i.e., the color has the
+  form <tt>"//yyyy"</tt>, the <tt>colorscheme</tt> attribute is used.
+  Thus, the forms <tt>"yyyy"</tt> and <tt>"//yyyy"</tt> are
+  equivalent.
+  </p><p>At present, Graphviz recognizes the default color scheme <tt>X11</tt>,
+  and the <a href="https://graphviz.gitlab.io/_pages/doc/info/colors.html#brewer">Brewer color schemes</a> (cf. <a href="http://www.personal.psu.edu/faculty/c/a/cab38/ColorBrewer/ColorBrewer_intro.html">ColorBrewer</a>). Please note that Brewer
+  color schemes are covered by this <a href="https://graphviz.gitlab.io/_pages/doc/info/colors.html#brewer_license">license</a>.
+  </p><p>
+  Examples:<br>
+    <table border="1">
+      <tbody><tr><th>Color</th><th>RGB</th><th>HSV</th><th>String</th></tr>
+      <tr><td bgcolor="#ffffff" align="center">White</td><td>"#ffffff"</td><td>"0.000 0.000 1.000"</td><td>"white"</td></tr>
+      <tr><td bgcolor="#000000" align="center"><font color="white">Black</font></td><td>"#000000"</td><td>"0.000 0.000 0.000"</td><td>"black"</td></tr>
+      <tr><td bgcolor="#ff0000" align="center">Red</td><td>"#ff0000"</td><td>"0.000 1.000 1.000"</td><td>"red"</td></tr>
+      <tr><td bgcolor="#40e0d0" align="center">Turquoise</td><td>"#40e0d0"</td><td>"0.482 0.714 0.878"</td><td>"turquoise"</td></tr>
+      <tr><td bgcolor="#a0522d" align="center">Sienna</td><td>"#a0522d"</td><td>"0.051 0.718 0.627"</td><td>"sienna"</td></tr>
+    </tbody></table>
+  </p><p>
+   The string value <tt>transparent</tt> can be used to indicate no color.
+   This is only available in the output formats
+   ps, svg, fig, vmrl, and the bitmap formats. It can be used whenever a
+   color is needed but is most useful with
+   the <a href="#d:bgcolor">bgcolor</a> attribute.
+   Usually, the same effect can be achieved by setting
+   <a href="#d:style">style</a> to <tt>invis</tt>.
+
+</p></dd><dt><a name="k:colorList"><strong>colorList</strong></a>
+</dt><dd>A colon-separated list of weighted color values: <i>WC</i>(:<i>WC</i>)*
+  where each <i>WC</i> has the form <i>C(;F)?</i> with C a <a href="#k:color">color</a> value
+  and the optional <i>F</i> a floating-point number, 0 ≤ <i>F</i> ≤ 1. The sum of the 
+  floating-point numbers in a <tt>colorList</tt> must sum to at most 1.
+  <p>
+  <b>NOTE:</b> Gradient fills, described below, are currently only available via CAIRO or SVG rendering.
+  </p><p>
+  If the colorList value specifies multiple colors, with no weights, and a filled style is specified,
+  a linear gradient fill is done using the first two colors.
+  If weights are present, a degenerate linear gradient fill is done. This essentially does a fill using
+  two colors, with the weights specifying how much of region is filled with each color. 
+  If the <a href="#a:style">style</a> attribute contains the value <tt>radial</tt>, then
+  a radial gradient fill is done. These fills work with any shape. 
+  </p><p>
+  For certain shapes, the <a href="#a:style">style</a> attribute can be set
+  to do fills using more than 2 colors. See the <a href="#k:style">style</a> type for more information.
+  </p><p>
+  The following table shows some variations of the <tt>yellow:blue</tt> color list depending on the
+  <a href="#a:style">style</a> and <a href="#a:gradientangle">gradientangle</a> attributes.
+    <table border="1">
+      <tbody><tr><th>Gradient angle</th><th><tt>style=filled</tt></th><th><tt>style=filled<br>fillcolor=yellow;0.3:blue</tt></th><th><tt>style=radial</tt></th></tr>
+      <tr><td align="center">0</td><td><img src="node_edge_graph_attributes_files/g_lin0.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin0.png"></td><td><img src="node_edge_graph_attributes_files/g_rad0.png"></td></tr>
+      <tr><td align="center">45</td><td><img src="node_edge_graph_attributes_files/g_lin45.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin45.png"></td><td><img src="node_edge_graph_attributes_files/g_rad45.png"></td></tr>
+      <tr><td align="center">90</td><td><img src="node_edge_graph_attributes_files/g_lin90.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin90.png"></td><td><img src="node_edge_graph_attributes_files/g_rad90.png"></td></tr>
+      <tr><td align="center">180</td><td><img src="node_edge_graph_attributes_files/g_lin180.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin180.png"></td><td><img src="node_edge_graph_attributes_files/g_rad180.png"></td></tr>
+      <tr><td align="center">270</td><td><img src="node_edge_graph_attributes_files/g_lin270.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin270.png"></td><td><img src="node_edge_graph_attributes_files/g_rad270.png"></td></tr>
+      <tr><td align="center">360</td><td><img src="node_edge_graph_attributes_files/g_lin360.png"></td><td align="CENTER"><img src="node_edge_graph_attributes_files/g_wlin360.png"></td><td><img src="node_edge_graph_attributes_files/g_rad360.png"></td></tr>
+    </tbody></table>
+
+</p></dd><dt><a name="k:dirType"><strong>dirType</strong></a>
+</dt><dd>For an edge <code>T -&gt; H;</code>
+    <table>
+    <tbody><tr><td>"forward"</td><td><img src="node_edge_graph_attributes_files/forward.gif">
+        </td><td>"back"</td><td><img src="node_edge_graph_attributes_files/back.gif"></td></tr>
+    <tr><td>"both"</td><td><img src="node_edge_graph_attributes_files/both.gif">
+        </td><td>"none"</td><td><img src="node_edge_graph_attributes_files/nohead.gif"></td></tr>
+    </tbody></table>
+  That is, a glyph is drawn at the head end of an edge if and only
+  if dirType is "forward" or "both";
+  a glyph is drawn at the tail end of an edge if and only
+  if dirType is "back" or "both";
+  <p>
+  For undirected edges <code>T -- H;</code>, one of the nodes, usually
+  the righthand one, is treated as the head for the purpose of
+  interpreting "forward" and "back".
+
+</p></dd><dt><a name="k:doubleList"><strong>doubleList</strong></a>
+</dt><dd>A colon-separated list of doubles: "<i>%f</i>(:<i>%f</i>)*"
+   where each <i>%f</i> is a double.
+
+</dd><dt><a name="k:escString"><strong>escString</strong></a>
+</dt><dd>A string allowing escape sequences which are replaced according
+  to the context.
+  For node attributes, the substring "\N" is replaced by the name of the node,
+  and the substring "\G" by the name of the graph.
+  For graph or cluster attributes, the substring "\G" is replaced by the
+  name of the graph or cluster.
+  For edge attributes, the substring "\E" is replaced by the name of the edge,
+  the substring "\G" is replaced by the name of the graph or cluster,
+  and the substrings "\T" and "\H" by the names of
+  the tail and head nodes, respectively.
+  The name of an edge is the string formed from the name of the
+  tail node, the appropriate edge operator ("--" or "-&gt;") and the name of the
+  head node.
+  In all cases, the substring "\L" is replaced by the object's label attribute.
+  <p>
+  In addition, if the associated attribute is
+  <a href="#a:label">label</a>,
+  <a href="#a:headlabel">headlabel</a> or <a href="#a:taillabel">taillabel</a>,
+  the escape sequences "\n", "\l" and "\r"
+  divide the label into lines, centered, left-justified, and right-justified,
+  respectively.
+  </p><p>
+  Obviously, one can use "\\" to get a single backslash. A backslash appearing before any
+  character not listed above is ignored.
+
+</p></dd><dt><a name="k:layerList"><strong>layerList</strong></a>
+</dt><dd>list of strings separated by characters from the
+  <a href="#a:layersep">layersep</a> attribute (by default, colons,
+  tabs or spaces), defining <a href="#a:layer">layer</a>
+  names and implicitly numbered 1,2,...
+
+</dd><dt><a name="k:layerRange"><strong>layerRange</strong></a>
+</dt><dd>specifies a list of layers defined by the <a href="#a:layers">layers</a> attribute.
+  It consists of a list of layer intervals separated by any collection of characters from
+  the <a href="#a:layerlistsep">layerlistsep</a> attribute.
+  Each layer interval is specified as either a
+  layerId or a layerId<b>s</b>layerId<br>, where layerId = "all",
+  a decimal integer or a <a href="#a:layer">layer</a> name.
+  (An integer i corresponds to layer i, layers being numbered from 1.)
+  The string <b>s</b> consists of 1 or more separator characters specified
+  by the <a href="#a:layersep">layersep</a> attribute.
+  <p>
+  Thus, assuming the default values for <a href="#a:layersep">layersep</a>
+  and <a href="#a:layerlistsep">layerlistsep</a>, if <tt>layers="a:b:c:d:e:f:g:h"</tt>, the
+  layerRange string <tt>layers="a:b,d,f:all"</tt> would denote the layers
+  <tt>a b d f g h"</tt>.
+
+</p></dd><dt><a name="k:lblString"><strong>lblString</strong></a>
+</dt><dd>an <a href="#k:escString">escString</a>
+  or an <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML label</a>.
+
+</dd><dt><a name="k:outputMode"><strong>outputMode</strong></a>
+</dt><dd>"breadthfirst","nodesfirst","edgesfirst"
+  These specify the order in which nodes and edges are drawn in concrete
+  output. The default "breadthfirst" is the simplest, but when the graph
+  layout does not avoid edge-node overlap, this mode will sometimes have
+  edges drawn over nodes and sometimes on top of nodes. If the mode
+  "nodesfirst" is chosen, all nodes are drawn first, followed by the
+  edges. This guarantees an edge-node overlap will not be mistaken for
+  an edge ending at a node. On the other hand, usually for aesthetic
+  reasons, it may be desirable that all edges appear beneath nodes, even
+  if the resulting drawing is ambiguous. This can be achieved by choosing
+  "edgesfirst".
+
+</dd><dt><a name="k:packMode"><strong>packMode</strong></a>
+</dt><dd>"node", "clust" , "graph" , "array(_<i>flags</i>)?(%d)?"
+  <p>
+  The modes "node", "clust" or "graph"
+  specify that the components should be packed together tightly, using
+  the specified granularity.
+  A value of "node" causes
+  packing at the node and edge level, with no overlapping of these objects.
+  This produces a layout with the least area, but it also allows interleaving,
+  where a node of one component may lie between two nodes in another
+  component. A value of "graph" does a packing using the bounding box of the
+  component. Thus, there will be a rectangular region around a component
+  free of elements of any other component.
+  A value of "clust" guarantees that top-level clusters are kept intact.
+  What effect a value has also depends on the layout algorithm. For
+  example, neato does not support clusters, so a value of "clust" will
+  have the same effect as the default "node" value.
+  </p><p>
+  The mode "array(_<i>flag</i>)?(%d)?"
+  indicates that the components should be packed at the 
+  graph level into an array of graphs. By default, the components
+  are in row-major order, with the number of columns roughly the
+  square root of the number of components. If the optional flags
+  contains 'c', then column-major order is used. Finally, if the
+  optional integer suffix is used, this specifies the number of 
+  columns for row-major or the number of rows for column-major.
+  Thus, the mode "array_c4" indicates array packing, with 4 rows,
+  starting in the upper left and going down the first column, then
+  down the second column, etc., until all components are used.
+  </p><p>
+  If a graph is smaller than the array cell it occupies, it is centered by default.
+  The optional flags may contain 't', 'b', 'l', or 'r', indicating that the graphs
+  should be aligned along the top, bottom, left or right, respectively.
+  </p><p>
+  If the optional flags contains 'u', this causes the insertion
+  order of elements in the array to be determined by user-supplied
+  values. Each component can specify its sort value by a 
+  non-negative integer using the <a href="#d:sortv">sortv</a> attribute. 
+  Components are
+  inserted in order, starting with the one with the smallest
+  sort value. If no sort value is specified, zero is used.
+
+</p></dd><dt><a name="k:pagedir"><strong>pagedir</strong></a>
+</dt><dd>"BL", "BR", "TL", "TR", "RB", "RT", "LB", "LT".
+  These specify the 8 row or column major orders for traversing a
+  rectangular array, the first character corresponding to the major
+  order and the second to the minor order. Thus, for "BL", the
+  major order is from bottom to top, and the minor order is from left
+  to right. This means the bottom row is traversed first, from left
+  to right, then the next row up, from left to right, and so on,
+  until the topmost row is traversed.
+
+</dd><dt><a name="k:point"><strong>point</strong></a>
+</dt><dd>"%f,%f('!')?" representing the point (x,y). The
+  optional '!' indicates the
+  node position should not change (input-only).
+  <p>
+  If <a href="#d:dim">dim</a> is 3, <b>point</b> may also have
+  the format "%f,%f,%f('!')?" to represent the point (x,y,z).
+
+</p></dd><dt><a name="k:pointList"><strong>pointList</strong></a>
+</dt><dd>A list of points, separated by spaces.
+
+</dd><dt><a name="k:portPos"><strong>portPos</strong></a>
+</dt><dd>modifier indicating where on a node an edge should be aimed.
+  It has the form <tt><i>portname</i>(:<i>compass_point</i>)?</tt>
+  or <tt><i>compass_point</i></tt>.
+  If the first form is used, the corresponding node must either have
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#record">record</a> shape with one of its fields
+  having the given <i>portname</i>,
+  or have an <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like label</a>, one of
+  whose components has a <tt>PORT</tt> attribute set to <i>portname</i>.
+  <p>
+  If a compass point is used, it must have the form
+  <tt>"n","ne","e","se","s","sw","w","nw","c","_"</tt>. This modifies the edge
+  placement to aim for the corresponding compass point on the port or,
+  in the second form where no <i>portname</i> is supplied, on the node
+  itself. The compass point "c" specifies the center of the node or port.
+  The compass point "_" specifies that an appropriate side of the port
+  adjacent to the exterior of the node should be used, if such exists.
+  Otherwise, the center is used.
+  If no compass point is used with a portname, the default value is "_".
+  </p><p>
+  </p><p>
+  This attribute can be attached to an edge using the
+  <a href="#d:headport">headport</a> and
+  <a href="#d:tailport">tailport</a> attributes, or as part of the
+  edge description as in
+  </p><center>
+  <tt>node1:port1 -&gt; node2:port5:nw;</tt>
+  </center>
+  <p>
+  Note that it is legal to have a portname the same as one of
+  the compass points. In this case, this reference will be resolved to
+  the port. Thus, if node <tt>A</tt> has a port <tt>w</tt>, then
+  <tt>headport=w</tt> will refer to the port and not the compass point.
+  At present, in this case, there is no way to specify that the compass
+  point should be used.
+
+</p></dd><dt><a name="k:quadType"><strong>quadType</strong></a>
+</dt><dd>"normal", "fast", "none". 
+  <p>
+  Using "fast" gives about a 2-4 times overall speedup compared with "normal", 
+  though layout quality can suffer a little. 
+
+</p></dd><dt><a name="k:rankType"><strong>rankType</strong></a>
+</dt><dd>"same", "min", "source", "max", "sink"
+
+</dd><dt><a name="k:rankdir"><strong>rankdir</strong></a>
+</dt><dd>"TB", "LR", "BT", "RL", corresponding to directed graphs drawn
+  from top to bottom, from left to right, from bottom to top, and from
+  right to left, respectively.
+
+</dd><dt><a name="k:rect"><strong>rect</strong></a>
+</dt><dd>"%f,%f,%f,%f"  The rectangle llx,lly,urx,ury gives the coordinates, in
+   points, of the lower-left corner (llx,lly) and the upper-right corner
+   (urx,ury).
+
+</dd><dt><a name="k:shape"><strong>shape</strong></a>
+</dt><dd>A string specifying the <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html">shape</a> of a node.
+  There are three
+  main types of shapes :
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#polygon">polygon-based</a>,
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#record">record-based</a> and
+  <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#epsf">user-defined</a>.
+  The record-based shape has largely been superseded and greatly generalized
+  by <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like labels</a>. 
+  That is, instead of using <tt>shape=record</tt>, one might
+  consider using <tt>shape=none</tt> and an HTML-like label.
+
+</dd><dt><a name="k:smoothType"><strong>smoothType</strong></a>
+</dt><dd>Values are "none", "avg_dist", "graph_dist", "power_dist", "rng", 
+  "spring" and "triangle".
+
+</dd><dt><a name="k:splineType"><strong>splineType</strong></a>
+</dt><dd>spline ( ';' spline )*<br>
+  <table>
+   <tbody><tr><td align="right">where spline</td><td>=</td><td>(endp)? (startp)? point (triple)+</td></tr>
+   <tr><td align="right">and triple</td><td>=</td><td>point point point</td></tr>
+   <tr><td align="right">and endp</td><td>=</td><td>"e,%f,%f"</td></tr>
+   <tr><td align="right">and startp</td><td>=</td><td>"s,%f,%f"</td></tr>
+  </tbody></table>
+  If a spline has points p<sub>1</sub> p<sub>2</sub> p<sub>3</sub> ... p<sub>n</sub>, (n = 1 (mod 3)), the points
+   correspond to the control points of a cubic B-spline from p<sub>1</sub> to p<sub>n</sub>. If startp
+   is given, it touches one node of the edge, and the arrowhead
+   goes from p<sub>1</sub> to startp. If startp is not given, p<sub>1</sub> touches a node.
+   Similarly for p<sub>n</sub>  and endp.
+
+</dd><dt><a name="k:startType"><strong>startType</strong></a>
+</dt><dd>has the syntax <tt>(<i>style</i>)?(<i>seed</i>)?</tt>.
+  <p>
+  If <i>style</i> is present, it must be one of the strings <tt>"regular"</tt>,
+  <tt>"self"</tt>, or <tt>"random"</tt>. In the first case, the nodes are
+  placed regularly about a circle. In the second case,
+  an abbreviated version of neato is run to obtain the initial layout.
+  In the last case, the nodes are placed randomly in a unit square.
+  </p><p>
+  If <i>seed</i> is present, it specifies a seed for the random number
+  generator. If <i>seed</i> is a positive number, this is used as the
+  seed. If it is anything else,
+  the current time, and possibly the process id, is used to pick a seed,
+  thereby making the choice more random. In this case, the seed value
+  is stored in the graph.
+  </p><p>
+  If the value is just <tt>"random"</tt>, a time-based seed is chosen.
+  </p><p>
+  Note that input positions, specified by a node's
+  <a href="#d:pos">pos</a>
+  attribute, are only used when the style is <tt>"random"</tt>.
+
+</p></dd><dt><a name="k:style"><strong>style</strong></a>
+</dt><dd>styleItem ( ',' styleItem )*<br>
+  <table>
+  <tbody><tr><td align="right">where styleItem</td><td>=</td><td>name or name'('args')'</td></tr>
+  <tr><td align="right">and args</td><td>=</td><td>name ( ',' name )*</td></tr>
+  </tbody></table>
+  and name can be any string of characters not containing a space, a left or
+  right parenthesis, or a comma.
+  Note that whitespace characters are ignored.
+  <p>
+  <b>NOTE:</b><em>The styles <tt>tapered, striped</tt> and <tt>wedged</tt>
+  are only available in release 2.30 and later.</em>
+  </p><p>
+  At present, the recognized style names are
+  "dashed", "dotted", "solid", "invis" and "bold" for nodes and edges,
+  "tapered" for edges only,
+  and "filled", "striped", "wedged", "diagonals" and "rounded" for nodes only.
+  The styles "filled", "striped" and "rounded" are recognized for clusters.
+  The style "radial" is recognized for nodes, clusters and graphs, and indicates a
+  radial-style gradient fill if applicable.
+  </p><p>
+  The style "striped" causes the
+  fill to be done as a set of vertical stripes. The colors are specified via a <a href="#k:colorList">colorList</a>, 
+  the colors drawn from left to right in list order. Optional color weights can be specified to indicate the
+  proportional widths of the bars. If the sum of the weights is less than 1, the remainder is divided evenly
+  among the colors with no weight. <b>Note</b>: The style "striped" is only supported with clusters and
+  rectangularly-shaped nodes.
+  </p><p>
+  The style "wedged" causes the
+  fill to be done as a set of wedges. The colors are specified via a <a href="#k:colorList">colorList</a>, 
+  with the colors drawn counter-clockwise starting at angle 0. Optional color weights are interpreted
+  analogously to the striped case described above.
+  <b>Note</b>: The style "wedged" is allowed only for elliptically-shaped nodes.
+  </p><p>
+  The following tables illustrate some of the effects of the style settings. 
+  Examples of tapered line styles are given below.
+  Examples of linear and radial gradient fill can be seen under  <a href="#k:colorList">colorList</a>.
+  </p><p>
+    <table border="1">
+      <tbody><tr><td align="center"><tt>solid</tt> </td><td><img src="node_edge_graph_attributes_files/n_solid.png">
+         </td><td align="center"><tt>dashed</tt> </td><td><img src="node_edge_graph_attributes_files/n_dashed.png">
+         </td><td align="center"><tt>dotted</tt> </td><td><img src="node_edge_graph_attributes_files/n_dotted.png"> </td></tr>
+      <tr><td align="center"><tt>bold</tt> </td><td><img src="node_edge_graph_attributes_files/n_bold.png">
+         </td><td align="center"><tt>rounded</tt> </td><td><img src="node_edge_graph_attributes_files/n_rounded.png">
+         </td><td align="center"><tt>diagonals</tt> </td><td><img src="node_edge_graph_attributes_files/n_diagonals.png"> </td></tr>
+      <tr><td align="center"><tt>filled</tt> </td><td><img src="node_edge_graph_attributes_files/n_filled.png">
+         </td><td align="center"><tt>striped</tt> </td><td><img src="node_edge_graph_attributes_files/n_striped.png">
+         </td><td align="center"><tt>wedged</tt> </td><td><img src="node_edge_graph_attributes_files/n_wedged.png"></td></tr>
+      </tbody><caption>Basic style settings for nodes</caption>
+    </table>
+  </p><p>
+    <table border="1">
+      <tbody><tr><td align="center"><tt>solid</tt> </td><td><img src="node_edge_graph_attributes_files/e_solid.png"> 
+          </td><td align="center"><tt>dashed</tt> </td><td><img src="node_edge_graph_attributes_files/e_dashed.png"> </td></tr>
+      <tr><td align="center"><tt>dotted</tt> </td><td><img src="node_edge_graph_attributes_files/e_dotted.png">
+          </td><td align="center"><tt>bold</tt> </td><td><img src="node_edge_graph_attributes_files/e_bold.png"></td></tr> <tr>
+      </tr></tbody><caption>Basic style settings for edges</caption>
+    </table>
+  </p><p>
+    <table border="1">
+      <tbody><tr><td align="center"><tt>solid</tt> </td><td><img src="node_edge_graph_attributes_files/c_solid.png"> 
+          </td><td align="center"><tt>dashed</tt> </td><td><img src="node_edge_graph_attributes_files/c_dashed.png">
+          </td><td align="center"><tt>dotted</tt> </td><td><img src="node_edge_graph_attributes_files/c_dotted.png">
+          </td><td align="center"><tt>bold</tt> </td><td><img src="node_edge_graph_attributes_files/c_bold.png"> </td></tr>
+      <tr><td align="center"><tt>rounded</tt> </td><td><img src="node_edge_graph_attributes_files/c_rounded.png">
+          </td><td align="center"><tt>filled</tt> </td><td><img src="node_edge_graph_attributes_files/c_filled.png">
+          </td><td align="center"><tt>striped</tt> </td><td><img src="node_edge_graph_attributes_files/c_striped.png"></td></tr>
+      </tbody><caption>Basic style settings for clusters</caption>
+    </table>
+  </p><p>
+  The effect of <tt>style=tapered</tt> depends on the <a href="#d:penwidth">penwidth</a>,
+  <a href="#d:dir">dir</a>, <a href="#d:arrowhead">arrowhead</a> and <a href="#d:arrowtail">arrowtail</a> attributes.
+  The edge starts with width <tt>penwidth</tt> and tapers to width 1, in points. The <tt>dir</tt> attribute
+  determines whether the tapering goes from tail to head (<tt>dir=forward</tt>), from head to 
+  tail (<tt>dir=forward</tt>), from the middle to both the head and tail (<tt>dir=both</tt>), or no
+  tapering at all (<tt>dir=none</tt>). If the <tt>dir</tt> is not explicitly set, the default for the
+  graph type is used (see <a href="#a:dir">dir</a>). Arrowheads and arrowtails are also drawn, based on the
+  value of <tt>dir</tt>; to avoid this, set <tt>arrowhead</tt> and/or <tt>arrowtail</tt> to <tt>"none"</tt>.
+  </p><p>
+  <b>Note:</b> At present, the tapered style only allows a simple filled polygon.
+  Additional styles such as <tt>dotted</tt> or <tt>dashed</tt>, or multiple colors
+  supplied via a <a href="#k:colorList">colorList</a> are ignored.
+  </p><p>
+  The following table illustrates the <tt>style=tapered</tt> with <tt>penwidth=7</tt> and
+  <tt>arrowtail=none</tt>.
+    <table border="1">
+      <tbody><tr><td><tt>dir</tt> \ <tt>arrowhead</tt></td><td align="center"><tt>normal</tt></td><td align="center"><tt>none</tt></td></tr>
+      <tr><td align="center"><tt>forward</tt> </td><td><img src="node_edge_graph_attributes_files/normal_forward.png"> </td><td><img src="node_edge_graph_attributes_files/none_forward.png"> </td></tr>
+      <tr><td align="center"><tt>back</tt> </td><td><img src="node_edge_graph_attributes_files/normal_back.png"> </td><td><img src="node_edge_graph_attributes_files/none_back.png"> </td></tr>
+      <tr><td align="center"><tt>both</tt> </td><td><img src="node_edge_graph_attributes_files/normal_both.png"> </td><td><img src="node_edge_graph_attributes_files/none_both.png"> </td></tr>
+      <tr><td align="center"><tt>none</tt> </td><td><img src="node_edge_graph_attributes_files/normal_none.png"> </td><td><img src="node_edge_graph_attributes_files/none_none.png"></td></tr>
+    </tbody></table>
+  </p><p>
+  Additional styles are available in
+  device-dependent form. Style lists are passed to device drivers, which
+  can use this to generate appropriate output.
+  </p><p>
+  The style attribute affects the basic appearance of nodes, edges and graphs, 
+  but has no effect on any text used in labels. For this, use the <a href="#d:fontname"><tt>fontname</tt></a>, <a href="#d:fontsize"><tt>fontsize</tt></a> and <a href="#d:fontcolor"><tt>fontcolor</tt></a>
+  attributes, or the <tt>&lt;FONT&gt;</tt>, <tt>&lt;B&gt;</tt>, <tt>&lt;I&gt;</tt>, etc. 
+  elements in <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like labels</a>.
+  </p><p>
+  The <tt>setlinewidth</tt> style value can be
+  used for more control over the width of node borders and edges than is
+  allowed by <tt>bold</tt>. This style value takes an argument, specifying the
+  width of the line in <a href="#points">points</a>. For example, <tt>style="bold"</tt> is
+  equivalent to <tt>style="setlinewidth(2)"</tt>.
+  <b>The use of <tt>setlinewidth</tt> is deprecated; one should use the
+  <a href="#d:penwidth"><tt>penwidth</tt></a> attribute instead.</b>
+
+</p></dd><dt><a name="k:viewPort"><strong>viewPort</strong></a>
+</dt><dd>"%lf,%lf,%lf,%lf,%lf" or  "%lf,%lf,%lf,'%s'"
+  <p>
+  The viewPort <tt>W,H,Z,x,y</tt> or <tt>W,H,Z,N</tt>
+  specifies a viewport for the final image. The pair (W,H) gives the
+  dimensions (width and height) of the final image, in
+  <a href="#points">points</a>.
+  The optional Z is the zoom factor, i.e., the image in the original layout will be
+  W/Z by H/Z points in size. By default, Z is 1.
+  The optional last part is either a pair (x,y) giving a position in the original layout of the
+  graph, in
+  <a href="#points">points</a>, of the center of the viewport, or the name N
+  of a node whose center should used as the focus.
+  By default, the focus is the center of the graph bounding box, i.e.,
+  (bbx/2,bby/2), where "bbx,bby" is the
+  value of the bounding box attribute <a href="#a:bb">bb</a>.
+  </p><p>
+  Sample values: <tt>50,50,.5,'2.8 BSD' or <tt>100,100,2,450,300</tt>.
+  The first will take the 100x100 point square centered on the node <tt>2.8 BSD</tt>
+  and scale it down by 0.5, yielding a 50x50 point final image.
+
+</tt></p></dd></dl><tt>
+
+
+</tt></body></html>

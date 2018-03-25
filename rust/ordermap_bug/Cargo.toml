@@ -1,0 +1,7 @@
+[package]
+authors = ["Garrett Berg <googberg@gmail.com>"]
+name = "ordermap_bug"
+version = "0.1.0"
+
+[dependencies]
+ordermap = "0.3.3"

@@ -1,0 +1,8 @@
+[package]
+authors = ["Garrett Berg <googberg@gmail.com>"]
+name = "cli-html"
+version = "0.1.0"
+
+[dependencies]
+html2text = "0.1.6"
+tabwriter = "1.0.3"

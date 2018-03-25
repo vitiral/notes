@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
+<!--
+    This is a generated document.  Do not edit.
+-->
+<html version="2.0"><div id="saka-gui-root" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 2147483647; opacity: 1; pointer-events: none;"><div><div><style>
+@font-face {
+  font-family: Roboto; -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased;
+  font-style: normal; font-weight: normal; src: url(moz-extension://0c92cada-5f12-4da3-9cea-61965cef735a/Roboto-Regular.tff) format('tff');
+}
+.saka-hint-body {
+  all: initial;
+position: absolute;
+z-index: 2147483647;
+opacity: 1;
+font-family: Roboto, sans-serif;
+font-weight: 900;
+padding: 0.15rem 0.25rem;
+border: 0px solid;
+text-align: center;
+text-decoration: none;
+text-transform: uppercase;
+vertical-align: middle;
+font-size: 12px;
+color: #3f51F5;
+background-color: #ffffff;
+border-color: #ffffff;
+box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+border-radius: 4px;
+transform: translate3d(0%, -50%, 0)
+}
+.saka-hint-normal-char {
+  
+}
+.saka-hint-active-char {
+  opacity: 0.5
+}</style><div style="position: absolute; left: 0px; top: 0px;"></div></div></div></div><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>The DOT Language</title>
+</head>
+<body bgcolor="white">
+<a name="top"></a>
+<h1 align="CENTER">The DOT Language</h1>
+<hr>
+The following is an abstract grammar defining the DOT language.
+Terminals are shown in bold font and nonterminals in italics.
+Literal characters are given in single quotes.
+Parentheses ( and ) indicate grouping when needed.
+Square brackets [ and ] enclose optional items.
+Vertical bars | separate alternatives.
+<table>
+<tbody><tr>
+  <td align="RIGHT"><i>graph</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">[ <b>strict</b> ] (<b>graph</b> | <b>digraph</b>) [ <i>ID</i> ] <b>'{'</b> <i>stmt_list</i> <b>'}'</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>stmt_list</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">[ <i>stmt</i> [ <b>';'</b> ] <i>stmt_list</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>stmt</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>node_stmt</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><i>edge_stmt</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><i>attr_stmt</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><i>ID</i> <b>'='</b> <i>ID</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><i>subgraph</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>attr_stmt</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">(<b>graph</b> | <b>node</b> | <b>edge</b>) <i>attr_list</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>attr_list</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><b>'['</b> [ <i>a_list</i> ] <b>']'</b> [ <i>attr_list</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>a_list</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>ID</i> <b>'='</b> <i>ID</i> [ (<b>';'</b> | <b>','</b>) ] [ <i>a_list</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>edge_stmt</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">(<i>node_id</i> | <i>subgraph</i>) <i>edgeRHS</i> [ <i>attr_list</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>edgeRHS</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>edgeop</i> (<i>node_id</i> | <i>subgraph</i>) [ <i>edgeRHS</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>node_stmt</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>node_id</i> [ <i>attr_list</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>node_id</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><i>ID</i> [ <i>port</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>port</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT"><b>':'</b> <i>ID</i> [ <b>':'</b> <i>compass_pt</i> ]</td>
+</tr>
+<tr>
+  <td align="RIGHT"></td>
+  <td align="LEFT">|</td>
+  <td align="LEFT"><b>':'</b> <i>compass_pt</i></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>subgraph</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">[ <b>subgraph</b> [ <i>ID</i> ] ] <b>'{'</b> <i>stmt_list</i> <b>'}'</b></td>
+</tr>
+<tr>
+  <td align="RIGHT"><i>compass_pt</i></td>
+  <td align="LEFT">:</td>
+  <td align="LEFT">(<b>n</b> | <b>ne</b> | <b>e</b> | <b>se</b> | <b>s</b> | <b>sw</b> | <b>w</b> | <b>nw</b> | <b>c</b> | <b>_</b>)</td>
+</tr>
+</tbody></table>
+<p>
+The keywords <b>node</b>, <b>edge</b>, <b>graph</b>, <b>digraph</b>,
+<b>subgraph</b>, and <b>strict</b> are case-independent.
+Note also that the allowed compass point values are not keywords, so
+these strings can be used elsewhere as ordinary identifiers and, conversely,
+the parser will actually accept any identifier.
+</p><p>
+An <i>ID</i> is one of the following: 
+</p><menu>
+<li> Any string of alphabetic (<tt>[a-zA-Z\200-\377]</tt>) characters, underscores (<tt>'_'</tt>) or
+digits (<tt>[0-9]</tt>), not beginning with a digit;
+</li><li> a numeral [<tt>-</tt>]<sup>?</sup>(<tt>.</tt>[<tt>0</tt>-<tt>9</tt>]<sup>+</sup>  | [<tt>0</tt>-<tt>9</tt>]<sup>+</sup>(<tt>.</tt>[<tt>0</tt>-<tt>9</tt>]<sup>*</sup>)<sup>?</sup> ); 
+</li><li> any double-quoted string ("...") possibly containing escaped 
+quotes (\")<sup>1</sup>;
+</li><li> an HTML string (&lt;...&gt;).
+</li></menu>
+An ID is just a string; the lack of quote characters in the first two
+forms is just for simplicity. There is no semantic difference between
+<tt>abc_2</tt> and <tt>"abc_2"</tt>, or between <tt>2.34</tt> and 
+<tt>"2.34"</tt>. Obviously, to use a keyword as an ID, it must be quoted.
+Note that, in HTML strings, angle
+brackets must occur in matched pairs, and newlines and other formatting whitespace
+characters are allowed.
+In addition, the content must be legal XML, so that the special XML
+escape sequences for ", &amp;, &lt;, and &gt; may be necessary
+in order to embed these characters in attribute values or raw text.
+As an ID, an HTML string can be any legal XML string. However, if used
+as a label attribute, it is interpreted specially and must follow the syntax
+for <a href="https://graphviz.gitlab.io/_pages/doc/info/shapes.html#html">HTML-like labels</a>.
+<p>
+Both quoted strings and HTML strings are scanned as a unit, so
+any embedded comments will be treated as part of the strings.
+</p><p>
+An <i>edgeop</i> is <tt>-&gt;</tt> in directed graphs and <tt>--</tt> in
+undirected graphs.
+</p><p>
+The language supports C++-style comments: <tt>/* */</tt> and <tt>//</tt>.
+In addition, a line beginning with a '#' character is considered a line
+output from a C preprocessor (e.g., #  34 to indicate line 34 ) and discarded.
+</p><p>
+Semicolons and commas aid readability but are not required.
+Also, any amount of whitespace may be inserted between terminals.
+</p><p>
+As another aid for readability, dot allows double-quoted strings to
+span multiple physical lines using the standard C convention of a
+backslash immediately preceding a newline character<sup>2</sup>. In addition, 
+double-quoted strings can be concatenated using a '+' operator.
+As HTML strings can contain newline characters, which are used solely for 
+formatting, the language does not allow escaped newlines or
+concatenation operators to be used within them.
+</p><h2>Subgraphs and Clusters</h2>
+Subgraphs play three roles in Graphviz. First, a subgraph can be used to 
+represent graph structure, indicating that certain nodes and edges should 
+be grouped together. This is the usual role for subgraphs 
+and typically specifies semantic information about the graph components. 
+It can also provide a convenient shorthand for edges. An edge statement allows
+a subgraph on both the left and right sides of the edge operator.
+When this occurs, an edge is created from every node on the left to every node
+on the right. For example, the specification
+<pre>  A -&gt; {B C}
+</pre>
+is equivalent to
+<pre>  A -&gt; B
+  A -&gt; C
+</pre>
+<p>
+In the second role, a subgraph can provide a context for setting attributes.
+For example, a subgraph could specify that blue 
+is the default color for all nodes defined in it. 
+In the context of 
+graph drawing, a more interesting example is: 
+</p><pre>subgraph { 
+rank = same; A; B; C; 
+} 
+</pre>
+This (anonymous) subgraph specifies that the nodes A, B and C 
+should all be placed on the same rank if drawn using dot. 
+<p>
+The third role for subgraphs directly involves how the graph
+will be laid out by certain layout engines. If the name of 
+the subgraph begins with <tt>cluster</tt>, Graphviz notes the subgraph as 
+a special <i>cluster</i> subgraph. If supported, the layout engine will 
+do the layout so that the nodes belonging to the cluster are drawn together, 
+with the entire drawing of the cluster contained within a bounding rectangle. 
+Note that, for good and bad, cluster subgraphs are not part of the
+DOT language, but solely a syntactic convention adhered to by
+certain of the layout engines.
+</p><h2>Lexical and Semantic Notes</h2>
+A graph must be specified as either a <b>digraph</b> or a <b>graph</b>.
+Semantically, this indicates whether or not there is a natural direction from
+one of the edge's nodes to the other. 
+Lexically, a digraph must specify an edge using the edge operator <tt>-&gt;</tt>
+while a undirected graph must use <tt>--</tt>.
+Operationally, the distinction is used to define different default rendering
+attributes. For example, edges in a digraph will be drawn, by default, with
+an arrowhead pointing to the head node. For ordinary graphs, edges are drawn
+without any arrowheads by default.
+<p>
+A graph may also be described as <b>strict</b>. 
+This forbids the creation of multi-edges, i.e., there can be at most one 
+edge with a given tail node and head node in the directed case. For undirected 
+graphs, there can be at most one
+edge connected to the same two nodes. Subsequent edge statements using
+the same two nodes will identify the edge with the previously defined one
+and apply any attributes given in the edge statement.
+For example, the graph
+</p><pre>strict graph { 
+  a -- b
+  a -- b
+  b -- a [color=blue]
+} 
+</pre>
+will have a single edge connecting nodes <tt>a</tt> and <tt>b</tt>,
+whose color is blue.
+<p>
+If a default attribute is
+defined using a <b>node</b>,  <b>edge</b>, or  <b>graph</b> statement,
+or by an attribute assignment not attached to a node or edge, any object of the
+appropriate type defined afterwards will inherit this attribute value.
+This holds until the default attribute is set to a new value, from which
+point the new value is used. Objects defined before a default attribute
+is set will have an empty string value attached to the attribute once
+the default attribute definition is made.
+</p><p>
+Note, in particular, that a subgraph receives the attribute settings of
+its parent graph at the time of its definition. This can be useful; for
+example, one can assign a font to the root graph and all subgraphs will
+also use the font. For some attributes, however, this property is
+undesirable. If one attaches a label to the root graph, it is probably
+not the desired effect to have the label used by all subgraphs. Rather
+than listing the graph attribute at the top of the graph, and the
+resetting the attribute as needed in the subgraphs, one can simply defer
+the attribute definition in the graph until the appropriate subgraphs
+have been defined.
+</p><p>
+If an edge belongs to a cluster, its endpoints belong to that cluster.
+Thus, where you put an edge can effect a layout, as clusters are sometimes
+laid out recursively.
+</p><p>
+There are certain restrictions on subgraphs and clusters. First, at
+present, the names of a graph and it subgraphs share the same namespace.
+Thus, each subgraph must have a unique name. Second, although nodes
+can belong to any number of subgraphs, it is assumed clusters form
+a strict hierarchy when viewed as subsets of nodes and edges.
+</p><h2>Character encodings</h2>
+The DOT language assumes at least the ascii character set.
+Quoted strings, both ordinary and HTML-like, may contain non-ascii characters.
+In most cases, these strings are uninterpreted: they simply serve as
+unique identifiers or values passed through untouched. Labels, however,
+are meant to be displayed, which requires that the software be able to
+compute the size of the text and determine the appropriate glyphs. 
+For this, it needs to know what character encoding is used.
+<p>
+By default, DOT assumes the UTF-8 character encoding. It also accepts
+the Latin1 (ISO-8859-1) character set, assuming the input graph uses
+the <b><a href="https://graphviz.gitlab.io/_pages/doc/info/attrs.html#a:charset">charset</a></b> attribute to 
+specify this. For graphs using other
+character sets, there are usually programs, such as <tt>iconv</tt>, which
+will translate from one character set to another.
+</p><p>
+Another way to avoid non-ascii characters in labels is to use HTML entities
+for special characters. During label evaluation, these entities are
+translated into the underlying character. This
+<a href="https://graphviz.gitlab.io/_pages/doc/char.html">
+table</a> shows the supported entities, with their Unicode value, a typical
+glyph, and the HTML entity name. Thus, to include a lower-case Greek beta
+into a string, one can use the ascii sequence <tt>&amp;beta;</tt>. 
+In general, one should only use entities that are allowed in the output
+character set, and for which there is a glyph in the font.
+</p><hr>
+<font size="2">
+<ol type="1">
+<li> In quoted strings in DOT, the only escaped character is double-quote
+("). That is, in quoted strings, the dyad \" is converted to "; all other
+characters are left unchanged. In particular, \\ remains \\. Layout
+engines may apply additional escape sequences.
+</li><li> Previous to 2.30, the language allowed escaped newlines to be used anywhere outside
+of HTML strings. The new lex-based scanner makes this difficult to implement. Given the
+perceived lack of usefulness of this generality, we have restricted this feature to
+double-quoted strings, where it can actually be helpful.
+</li></ol>
+</font>
+
+
+</body></html>

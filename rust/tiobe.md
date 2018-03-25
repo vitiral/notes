@@ -1,8 +1,8 @@
   year |  month | place | perc  | Notes
 ------------------------------------------------------------
   2018    March                   Not in top 50
-  2018    Feb                     forgot to record
-  2018    Jan                     forgot to record
+  2018    Feb     46      0.196   Still droppin
+  2018    Jan     46      0.230   Droppin like a rock
   2017    Dec     43      0.530   And... it's gone
   2017    Nov     31      0.698   Holy popularity, Batman!
   2017    Oct     46      0.409   Gained place, lost perc
