@@ -1,39 +1,24 @@
-use std::char;
-use std::io;
-use std::fs;
-use std::iter::FromIterator;
+use std::process::Command;
+use std::path::*;
 
-use std::sync::mpsc::TryRecvError;
+fn join<P: AsRef<Path>>(a: P, b: P) {
+    println!("Joining: {} with {}", a.as_ref().display(), b.as_ref().display());
+    let result = a.as_ref().join(b);
+    println!("Result : {}", result.display());
 
-fn into_try_recv() {
-    let recv_err = TryRecvError::Disconnected;
-    let e: TryRecvError = recv_err.into();
-    println!("try_recv?:\n- {}\n- {}", e, recv_err);
-}
-
-fn read_dne() -> io::Result<()> {
-    let path = "foobar";
-    fs::File::open(path)
-        .map_err(|err| io::Error::new(err.kind(), format!("(path={}) {}", path, err)))?;
-    Ok(())
-}
-
-fn fmt_fn() {
-    println!("This is a function: {}", {
-        let x = 10;
-        10 + 7
-    });
 }
 
 fn main() {
-    if let Err(e) = read_dne() {
-        println!("Got Error: {}", e);
-    }
+    let hostname = Command::new("hostname")
+        .output()
+        .expect("could not get hostname")
+        .stdout;
+    let hostname = ::std::str::from_utf8(&hostname).unwrap();
+    println!("Hostname: {}", hostname.trim());
 
-    into_try_recv();
-
-    println!("Hello, world!");
-    let dig = 'F'.to_digit(16).unwrap();
-    println!("F: {}", dig);
-    // println!("x09 == {}", "x09".parse::<u8>().unwrap());
+    join("a", "b");
+    join("a/", "b");
+    join("/a", "b");
+    join("a", "/b");
+    join("/a", "/b");
 }
