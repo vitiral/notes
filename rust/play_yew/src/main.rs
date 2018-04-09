@@ -63,39 +63,29 @@ impl Component<Context> for Model {
 
 
 const SVG: &str = r#"
-<!DOCTYPE html>
-<html>
-<body>
-
 <svg width="400" height="110">
   <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
   Sorry, your browser does not support inline SVG.
 </svg>
-
-</body>
-</html>
 "#;
 
 impl Renderable<Context, Model> for Model {
     fn view(&self) -> Html<Context, Self> {
-        // let mut h = html!{
+        // html!{
         //     <h1>{"See inner html?:"}</h1>
-        //     // <div innerHtml=SVG,></div>
-        // };
-        // h
-        //
-        // SVG.into()
+        //     <div innerHtml=SVG,></div>
+        //     <div>{ SVG }</div>
+        // }
+
         let js_node = js! {
             var div = document.createElement("div");
             div.innerHTML = @{SVG.to_string()};
             console.log(div);
-            div
+            return div;
         };
         eprintln!("js_node: {:?}", js_node);
-
         let node = Node::try_from(js_node).expect("convert js_node");
         VNode::VRef(node)
-
 
         // html! {
         //     <div>
