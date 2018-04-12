@@ -1,4 +1,4 @@
-#![recursion_limit="512"]
+#!l[recursion_limit="512"]
 #[macro_use]
 extern crate stdweb;
 #[macro_use]
@@ -33,6 +33,10 @@ impl Component<Context> for Model {
     type Properties = ();
 
     fn create(_: Self::Properties, context: &mut Env<Context, Self>) -> Self {
+        js! {
+            hello("bob");
+            hello("World");
+        };
         Model {
             value: 0,
         }
