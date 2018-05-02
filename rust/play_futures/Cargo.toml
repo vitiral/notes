@@ -1,0 +1,9 @@
+[package]
+name = "play_futures"
+version = "0.1.0"
+authors = ["Garrett Berg <vitiral@gmail.com>"]
+
+[dependencies]
+futures = "0.2.0"
+tokio-core = "0.1.17"
+futures-await = "0.1.1"

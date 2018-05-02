@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="hello.js"></script>
+    <script>
+        var xmldoc = document.implementation.createDocument(null, null);
+        var span = xmldoc.createElement("span");
+        span.innerHTML = "<div></div>";
+
+        console.log("Getting text");
+        var request = new XMLHttpRequest();
+        request.open('GET', 'text.txt', false);
+        request.send();
+        var text = request.responseText;
+        console.log("TEXT:\n" + text);
+
+        console.log("Getting async text");
+        var request = new XMLHttpRequest();
+        var text = null;
+        request.open('GET', 'text.txt');
+        request.onreadystatechange = function() {
+            if (request.readyState === 4) {
+                text = request.responseText;
+            }
+        }
+        request.send();
+        while (text === null) {
+
+        }
+        console.log("ATEXT:\n" + text);
+    </script>
+</head>
+<body>
+    <h1>Header</h1>
+</body>
+</html>

@@ -36,6 +36,7 @@ impl Component<Context> for Model {
         js! {
             hello("bob");
             hello("World");
+            getFile("test.json");
         };
         Model {
             value: 0,
