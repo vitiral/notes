@@ -8,12 +8,12 @@ def swap(arr, i, j):
 
 def left(li, i):
     """The left node of the index."""
-    return 2 * (i - li) + 1 + li
+    return li + 2 * (i - li) + 1
 
 
 def right(li, i):
-    """The left node of the index."""
-    return 2 * (i - li) + 2 + li
+    """The right node of the index."""
+    return li + 2 * (i - li) + 2
 
 
 def parent(li, i):

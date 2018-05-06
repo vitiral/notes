@@ -90,7 +90,7 @@ basic strategies for solving problems that have come up:
 
 ## Data Structures
 - array: contiguous memory with a set size. inserting/deleting can take up to
-  O(n), appending takes O(1), locating takes O(1), searching O(n)
+  O(n), appending takes O(1), locating index takes O(1), searching O(n)
 - que: first-in first-out buffer (like the line at a supermarket)
 - stack: first-in last-out buffer, like a pile of trays
 - deque: stack + queue. Example: ring buffer
@@ -101,7 +101,7 @@ basic strategies for solving problems that have come up:
   - depth-first traversals: recursive "visiting of nodes."
     - inorder (left, self, right), preorder (self, left, right),
       postorder (left, right, self)
-    - inorder traversal will result in a sorted output
+    - inorder traversal of BST will result in a sorted output
     - inorder + (pre | post) will result in the tree structure being
       described completely.
     - preorder + duplicating nodes can make a complete duplicate of BTree
@@ -114,8 +114,8 @@ basic strategies for solving problems that have come up:
       ... actually it seems to be the only way?
   - in a binary tree, node N can have following relatives:
     - U: the uncle of the node (grandparent's other child)
-    - G: the parent of the parent
-    - B: the brother of the node
+    - G: the grandparent (parent of the parent)
+    - B: the brother of the node (parent's other child)
     - P: the parent of the node
     - N: the node itself
     - L: the left child of the node
@@ -133,11 +133,21 @@ basic strategies for solving problems that have come up:
   L   R                  L   R
      / \
     rL  rR
+
+ ROT RIGHT          ROT LEFT
+
+      G                G
+     / \              / \
+    N   U            U   N
+   / \                  / \
+  L   P                P   R
+     / \              / \
+    R   B            B   L
 ```
   - flattening of trees can be performed with rotation, especially for BST's
   - right rotation (of tree on the left) of node N means:
     - R becomes P's left-child
-    - P becomes N's right child (B stays P's left child)
+    - P becomes N's right child (B stays P's right child)
     - N becomes G's left-child
   - left rotation (of tree on the left) of node N means ... you can't do a left
     rotation because N is the left node of P
@@ -181,7 +191,7 @@ basic strategies for solving problems that have come up:
   - Online/async: can sort a list as it receives it
   - Typically the fastest sorting method for small arrays.
     - used internally in quicksort (and Timsort/MergeRunSort) to sort the
-      sub-arrays when the arrays are small (typically smaller than 10 elements)
+      sub-arrays when the arrays are small (typically smaller than 10-45 elements)
   - Can be used directly on (doubly) linked lists by simply starting with an
     empty list and taking values off of the input list one at a time
     and inserting/shifting them to the correct place.
@@ -209,6 +219,26 @@ basic strategies for solving problems that have come up:
     - unstable, inplace, O(n log n) for all cases
     - heapify the array and then pop values from it until the array is sorted.
 
+## Basic Probability Theory:
+- Poison distribution: `P(k events in t) = e^-l * ( l^k ) / (k!)
+  - `l == lambda == average == rate * time [rt]`
+  - discrete probability distribution
+  - expresses the probability of events within a fixed interval of space and time.
+  - events occur with a known constant rate and independently of their last event
+
+
 ## General Algorithms
-- TODO: read https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
-    - crap... this could actually be used for bridge-rpc...
+### Greedy
+A greedy algorithm is one that chooses the most optimal solution _locally_ in the hope
+that it leads to the most optimal solution globally.
+
+It may not always get the optimal solution, but it often at least approximates it.
+
+## General Strategy
+- Writing a regex engine:
+  - create function to do match
+  - create functions to do most basic things (`match_one`)
+  - recursively try _every_ possibility
+  - for non `^` (start), do `search` which does `match` on every item.
+  - `*` and `?` then just become allowing for literally every possibility
+
