@@ -1,3 +1,5 @@
 .ropeproject
 .cache
+.pytest_cache
 result
+env
