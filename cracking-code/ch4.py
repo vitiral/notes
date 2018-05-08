@@ -9,6 +9,9 @@ class TreeNode(object):
         self.left = left
         self.right = right
 
+    def __repr__(self):
+        return "<{}>".format(self.val)
+
 BASIC = TreeNode(
     3,
     left=TreeNode(2),
@@ -177,4 +180,65 @@ def _from_sorted(sorted_array, li, hi):
 # successor) of a given node in a binary search tree where each node has a link
 # to its parent
 
+"""
+Notes:
+
+In order traversal is:
+- left
+- self
+- right
+
+So lets start from the root and work our way through.
+- first we return the left most node
+- then, knowing only that node, we should return it's parent
+- then, knowing only that node, we should return it's right node
+
+To "kick off" the traversal we would be _given_ the left_most_node
+and asked to find the successor.
+
+"""
+
+
+def successor(node):
+    if node is None:
+        return None
+
+    if node.right:
+        return left_most_node(node.right)
+
+    return find_parent_where_self_is_left(node)
+
+
+def find_parent_where_self_is_left(node):
+    if node is None or node.parent is None:
+        return None
+
+    if node.parent.left is node:
+        return node.parent
+
+    return find_parent_where_self_is_left(node.parent)
+
+
+def left_most_node(node):
+    if node is None:
+        return None
+    while node.left:
+        node = node.left
+    return node
+
+
+def set_parents(node, parent=None):
+    node.parent = parent
+    if node.left:
+        set_parents(node.left, parent=node)
+    if node.right:
+        set_parents(node.right, parent=node)
+
+def test_successor():
+    basic = copy.deepcopy(BASIC)
+    set_parents(basic)
+    assert left_most_node(basic) is basic.left
+    assert successor(basic.left) is basic
+    assert successor(basic) is basic.right
+    assert successor(basic.right) is None
 
