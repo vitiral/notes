@@ -242,3 +242,44 @@ def test_successor():
     assert successor(basic) is basic.right
     assert successor(basic.right) is None
 
+
+################################################################################
+# PG-52 4.7 You have two very large binary trees: T1, with millions of
+# nodes, and T2, with hundreds of nodes.
+
+# Create an algorithm to decide if T2 is a subtree of T1
+
+"""
+Obviously in this case we cannot use depth-first because of the memory
+requirements.
+
+You can compare two trees using pre-order traversal, so a brute force
+solution is to do this operation for every possible node in T2.
+
+I _want_ to use hashing for this. If T2 had the hash of all of it's
+trees pre-computed then we could simply ask if the hash of T1 existed
+in T2. Hashing takes only O(n) (since the hash of each node can be
+something like hash(hash(node.val) + hash(node.left) + hash(node.right)).
+But the hash of left and right can be pre-computed and cached.
+
+Solution:
+- you can use preorder and inorder traversal for this.
+  - If T2's (preorder/postorder) is a subset of T1's (preorder/postorder)
+    then T1 is a subset of T2. You can check this using a suffix tree TODO: wut?
+"""
+
+def trees_equal(t1, t2):
+    if t1 is None:
+        if t2 is None:
+            return True
+        else:
+            return False
+
+    if t1.val != t2.val:
+        return False
+
+    if not trees_equal(t1.left, t2.left):
+        return False
+
+    if not trees_equal(t1.right, t2.right):
+        return False
