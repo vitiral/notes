@@ -232,3 +232,55 @@ def parent(arr, li, n):
     if p < li:
         return None
     return p
+
+
+###############################################################################
+## COUNTING SORT
+"""
+Counting sort only works when the integer ranges are known and are small.
+
+It works by:
+- Creating an `count array` where each `index=value - min_value` and the
+  values in the count array are the count of those indexes
+- Once all counting has happened, modify the count array so that
+  each element at each index stores the sum of it's previous counts.
+- The resulting array signifies the index position that each value should
+  go when encountered. Note: if `count>1` for _any_ item, it is important
+  to decrement the count after inserting to prevent inserting two
+  elements in the same place.
+"""
+
+def counting_sort(arr, min_val, max_val):
+    count = [0 for _ in range(max_val - min_val + 1)]
+    for value in arr:
+        count[value - min_val] += 1
+
+    sum = 0
+    for (i, value) in enumerate(count):
+        count[i] += sum
+        sum = count[i]
+
+    result = [0 for _ in range(len(arr))]
+    for (i, value) in enumerate(arr):
+        count_index = value - min_val
+        result_index = count[count_index] - 1
+        result[result_index] = arr[i]
+
+        count[count_index] -= 1
+
+    return result
+
+
+def test_counting_sort():
+    assert counting_sort([], 1, 5) == []
+    assert counting_sort([1], 1, 5) == [1]
+
+
+
+###############################################################################
+## RADIX SORT
+"""
+This is where we get to the meat of counting sort. Radix sort allows you
+to sort very large integers using very little memory in O(n) time --
+64 bit integers in only 8 passes!
+"""

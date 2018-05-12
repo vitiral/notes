@@ -33,6 +33,16 @@
 - O(n log n) / O(1): heapsort
 - O(n log n) / O(n): timsort > mergesort
 - integer case: counting sort, radix sort bucket sort can be as low as O(n+k)
+- bucket sorting: if you know the number of possible values is small (i.e.
+  1000 employees, plz sort by age) you can easily put each value in a bucket
+  (i.e. hash-table) and then sort the buckets
+- enourmous-bit-field: if you want to _remove duplicates **and** sort_ then you
+  can use an enourmous bitfield to do both in `O(N)`!!
+  - create a bitfield of all possible integers. This takes `2^N / 8` bytes, where
+    `N` is the size of the integer in bytes.
+  - when you encounter an integer simply flip it's relevant bit to 1
+  - scan through the array, outputing any `1` as it's corresponding integer.
+    Therefore this only takes two passes.
 
 ## General Stratey for questions
 - Always start off by *writing down* the question and then branching it
