@@ -4,15 +4,19 @@ def swap(arr, i, j):
     arr[i], arr[j] = arr[j], arr[i]
 
 
+TEST_MAX_INT = 1000
+
 def do_test(sorting_fn):
     v = [3, 3, 10, 8, 1, 3]
     expected = sorted(v)
-    sorting_fn(v)
+    r = sorting_fn(v)
+    if r is not None:
+        v = r # some sorts are not in-place
     assert v == expected
 
     for _ in range(10):
         values = [
-            random.randint(0, 1000)
+            random.randint(0, TEST_MAX_INT)
             for _ in range(random.randint(0, 30))
         ]
         print("Sorting", sorting_fn, ":", values)
@@ -250,31 +254,47 @@ It works by:
   elements in the same place.
 """
 
-def counting_sort(arr, min_val, max_val):
-    count = [0 for _ in range(max_val - min_val + 1)]
+def counting_sort(arr, modify_fn, max_val):
+    """An adaptation of counting sort to use for radix sort.
+
+    Works by guaranteeing the value is between [0, mod_val)
+    by subtracting the min_val and moding the result.
+
+    Note that values >= mod_val will not be "correctly" sorted,
+    (but will be corectly sorted for radix-sort's purpose).
+
+    """
+    count = [0 for _ in range(max_val + 1)]
     for value in arr:
-        count[value - min_val] += 1
+        count[modify_fn(value)] += 1
 
     sum = 0
-    for (i, value) in enumerate(count):
+    for (i, _) in enumerate(count):
         count[i] += sum
         sum = count[i]
 
     result = [0 for _ in range(len(arr))]
-    for (i, value) in enumerate(arr):
-        count_index = value - min_val
+    for i in range(len(arr)):
+        i = len(arr) - 1 - i  # do it in reverse order to preserve stability
+        count_index = modify_fn(arr[i])
         result_index = count[count_index] - 1
         result[result_index] = arr[i]
-
         count[count_index] -= 1
 
     return result
 
 
 def test_counting_sort():
-    assert counting_sort([], 1, 5) == []
-    assert counting_sort([1], 1, 5) == [1]
+    def modify_fn(value):
+        return value
+    assert counting_sort([], modify_fn, 6) == []
+    assert counting_sort([1], modify_fn, 6) == [1]
+    assert counting_sort([5,2,3], modify_fn, 6) == [2,3,5]
 
+    v = [3, 3, 10, 8, 1, 3]
+    expected = sorted(v)
+    result = counting_sort(v, modify_fn, 10)
+    assert result == expected
 
 
 ###############################################################################
@@ -283,4 +303,34 @@ def test_counting_sort():
 This is where we get to the meat of counting sort. Radix sort allows you
 to sort very large integers using very little memory in O(n) time --
 64 bit integers in only 8 passes!
+
+It does so by sorting in "chunks" from LSB -> MSB
+(although it can be imiplemented in reverse as well).
+
+Because counting sort is stable, we can know that our previous work will
+not be overwritten.
+
+TODO: this does not currently work, and I don't have time to fix ATM.
 """
+
+def radix_sort(arr):
+    class ModifyValue(object):
+        def __init__(self, shift_by, bytes=1):
+            self.shift_by = shift_by
+            self.bitmask = (1 << (bytes*8)) - 1
+
+        def __call__(self, value):
+            return (value >> self.shift_by) & self.bitmask
+
+    result = arr
+    shift_by = 0
+    for _ in range(4): # up to 4 byte values
+        modify = ModifyValue(shift_by)
+        result = counting_sort(result, modify, 255)
+        shift_by += 8
+
+    return result
+
+
+# def test_radixsort():
+#     do_test(radix_sort)
