@@ -10,6 +10,7 @@
 - sliding window: move a window along the data
 - growing midpoint: grow a midpoint at different points in the data
 - data structure: HashMap/Set are very commonly useful
+- for sum: do rolling maximum, starting over if the maximum gets reduced.
 
 **Conversion Questions**
 - General strategy (simple cases manually, reducing scope, etc)
@@ -26,23 +27,23 @@
 - que/stack/deque
 - tree (Binary Tree, Binary Heap)
 - hashmap / hashset
-- directed/undirected graph (don't know much about)
+- directed/undirected graph
 
 **Sorting Algorithms**
 - O(n^2)     / O(1): quicksort > insertion sort > selection sort > bubble sort
 - O(n log n) / O(1): heapsort
 - O(n log n) / O(n): timsort > mergesort
 - integer case: counting sort, radix sort bucket sort can be as low as O(n+k)
-- bucket sorting: if you know the number of possible values is small (i.e.
-  1000 employees, plz sort by age) you can easily put each value in a bucket
-  (i.e. hash-table) and then sort the buckets
-- enourmous-bit-field: if you want to _remove duplicates **and** sort_ then you
-  can use an enourmous bitfield to do both in `O(N)`!!
-  - create a bitfield of all possible integers. This takes `2^N / 8` bytes, where
-    `N` is the size of the integer in bytes.
-  - when you encounter an integer simply flip it's relevant bit to 1
-  - scan through the array, outputing any `1` as it's corresponding integer.
-    Therefore this only takes two passes.
+
+**Recursion**
+- memoization: store the results of previous values
+- divide and conqure: split the problem set up
+- backtracking: tentatively _try_ a solution (recursively). If it fails, try
+  the next one _at each level_. Regex, sudoku, etc
+- bottom-up: solve simple subproblems and use them to solve the more complex
+  problems.
+- top-down: solve what would happen if you could call other functions to solve
+  the top problem.
 
 ## General Stratey for questions
 - Always start off by *writing down* the question and then branching it
@@ -51,16 +52,19 @@
     positive/negative/rational/etc?
   - Make sure every term is well defined.
 - Do a trivial example by hand to make sure you understand the problem
-    - Reduce scope if necessary
-    - Graph it out in text or do several solutions in table form to look for
-      patterns
-    - Do each step of what is *wanted* manually, poiting out where things are
-      "just working"
-    - Find boundary conditions
-- Take another look at the problem, what strategies/datastructures/etc are the
-  most likely to solve it?
+  - Reduce scope if necessary
+  - Graph it out in text or do several solutions in table form to look for
+    patterns
+  - Do each step of what is *wanted* manually, poiting out where things are
+    "just working"
+  - Find boundary conditions
+  - Solve for boundary conditions. Solve for f(0) + f(1) + f(2) and see if
+    f(2) can be made general.
+- Take another look at the problem, what strategies/datastructures/etc are most
+  likely to solve it?
 - Discuss the posibilities (with yourself and interviewer), let them know how
   your thought process works and where you are unsure.
+  - point out algorithms/proofs/data-sets you _wish_ you had.
 - Dive in: try to solve the problem "manually" using the method you came up
   with.
 
@@ -228,6 +232,20 @@ basic strategies for solving problems that have come up:
 - Heapsort
     - unstable, inplace, O(n log n) for all cases
     - heapify the array and then pop values from it until the array is sorted.
+- Bucketsort: O(n + C) if you know the number of possible values is small (i.e. 1000
+  employees, plz sort by age) you can easily put each value in a bucket
+  (i.e. hash-table) and then sort the buckets
+- Counting Sort: O(n + C), kind of like bucketsort. Zero an array of integers of len
+  (max - min + 1) and then increment each value as you find them. Do a rolling
+  sum of the count_array, the values have the indexes where you should put
+  said values (decrement each time you do so).
+- enourmous-bit-field: if you want to _remove duplicates **and** sort_ integers
+  then you can use an enourmous bitfield to do both in `O(N)`!!
+  - create a bitfield of all possible integers. This takes `2^N / 8` bytes, where
+    `N` is the size of the integer in bytes.
+  - when you encounter an integer simply flip it's relevant bit to 1
+  - scan through the bitfield, outputing any `1` as it's corresponding integer.
+    Therefore this only takes two passes.
 
 ## Basic Probability Theory:
 - Poison distribution: `P(k events in t) = e^-l * ( l^k ) / (k!)
