@@ -41,7 +41,7 @@ hello_py
 hello_args foo bar -a b -z 'foo bar is zzzz'
 
 printf "\nTEMPLATE no flag\n"
-py_bash_template path1 path2
+py_bash_template path1 path2 "this path is waaaay too long"
 
 printf "\nTEMPLATE empty flag\n"
 py_bash_template --force
