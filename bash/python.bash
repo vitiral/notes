@@ -23,7 +23,7 @@ EOF
 }
 
 function py_bash_template {
-python3 - "$@" <<EOF
+python3 - "$@" <<PY3
 #!/usr/bin/python3
 import argparse,os,sys,subprocess as sp
 parser = argparse.ArgumentParser(
@@ -34,17 +34,20 @@ parser.add_argument('paths', nargs='+', help='paths')
 parser.add_argument('-f', '--flag', action='store_true')
 args = parser.parse_args()
 print('paths={}, flag={}'.format(args.paths, args.flag))
-EOF
+PY3
 }
 
 hello_py
 hello_args foo bar -a b -z 'foo bar is zzzz'
 
 printf "\nTEMPLATE no flag\n"
-py_bash_template path1 path2 "this path is waaaay too long"
+py_bash_template path1 path2 'this path is waaaay too long'
+
+printf "\nTEMPLATE flag\n"
+py_bash_template path1 --flag
 
 printf "\nTEMPLATE empty flag\n"
-py_bash_template --force
+py_bash_template --flag
 
 printf "\nTEMPLATE help\n"
 py_bash_template --help
