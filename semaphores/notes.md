@@ -14,6 +14,33 @@ Semaphore
   one of them gets unblocked. **NOTE: the semaphore does not have to be positive
   for another thread to get unblocked. It ONLY HAS TO BE INCREMENTED**.
 
+# Extra Concurrency Notes
+## Memory barriers/fences
+This code can print either 0 or 42 without a fence.
+Global:
+```
+x, f = 0, 0
+```
+Processor #1:
+```
+while(f == 0):
+    pass
+# fence required
+print x
+```
+Processor #2:
+```
+x = 42
+f = 1
+```
+
+without a fence, #2's CPU can do `f=1` before `x=42` as an optimization, since
+they _shouldn't_ depend on eachother (locally).
+
+
+
+# Book Notes
+
 ## Rendevous
 Ensure that a1 < b2 and b1 < b2 using only semaphores.
 

@@ -112,3 +112,96 @@ Using 4 bits
 Masks:
 - `&` with `0` will always turn "off"
 - `|` with `1` will always turn "on"
+
+# System Design and Scalability
+System design is mostly about your ability to get a rough design on the board and think out loud.
+
+- What is the scope of the problem? Get a scope/requirements first.
+- Make reasonable assumptions _out loud_.
+- What is a _basic_ design? What are its major components?
+- What are the key difficulties with this design?
+- Redesign with the key issues in mind and loop.
+
+## Key Concepts
+- Scaling:
+  - Verticle Scaling: increase the memory/cpu/etc of individual nodes.
+    Improving the performance characteristics of the program itself.
+  - Horizontal Scaling: increase the _number of nodes_ and split up the work.
+- Load Balancer: a tool that distrubutes work among nodes to balance their loads.
+- Database Denormalization: the one I know the least about. Basically databases don't
+  always scale well, especially regarding join operations. NoSQL can theoretically help in some
+  situations.
+  - Try and avoid extra lookups -- instead possibly store the relevant relationships within
+    the relevant tables.
+- Database Partitioning (sharding): break up the data across machines by some scheme.
+  - Verticle Partitioning: split up the data by application/feature. I.e. one partition
+    for tables related to profiles, another for messages, etc.
+  - Key-Based (or Hash-Based) Partitioning: Use some part of the data (i.e. ID) to partition
+    it. Example: `server_index=key % n`. Says the number of servers is "effectively fixed"
+    because adding nodes means you have to repartition.
+  - Directory-Based Partitioning: you maintain a lookup-table for where data can be found.
+    Makes it easy to add servers but you have to maintain and use the lookup table.
+- Caching: pretty clear, keep hot stuff in memory and check memory first.
+- Async Processing and Queues: make long running processes asyncronous and don't let the user
+  see them. Also, be okay with having _some_ delay in what the user sees, being okay to show
+  them a slightly out of date version that renders quickly.
+- Networking Metrics:
+  - Throughput: the speed of the network in real-world scenarios.
+  - Bandwidth: the maximum throughput of the system in ideal conditions.
+  - Latency: the time it takes for the transmission of a packet to be received.
+
+### Map Reduce:
+Map Reduce is a big one, so I'm focusing on it.
+
+Basics:
+- I like to call it `Map-(Combine-Shuffle-Reduce)+`
+- The Map step is only executed _once_. It takes some data and emits a bunch
+  of `(key, value)` pairs.
+- The (Combine-Shuffle-Reduce)` step is recursively executed one or more times.
+  - Combine: the `(key, value)` are combined so that the values of like-keys
+    are joined into `(key, List[value])`. This step can be customized in some
+    implementations.
+  - Shuffle: organize the (key, List[value]) pairs and "shuffles" them off to
+    workers. This is typically defined by the system.
+  - Reduce: take in `(key, List[value])` and process it in _some way_,
+    producing a bunch of `(key, value)` pairs to again be recursively
+    `(Combine-Shuffle-Reduce)`.
+
+#### Hadoop Example
+> - http://ercoppa.github.io/HadoopInternals/AnatomyMapReduceJob.html
+> - https://docs.marklogic.com/guide/mapreduce/hadoop
+
+Configuration: the user provides configuration:
+- A `.jar` with `map()` and `reduce()` implemented (also arbitrary "combiner"
+  which can process the data in some way during the map step, i.e. take the
+  local maximum/minum etc)
+- `input,output` directories/files
+- other parameters
+
+Map Task:
+- Typically does one `file` per task, but may split the file up.
+- Tries to explit data locality, giving data for the map to the node it resides
+  on (or it's rack). The load balancer makes the final call though.
+- A single map task: it executes the `map()` function and "spills" the results
+  to disk. `shuffle` then package the merged keys into outputs.
+  - spilling happens when a buffer is getting full. It literally in-memory
+    sorts the buffer and dumps them to the local file (I assume it only sorts
+    the buffer up to the "current index" since items will still be being
+    written by the map step).
+
+Reduce Task on one node:
+- fetches the map results from other nodes to be local.
+- sorts them into a single sorted array of `(key, value-list)` pairs.
+- execute the reduce phase and saves the result (i.e. to HDFS).
+
+The job is complete when all there are no duplicate keys and all reduce tasks
+have been executed.
+
+## Consideratiosn
+- Failures: essentially any part of a system can fail. Plan for them.
+- Availability: percentage of the time a system is available.
+- Realibility: probability that a system will be available for a given unit of
+  time.
+- Read vs Write heavy: queing for writing and caching for reads might make
+  sense.
+- Security issues

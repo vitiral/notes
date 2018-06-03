@@ -27,8 +27,7 @@ python3 - "$@" <<PY3
 #!/usr/bin/python3
 import argparse,os,sys,subprocess as sp
 parser = argparse.ArgumentParser(
-    prog='template',
-    description='example template',
+    prog='py3bash', description='py3 inside bash',
 )
 parser.add_argument('paths', nargs='+', help='paths')
 parser.add_argument('-f', '--flag', action='store_true')
