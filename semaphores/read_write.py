@@ -1,6 +1,6 @@
 """Implement a read/write lock using only semaphores.
 """
-from threading import Semaphore, Thread
+from threading import Semaphore, Thread, Condition
 import time
 
 class RWLockRPreferred(object):
@@ -35,41 +35,54 @@ class RWLockRPreferred(object):
 
 
 class RWLockWPreferred(object):
-    """A readers writers lock where the writer is preferred."""
+    """A readers writers lock where the writer is preferred.
+
+    Some notes on the condition variable:
+    - It is basically a `Lock/Mutex` object with additional `wait` and `release` methods.
+    - The extra methods can _only be called after `acquire`_.
+    - `wait` releases the lock until `release*` is called by another thread.
+
+    Basically it avoids having to use a mutex-var to unlock/check-var/lock --
+    the OS handles when you unlock which is much more efficient.
+
+    """
 
     def __init__(self):
-        self._lock = Semaphore(1)
         self._write_lock = Semaphore(1)
+        self._condition = Condition()
         self.readers = 0
         self.writers_waiting = 0
 
     def read_lock(self):
-        self._lock.acquire()
+        self._condition.acquire()
+
         while self.writers_waiting:
-            self._lock.release()
-            self._lock.acquire()
+            self._condition.wait()
+
         if self.readers == 0:
             self._write_lock.acquire()
         self.readers += 1
-        self._lock.release()
+        self._condition.release()
 
     def read_unlock(self):
-        self._lock.acquire()
+        self._condition.acquire()
         self.readers -= 1
         if self.readers == 0:
             self._write_lock.release()
-        self._lock.release()
+        self._condition.release()
 
     def write_lock(self):
-        self._lock.acquire()
+        self._condition.acquire()
         self.writers_waiting += 1
-        self._lock.release()
+        self._condition.release()
 
         self._write_lock.acquire()
 
-        self._lock.acquire()
+        self._condition.acquire()
         self.writers_waiting -= 1
-        self._lock.release()
+        if self.writers_waiting == 0:
+            self._condition.notify_all()
+        self._condition.release()
 
     def write_unlock(self):
         self._write_lock.release()

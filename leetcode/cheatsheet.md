@@ -268,5 +268,11 @@ It may not always get the optimal solution, but it often at least approximates i
   - create functions to do most basic things (`match_one`)
   - recursively try _every_ possibility
   - for non `^` (start), do `search` which does `match` on every item.
-  - `*` and `?` then just become allowing for literally every possibility
+  - ``*`` and `?` then just become allowing for literally every possibility
+
+# Graph Theory Refresher
+
+## Dijkstra's Algorithm
+The shortest distance from one node to _every other node_ in the graph.
+
 
