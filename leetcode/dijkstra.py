@@ -11,6 +11,19 @@ Given a weighted graph, find the shortest paths to all nodes.
   - if new_value < child.value: continue
   - child.value = new_value
   - if child in unvisited: visit(child) (go to 4)
+
+
+# Alternative Algorithm: A star (A*)
+Very similar to dijkstra's except that we are given a pre-defined heuristic function.
+
+This algorithm visits each node a maximum of one time, using the heuristic weight
+to determine the next node to query.
+
+- Only "neighbor" nodes of the starting node (etc etc) are queried.
+- The operation is performed only while discovered nodes are unvisited (to
+  avoid non-connected graphs)
+- The "next node" to look at is determined by a minheap of the heurstic set.
+- The heurstic value is determined by `cost_from_start + heurstic_cost(self, goal)`
 """
 import copy
 

@@ -11,6 +11,8 @@
 - growing midpoint: grow a midpoint at different points in the data
 - data structure: HashMap/Set are very commonly useful
 - for sum: do rolling maximum, starting over if the maximum gets reduced.
+- backtracking: solve the problem with one decision, then solve it making the
+  next decision (i.e. regex).
 
 **Conversion Questions**
 - General strategy (simple cases manually, reducing scope, etc)
@@ -269,10 +271,3 @@ It may not always get the optimal solution, but it often at least approximates i
   - recursively try _every_ possibility
   - for non `^` (start), do `search` which does `match` on every item.
   - ``*`` and `?` then just become allowing for literally every possibility
-
-# Graph Theory Refresher
-
-## Dijkstra's Algorithm
-The shortest distance from one node to _every other node_ in the graph.
-
-

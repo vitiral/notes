@@ -2,23 +2,43 @@
 # QUESTION
 https://careercup.com/question?id=5722238880841728
 
- Google Interview Question for Software Engineer in Tests
+Automation Testing Question:
+How do you verify a search result list which changes consistently based on each search word and filters?
 
-    Automation Testing Question:
-    How do you verify a search result list which changes consistently based on each search word and filters?
-
-    For example, how do you make sure that the list is sorted based on price or rating or etc without any identical list to compare with? Since providing an identical list as Test Input for each word is not the best approach.
+For example, how do you make sure that the list is sorted based on price or
+rating or etc without any identical list to compare with? Since providing an
+identical list as Test Input for each word is not the best approach.
 
 
 ## GIVEN ANSWER
 Very open question, I'd cover these aspects:
-1. What is purpose of this test? Verify the search function, verify correct rendering, ... what is already tested? A single test should fit in some kind of test concept which gives an idea on what to test. A reasonable assumption could be, that search has been tested already on different known samples and information is around how the search has performed compared to this fixed set of data.
-(notice, there is no perfect search result, but there will be indications whether it improved or not compared to other "generaions")
-2. Define what must be tested, based on 1) e.g. verify that each items price is <= then the next, maybe for the first 20 pages, supposing it is very expensive or impossible to fetch all results. How ever, we still could miss a very low priced element that would only come after position 1000, or maybe even last due to an error. Now, several questions:
-- sometimes search is designed to be fast vs. "perfectly accurate", that means, for the case of Google for example, that servers that participate in a query and do not respond within a certain time, will be ignored. Usually this is the case for not so important pages that have less redundancy etc. etc. So a certain error might even be tolerated.
-3. Maybe we have statistical data, which gives a price distribution for the first 1000 items of a search and information how this distribution changed over time. Maybe we only want to accept a certain change in this distribution
-4. Maybe the test should be around performance, e.g. how fast is the result served or how fast is the result rendered. Here we had more information, like a SLO (service level objective) where we'd say 99.9% of time the first 50 result must be served within 100 mS.
-5. Or other tests could be that the system accepts "bad searches" which are searches that will tear down a server, etc. etc.
+1. What is purpose of this test? Verify the search function, verify correct
+   rendering, ... what is already tested? A single test should fit in some kind
+   of test concept which gives an idea on what to test. A reasonable assumption
+   could be, that search has been tested already on different known samples and
+   information is around how the search has performed compared to this fixed
+   set of data.  (notice, there is no perfect search result, but there will be
+   indications whether it improved or not compared to other "generaions")
+2. Define what must be tested, based on 1) e.g. verify that each items price is
+   <= then the next, maybe for the first 20 pages, supposing it is very
+   expensive or impossible to fetch all results. How ever, we still could miss
+   a very low priced element that would only come after position 1000, or maybe
+   even last due to an error. Now, several questions:
+  - sometimes search is designed to be fast vs. "perfectly accurate", that means,
+    for the case of Google for example, that servers that participate in a query
+    and do not respond within a certain time, will be ignored. Usually this is
+    the case for not so important pages that have less redundancy etc. etc. So a
+    certain error might even be tolerated.
+3. Maybe we have statistical data, which gives a price distribution for the
+   first 1000 items of a search and information how this distribution changed
+   over time. Maybe we only want to accept a certain change in this
+   distribution
+4. Maybe the test should be around performance, e.g. how fast is the result
+   served or how fast is the result rendered. Here we had more information,
+   like a SLO (service level objective) where we'd say 99.9% of time the first
+   50 result must be served within 100 mS.
+5. Or other tests could be that the system accepts "bad searches" which are
+   searches that will tear down a server, etc. etc.
 
 
 # QUESTION

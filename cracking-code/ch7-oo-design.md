@@ -349,3 +349,117 @@ class Song(object:
 ```
 
 
+# 7.4: Design a chess game using OO principles
+This is an interesting problem that I've thought about before. We have a couple
+of questions to answer before we think too seriously about the details:
+
+- How is the board represented?
+- How should we signify a piece?
+- How should we handle piece movement?
+  - Pieces not allowed to move through eachoter.
+  - Cannot move into check.
+- How should we handle board state?
+  - Figure out when you are in check?
+  - Handle allowed movements in check?
+  - Handle other state (en-passant, castling allowed, etc.)
+
+Another question is what are we building this for:
+- Are we going to receive a current state + a movement and return if the
+  movement is valid + new state?
+- Should we be managing the state ourselves?
+- Do we have to provide valid moves and/or calculate new moves? Are we a "chess
+  engine" or just a validator?
+
+I'm going to assume we are just a validator and will design it to not hold
+state.
+
+The first thing is to be able to accept/return the current state of the board.
+We need to know several things:
+- Position of each piece.
+- Which player's turn it is
+- Requested move
+- Miscelanious state:
+  - Last pawn moved (en passant)
+  - Whether king + each rook has moved for each player
+
+A fen string will give us this information.
+
+Given this input and that we can deserialize it, we are going to need the
+following objects
+
+```
+class Error(Exception):
+    """Chess specific error."""
+
+
+class InvalidMove(Exception):
+    """The move was invalid."""
+
+
+class Player(enum):
+    white = 'w'
+    black = 'b'
+
+
+class Board(object):
+    def __init__(pieces: List[Pieces]):
+        """`pieces` should be a list of all pieces and their place."""
+        self.pieces = pieces
+        self.piece_map = {id(p): p for p in pieces}
+        # TODO: a map/grid to map locations of pieces.
+
+    def move(self, piece, row, col):
+        """Attempt to move the piece to row, col on the board."""
+        assert id(piece) in self.piece_map
+        if self.board.is_checkmate(piece.player):
+            raise InvalidMove("player already in checkmate.")
+
+        piece.check_move(self, row, col)
+        piece.row = row
+        piece.col = col
+        if self.is_check(piece.player):
+            # TODO: undo the mutation.
+            raise InvalidMove("move put moving player in check.")
+
+    def is_check(self, player):
+        """Return true if the player is in check."""
+
+    def is_checkmate(self, player):
+        """Return if the player is in checkmate (assumes it is their turn)."""
+
+
+class Piece(object):
+    """The Piece base class."""
+    __metaclass__ = abc.abstractclass
+    def __init__(self, player, row, col):
+        self.player = player
+        self.row = row
+        self.col = col
+
+    @abc.abstractmethod
+    def check_move(self, board, row, col):
+        """Check if the move is valid for this piece.
+
+        Must raises InvalidMove if the movement is invalid.
+
+        :raises: InvalidMove
+        """
+
+
+class Game(object):
+    def __init__(
+        player_turn: Player,
+        board: Board,
+    ):
+        self.player_turn = player_turn
+        self.board = board
+
+    def move(self, piece, row, col):
+        if self.player_turn is not piece.player:
+            raise InvalidMove("not the player's turn to move."
+        self.board.move(piece, row, col)
+```
+
+
+
+

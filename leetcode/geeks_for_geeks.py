@@ -66,27 +66,28 @@ def power(x, e, p):
         return result
 
     However, what if we ramped up x while keeping track with
-    y.
+    e.
 
-    - x         y=9 or 8
-    - x^2       y=4
-    - x^4       y=2
-    - x^8       y=1
+    - x         e=9 or 8
+    - x^2       e=4
+    - x^4       e=2
+    - x^8       e=1
 
     This can be accomplished by doing x=x*x in _each loop_.
 
-    You notice above, y can be _either 9 or 8_.
+    You notice above, e can be _either 9 or 8_.
     Obviously the result is not always x^8. You can
     keep track of the odd values by res = result * x
-    when y is odd.
+    when e is odd.
 
     Using the modulo relationship you can keep modding
     as you go to prevent overflow.
     """
     res = 1
     while e > 0:
-        if y % 2 != 0:
-            # if y is odd, multiply result with x
+        if e % 2 != 0:
+            # if e is odd, multiply result with x
+            # otherwise we loose data.
             res = (res * x) % p
 
         e = e // 2
@@ -135,7 +136,7 @@ characters.
 ################################################################################
 # Find largest word in dictionary by deleting some characters of given string
 #
-# Giving a dictionary and a string ‘str’, find the longest string in dictionary
+# Given a dictionary and a string ‘str’, find the longest string in dictionary
 # which can be formed by deleting some characters of the given ‘str’.
 """
 Notes:
@@ -297,7 +298,7 @@ Wait... this is a programming question! Whoops!
 # We want to find the maximum substring that has k unique characters
 #
 # aabbbcc, k=1 => bbb
-# aabbbcc, k=1 => aabbb or bbbcc
+# aabbbcc, k=2 => aabbb or bbbcc
 #
 # The first thing that comes to mind is a sliding window. Move the window from left to right,
 # shrinking it from left when it hits a character that is invalid.
