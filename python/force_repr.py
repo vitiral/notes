@@ -14,4 +14,7 @@ def test_single():
 def test_double():
     assert r'"foobar"' == repr_double("foobar")
     assert '"\'foobar"' == repr_double("'foobar")
-    assert '"\\"foobar"' == repr_double('"foobar')
+    assert '''"\\"foobar"''' == repr_double('"foobar')
+    assert '''"\\"foobar\\" = \\"blah blah\\""''' == repr_double('"foobar" = "blah blah"')
+
+    # echo "\"foobar" > file.txt
