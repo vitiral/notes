@@ -220,3 +220,114 @@ Several useful points:
 - `@Target( {ElementType.[CONSTRUCTOR, FIELD, METHOD, etc]} )`
 - `@Inherited`: forces subclasses to inherit the annotation
 
+# Writing Methods Efficiently
+Most of this stuff was already known by me.
+
+Some newish stuff:
+- Covariant return types: when `@Override`ing a parent's method you can return
+  a narrower type. For instance if your parent returned `Animal` you can return
+  `Dog`.
+- You can have one generic method and overload other concrete implementations.
+- You can pass a method around using `Object::methodName` -- agh, why???
+- Immutability is not well supported but recommended anyway.
+- Method documentation is in it's own language man. (not html, not markdown,
+  yay?)
+
+# Exceptions
+There are two classes of exceptions:
+- those derived from `Exception`: must be explicitly caught or declared in methods.
+- those derived from `RuntimeException`: can be uncaught/undeclard in methods.
+
+More points:
+- It is common practice for all exceptions to be RuntimeExceptions.
+- If a method might throw an exeption use the javadoc line `@throws
+  SomeException if thing occurs`.
+- If the exception must be caught, use
+    `public void myFunction(final int arg) throws Somexception { /* ... */ }`
+
+# Concurency
+Every java thread (lightweight process) exists inside the JVM and may not
+reflect any operating systme threads.
+
+Threads are an instance of the `Thread` class. It is not recommended to create/manage
+threads yourself but it can be done.
+
+```
+public static main(String[] args) {
+    new Thread( new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("Hello from thread.");
+        }
+    } ).start()
+
+    new Thread( () -> { System.out.println("Hello from lambda.") } ).start();
+}
+```
+
+## `synchronized` keyword
+
+Java provides a keyword for synchronizing methods or arbitrary code blocks.
+This guarantees that only one thread at a time can execute it.
+
+```
+public synchronized vod performAction() {
+    // implementation here
+}
+
+public void performActionBlock() {
+    synchronized(this) {
+        // Implementation here
+    }
+}
+```
+
+This is intended to provide _automatic concurrency management_. Basically
+`this._lock.lock()` is called before the code block is enetered and `unlock()`
+is called on exit. This is great, except that is a _lot_ of implicit
+locking/unlocking. I can't imagine trying to analyze java code for where
+deadlocks might be happening.
+
+## Executors
+These are basically threadpools. The basic idea is that they are intended for
+_short lived threads_. It is also probably a bad idea for there to be resource
+sharing between threads in the executor (although this wasn't mentioned).
+
+The state of the thread can be in one of these states:
+- NEW: thread not started
+- RUNNABLE: the thread is running
+- BLOCKED: waiting on a monitor ONLY.
+- WAITING/TIMED_WAITING: waiting for another thread's resource.
+- TERMINATED: thread complete.
+
+```
+ExecutorService executor = Executors.newFixedThreadPool( 10 );
+
+executor.execute( () -> {
+  // Implementation here
+})
+
+Future< Long > result = executor.submit( new Callable<Long>() {
+    @Override
+    public Long call throws Exception {
+        return 42;
+    }
+} );
+```
+
+
+## Completeable Future
+There is a completeable future class with associated methods:
+
+```
+final Collections<String> strings = new ArrayList<>();
+
+final int sumOfLengths = strings.parallelStream()
+    .filter( str -> !str.isEmpty())
+    .mapToInt( str -> str.length() )
+    .sum();
+```
+
+
+
+
