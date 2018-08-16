@@ -315,6 +315,19 @@ Future< Long > result = executor.submit( new Callable<Long>() {
 } );
 ```
 
+# Serialization
+- You can have default serialization by saying that an object implements
+  `Serializable` and setting `serialVerisonUID` to some random number.
+- Or you can do it yourself using the `Externalizable` interface. All fields
+  will be in the order declared from/to a ObjectInput/ObjectOutput object.
+- This is basically pickling for java.
+
+The libraries are not all that impressive. The xml one is probably the best
+with its use of annotations. I think gRPC+protobuffs are _definitely_ the way
+to go for serialization/deserialization/rpc. I wouldn't touch default java with
+a 10 foot poll if I can.
+
+
 
 ## Completeable Future
 There is a completeable future class with associated methods:
