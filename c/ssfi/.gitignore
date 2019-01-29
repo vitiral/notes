@@ -1,0 +1,6 @@
+env/
+bin/
+*.o
+*.gch
+data/random-big
+data/random-shallow
