@@ -145,6 +145,32 @@ Basically, these are opposites of eachother:
 - `void doThing(Collection<? extends Other> thing)`: thing is a **subclass** of `Other`, i.e. `class Thing extends Other`.
 - `void doThing(Collection<? super Other> thing)`: thing is a **superclass** of `Other`, i.e. `class Other extends Thing`.
 
+## Flex Your PECS
+From Talk [Effective Java: Still effective after all these years](https://www.youtube.com/watch?v=V1vQf4qyMXg&t=74s)
+
+PECS:
+- Producer `extends`, Consumer `super`
+
+This is referring to generic types in methods. If your method takes a value
+which _produces_ elements (for you to consume) it should be generic over `<?
+extends T>`. If on the other hand it _consumes_ elements (i.e. you are pushing
+values into it) then it should be generic over `<? super T>`.
+
+[JLS 4.5.1 Type Arguments and Wildcards](http://java.sun.com/docs/books/jls/third_edition/html/typesValues.html#4.5.1)
+
+Wildcards are useful in situations where only partial knowledge about the type parameter is required. [...] An upper bound is signified by the syntax:
+
+? extends B
+where B is the upper bound. [...] it is permissible to declare lower bounds on a wildcard, using the syntax:
+
+? super B
+where B is a lower bound.
+
+A List<? super Integer>, for example, includes List<Integer>, List<Number>, and List<Object>.
+
+- `? super T` means any T, or _parent/super class_ of T.
+- `? extends T` means any T or _child class / class which extends_ T.
+
 # Enums and Annotations
 Full enum declaration:
 
