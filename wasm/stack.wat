@@ -30,18 +30,20 @@ int call_it() {
 
   (func $sum_struct_create (param $sum_struct_ptr i32) (param $var$a i32) (param $var$b i32)
     ;; c// sum_struct_ptr->a = a;
-    get_local $sum_struct_ptr
-    get_local $var$a
-    i32.store
+    (i32.store
+      (get_local $sum_struct_ptr)
+      (get_local $var$a)
+    )
 
     ;; c// sum_struct_ptr->b = b;
-    get_local $sum_struct_ptr
-    get_local $var$b
-    i32.store offset=4
+    (i32.store offset=4
+      (get_local $sum_struct_ptr)
+      (get_local $var$b)
+    )
   )
 
   (func $sum_local (result i32)
-    (local $var0 i32) (local $var1 i32) (local $local_stack_ptr i32) 
+    (local $var$sum_struct$a i32) (local $var$sum_struct$b i32) (local $local_stack_ptr i32) 
 
     ;; reserve stack space and store local_stack_ptr
     (i32.sub
@@ -53,22 +55,17 @@ int call_it() {
 
     ;; call the function, storing the result in the stack
     (call $sum_struct_create
-      (i32.add
-        (get_local $local_stack_ptr)
-        (i32.const 8)
-      )
-      (i32.const 40)
-      (i32.const 2)
+      ((;$sum_struct_ptr=;) get_local $local_stack_ptr)
+      ((;$var$a=;) i32.const 40)
+      ((;$var$b=;) i32.const 2)
     )
 
-    (set_local $var0
-      ;; ?? Nobody has touched this address
-      (i32.load offset=8 (get_local $local_stack_ptr))
+    (set_local $var$sum_struct$a
+      (i32.load offset=0 (get_local $local_stack_ptr))
     )
 
-    ( set_local $var1
-      ;; ?? nor this address
-      (i32.load offset=12 (get_local $local_stack_ptr))
+    ( set_local $var$sum_struct$b
+      (i32.load offset=4 (get_local $local_stack_ptr))
     )
 
     ;; unreserve stack space
@@ -79,8 +76,9 @@ int call_it() {
         )
     )
 
-    get_local $var1
-    get_local $var0
-    i32.add
+    (i32.add
+      (get_local $var$sum_struct$a)
+      (get_local $var$sum_struct$b)
+    )
   )
 )
