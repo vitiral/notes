@@ -1,6 +1,4 @@
 (module
-  (type $type0 (func (param i32 i32 i32)))
-  (type $type1 (func (result i32)))
   (memory 1) ;; 64KiB of memory
   (export "main" (func $main))
   (func $main (result i32)
