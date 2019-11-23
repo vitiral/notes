@@ -16,4 +16,3 @@ sayYoTest = testCase "Testing sayYo"
 add5Test :: TestTree
 add5Test = testCase "Testing add5"
     (assertEqual "10 + 5" 15 (add5 10))
-
