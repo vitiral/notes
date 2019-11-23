@@ -1,4 +1,4 @@
-module LibTests where
+module Main where
 
 import Test.Tasty
 import Test.Tasty.HUnit
@@ -8,8 +8,7 @@ import MathLib
 
 main :: IO ()
 main = do
-    defaultMain (testGroup "Our library tests" [sayYoTest, add5Test])
-
+    defaultMain (testGroup "Ch2 tests" [sayYoTest, add5Test])
 
 sayYoTest :: TestTree
 sayYoTest = testCase "Testing sayYo"
