@@ -4,7 +4,6 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 import Lib
-import MathLib
 
 main :: IO ()
 main = do

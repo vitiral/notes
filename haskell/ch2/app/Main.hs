@@ -1,7 +1,6 @@
 module Main where
 
 import Lib
-import MathLib
 
 main :: IO ()
 main = do

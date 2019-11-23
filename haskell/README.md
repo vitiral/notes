@@ -73,4 +73,8 @@ Definitions:
   evaluating leftmost, outermost lambda first then nested. NOT how Haskell code
   is evaulated :D. Haskell evaluates in _call by need_.
 
+## Chapter 2
+- **redex** a reducible expressions, i.e. one not in normal form.
+- **functions** map an input or set of inputs to an output
+
 
