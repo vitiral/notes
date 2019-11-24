@@ -74,6 +74,15 @@ Definitions:
   is evaulated :D. Haskell evaluates in _call by need_.
 
 ## Chapter 2
+```
+stack new <proj name>
+stack test
+stack run
+```
+
+I cleaned up the stack project a lot in `ch2/` minimizing it as much as I
+could for simplicity.
+
 - **redex** a reducible expressions, i.e. one not in normal form.
 - **functions** map an input or set of inputs to an output
 

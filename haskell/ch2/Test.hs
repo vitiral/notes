@@ -6,8 +6,7 @@ import Test.Tasty.HUnit
 import Lib
 
 main :: IO ()
-main = do
-    defaultMain (testGroup "Ch2 tests"  tests)
+main = do defaultMain $ testGroup "Ch2 tests" tests
 
 tests = 
     [ testCase "sayYo Friend"
