@@ -3,6 +3,8 @@ module Lib
     , sayYo
     , add5
     , tripple
+    , half
+    , square
     ) where
 
 someFunc :: IO ()
@@ -16,3 +18,9 @@ add5 x = x + 5
 
 tripple :: Int -> Int
 tripple x = x * 3
+
+half :: Double -> Double 
+half x = x / 2
+
+square x = x * x
+

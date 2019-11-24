@@ -77,4 +77,6 @@ Definitions:
 - **redex** a reducible expressions, i.e. one not in normal form.
 - **functions** map an input or set of inputs to an output
 
+A **value** is simply _any_ irreducible expression.
+
 

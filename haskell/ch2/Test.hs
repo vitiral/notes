@@ -7,12 +7,18 @@ import Lib
 
 main :: IO ()
 main = do
-    defaultMain (testGroup "Ch2 tests" [sayYoTest, add5Test])
+    defaultMain (testGroup "Ch2 tests"  tests)
 
-sayYoTest :: TestTree
-sayYoTest = testCase "Testing sayYo"
-    (assertEqual "Should say Yo to Friend!" "Yo Friend!" (sayYo "Friend"))
+tests = 
+    [ testCase "sayYo Friend"
+        $ assertEqual "" "Yo Friend!" (sayYo "Friend")
 
-add5Test :: TestTree
-add5Test = testCase "Testing add5"
-    (assertEqual "10 + 5" 15 (add5 10))
+    , testCase "add5 10"
+        $ assertEqual "" 15 $ add5 10
+
+    , testCase "half 10"
+        $ assertEqual "" 5.0 $ half 10.0
+
+    , testCase "sayYo empty"
+        $ assertEqual "Should say Yo to Friend!" "Yo !" (sayYo "")
+    ]
