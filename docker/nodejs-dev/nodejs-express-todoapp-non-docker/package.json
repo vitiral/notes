@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "babel-jest": "^19.0.0",
-    "eslint": "^3.17.1",
+    "eslint": "^4.19.1",
     "eslint-watch": "^3.0.1",
     "jest": "^19.0.2",
     "nodemon": "^1.11.0",
