@@ -1,0 +1,40 @@
+WHITESPACE = _{ " " | "\t" | "\n" | "\r\n" }
+
+file = _{ SOI ~ (array | object) ~ EOI }
+
+array = {
+  ("[" ~ "]")
+  | ("[" ~ value ~ ( "," ~ value )* ~ "]")
+}
+
+object = {
+  ("{" ~ "}")
+  | ("{" ~ mapping ~ ( "," ~ mapping)* ~ "}")
+}
+
+mapping = { string ~ ":" ~ value }
+
+value = _{ null | boolean | number | string | array | object }
+
+null = { "null" }
+
+boolean = { "true" | "false"}
+
+number = @{ 
+  "-"?
+  ~ ASCII_DIGIT+
+  ~ ("." ~ ASCII_DIGIT*)?
+  ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+}
+
+string = ${ "\"" ~ string_inner ~ "\"" }
+
+string_inner = @{ char* }
+
+char = {
+  !("\"" | "\\") ~ ANY
+  | "\\" ~ ("\"" | "\\" | "b" | "f" | "n" | "r" | "t")
+  | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+}
+
+
