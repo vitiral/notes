@@ -15,3 +15,6 @@ data Mood =
 changeMood :: Mood -> Mood
 changeMood Blah = Woot
 changeMood _ = Blah
+
+-- Continue at section 4.6
+

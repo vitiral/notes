@@ -7,6 +7,12 @@
 Stack tutorial is definitely necessary to get me up and running:
 https://github.com/Originate/guide/blob/master/haskell/stack-tutorial.md
 
+Also `ghci` is the interactive interpreter.
+
+- `:load <file>` to reload the file
+- `:type <expr>` to get the type of an expression
+- `:info <type>` to get info about a type
+
 ## Chapter 1: all you need is lambda
 - A calculus is a "method of calculation or reasoning" -- not necessarily
   related to Calculus which is the mathematics of infinitesmal differences.
@@ -56,7 +62,7 @@ ordinarily converge to a beta normal form, of which divergence is the opposite.
 - Example: `(\x -> x x) (\x -> x x)`
 - Terms that diverge simply don't produce an answer/result and are not useful.
 
-Haskell is a typed lambda calculus with a log of surface-level decoration to
+Haskell is a typed lambda calculus with a lot of surface-level decoration to
 make it easier for humans to write/read. The meaning of Haskell programs
 is centered around **evaluating expressions** rather than **executing
 instructions**.
@@ -88,4 +94,29 @@ could for simplicity.
 
 A **value** is simply _any_ irreducible expression.
 
+
+
+## Chapter 3
+The main things learned from this is some important list operations:
+
+- `head` get the first value
+- `tail` get values after the first value
+- `last` get the last value
+- `concat` and `++`: join lists
+- `!!` get item at an index
+- `length` get the list length
+- `myFun x = x + 3` declare a function.
+- `print` print to the screen in `main :: IO ()`
+
+## Chapter 4
+
+Declare a type with `data`.
+
+- Sumtypes: `data Bool = True | False`
+- `Word` is a non-negative `Int` (0 is lowest value)
+
+Type classes are a way of adding functionality to types that is
+reusable across all types which have instances of that type class.
+`Num` is the typeclass for all of the number types including
+`Int Integer Word Float Double Rational Fixed Scientific`
 

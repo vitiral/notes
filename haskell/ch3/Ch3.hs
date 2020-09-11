@@ -47,3 +47,29 @@ ex2 =
     , tail [7, 8, 9]
     ]
   )
+
+-- Oops! This was the reverse
+-- prob1a = \x -> take ((length x) - 1) x
+
+prob1a = \x -> x ++ "!"
+
+prob1b = \x -> x !! 4
+
+prob1c = \x -> drop ((length x) - 7) x 
+
+thirdLetter :: String -> Char
+thirdLetter x = x !! 2
+
+letterIndex :: Int -> Char
+-- letterIndex = \i -> "Curry is awesome!" !! i
+letterIndex i = "Curry is awesome!" !! i
+
+-- last x = x !! length x - 1
+
+rvrs :: String -> String
+rvrs x = if length x <= 1
+  then x
+  else [last x] ++ (rvrs $ take (length x - 1) x)
+
+main :: IO ()
+main = print (rvrs "Curry is awesome")
