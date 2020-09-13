@@ -102,7 +102,7 @@ cleared
 ." n=100 5 <= n < 10? " 100 range within_b .BOOL SPACE done ;
 
 cleared
-." ### Ch5" CR ;
+CR ." ### Ch5" CR ;
 ." 1+-: " 0 1+ 1- . done ;
 ." 2+-: " 0 2+ 2- . done ;
 ." 2*/: " 1 2* 2/ . done ;
@@ -135,11 +135,128 @@ cleared
 ." x=5: " Q_ABC 5 QUADRATIC . done ;
 
 cleared
-: % 100 */ ;
+: %   ( value perc -- result ) 100 */ ;
 ." 32% of 225: " 225 32 % . done ;
 : 4MAX ( a b c d -- maximum )
   MAX MAX MAX ;
 ." max of 1 2 3 4: " 1 2 3 4 4MAX . done ;
 
 cleared
-." #### Ch6" CR
+CR ." #### Ch6: loops" CR
+: 10hello ( -- )
+  10 0 DO
+    ." Hello " I .
+  LOOP ;
+
+10hello done
+
+: MULTIPLICATIONS ( n -- )
+  ." Multiplications " DUP . ." : "
+  10 1 DO
+    DUP I * .
+  LOOP DROP ;
+2 MULTIPLICATIONS done
+3 MULTIPLICATIONS done
+
+
+cleared
+: COMPOUND ( amount interest -- )
+  ( "Compund <amount> %<interest>" )
+  2dup swap ." Compound " . . ." % : " CR
+
+  100 + ( amount [interest+100] )
+  10 1 DO
+    ." Amount after " I . ." years: "
+    dup rot swap ( [interest+100] amount [interest+100] )
+    % dup . CR swap ( newAmount [interest+100] )
+  LOOP 
+  2drop ;
+1000 6 COMPOUND done
+
+cleared
+: RECTANGLE ( width -- )
+  256 0 DO 
+    DUP I SWAP MOD ( I % width ) 0= IF
+      CR
+    THEN ." *"
+  LOOP DROP ;
+32 RECTANGLE done
+
+cleared
+: MUL_TABLE ( -- )
+  10 1 DO
+    10 1 DO
+      I J * 5 U.R
+    LOOP
+    CR
+  LOOP ;
+MUL_TABLE done
+
+cleared
+: PENTALOOP  50 0 DO I . 5 +LOOP ;
+PENTALOOP done
+
+cleared
+: FALLING 0 9 DO I . -1 +LOOP ;
+FALLING done
+
+cleared
+: STAR [CHAR] * EMIT ;
+: STARS ( n -- . # of stars )
+  0 DO STAR LOOP ;
+." 5 stars: " 5 STARS done
+." 10 stars: " 10 STARS done
+
+cleared
+CR ." Ch7: more numbers " CR
+: ASCII_TABLE 
+  126 32 DO
+    5 I + I DO
+      I 126 <= IF
+        I 3 U.R ." : " [CHAR] ' EMIT I EMIT [CHAR] ' EMIT ."   "
+      THEN
+    LOOP
+    CR
+  5 +LOOP ;
+." ASCII TABLE" CR ASCII_TABLE done
+
+." I skipped most of this as I already know it." CR
+
+cleared
+: ?   @ . ; ( wow, this wasn't actually defined )
+CR ." Ch8: Variables, constants, arrays" CR
+
+VARIABLE DATE
+12 DATE ! ( store the date as 12 )
+." Today's date: " DATE @ . done
+." Or just... " DATE ? done
+13 DATE !
+." Now the date is " DATE ? done
+FORGET DATE
+
+cleared
+variable day   variable month    variable year
+: !DATE   ( year month day -- ) DAY ! MONTH ! YEAR ! ;
+: ?DATE   ( -- ) year ? month ? day ? ;
+2020 09 12 !DATE
+." Today's date: " ?DATE done
+
+cleared
+220 constant ovenLimit
+: ?tooHot  ovenLimit > IF ." Danger -- reduce heat " THEN ;
+
+355 113 2CONSTANT PI ( 355 / 133 ~= 3.14159... )
+
+VARIABLE burnerLimits 4 CELLS ALLOT
+
+( Get the address for a burner limit. Note that CELLS is basically multiplying
+  the pointer by the byte-width of a cell )
+: &burnerLimit   ( index -- &burnerLimit ) CELLS burnerLimits + ! ;
+
+220 0 &burnerLimit ! ( store burner 0 limit )
+340 1 &burnerLimit ! ( store burner 1 limit )
+340 2 &burnerLimit !
+200 3 &burnerLimit !
+150 4 &burnerLimit !
+
+
