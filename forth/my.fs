@@ -1,3 +1,7 @@
+." ### Tutorial: https://www.forth.com/starting-forth/0-starting-forth/ " CR
+: GREET ." Hello I speak forth." CR ;
+GREET
+
 : cleared DEPTH 0 > IF ." Stack not cleared: " .S true ABORT" " THEN ;
 ." DEPTH: " DEPTH . CR
 1001
@@ -227,6 +231,7 @@ cleared
 CR ." Ch8: Variables, constants, arrays" CR
 
 VARIABLE DATE
+cleared
 12 DATE ! ( store the date as 12 )
 ." Today's date: " DATE @ . done
 ." Or just... " DATE ? done
@@ -241,24 +246,75 @@ variable day   variable month    variable year
 2020 09 12 !DATE
 ." Today's date: " ?DATE done
 
+." oven limits " CR
 cleared
 220 constant ovenLimit
 : ?tooHot  ovenLimit > IF ." Danger -- reduce heat " THEN ;
 
-355 113 2CONSTANT PI ( 355 / 133 ~= 3.14159... )
+( 355 113 2CONSTANT PI ) ( 355 / 133 ~= 3.14159... )
 
-VARIABLE burnerLimits 4 CELLS ALLOT
+." Burner limits " CR
+cleared
+VARIABLE burnerLimits[5] 4 CELLS ALLOT
 
-( Get the address for a burner limit. Note that CELLS is basically multiplying
-  the pointer by the byte-width of a cell )
-: &burnerLimit   ( index -- &burnerLimit ) CELLS burnerLimits + ! ;
+( Get the address for a burner limit. Note that CELLS is basically multiplying )
+( the pointer by the byte-width of a cell )
+: &burnerLimit   ( index -- &burnerLimit ) CELLS burnerLimits[5] + ;
+
+." &burnerLimits[5] " burnerLimits[5] . done
+220 burnerLimits[5] ! 
+." burnerLimit 0: " burnerLimits[5] ? done
 
 220 0 &burnerLimit ! ( store burner 0 limit )
 340 1 &burnerLimit ! ( store burner 1 limit )
-340 2 &burnerLimit !
+325 2 &burnerLimit !
 200 3 &burnerLimit !
 150 4 &burnerLimit !
 
-0 &burnerLimit @ . done
-1 &burnerLimit @ . done
+." burnerLimit 1: " 1 &burnerLimit @ . done
+." burnerLimit 2: " 2 &burnerLimit @ . done
 
+cleared
+: dumpArray   ( addr cell-count : )
+  CELLS OVER + SWAP ( addr [addr+cells] )
+  DO
+    I ?
+  CELL +LOOP ;
+
+." dumpArray " burnerLimits[5] 5 dumpArray done
+." DUMP " burnerLimits[5] 5 cells dump done
+
+cleared
+CR ." ### Ch9: Under the hood" CR
+." Greet execution token: " ' GREET U. done
+." Execute GREET: " ' GREET EXECUTE done
+( ." Doesn't work: " ' bazelkjsd EXECUTE done )
+( ." What is an unfound value? : " ' NOT_FOUND . done -- throws error )
+( ." Greet contents: " ' GREET 1 DUMP done -- segfaults ?? )
+
+cleared
+: hello ." Hello " ;
+: goodbye ." Goodbye " ;
+VARIABLE 'aloha   ' hello 'aloha ! ( store hello xt in 'aloha )
+: aloha   'aloha @ EXECUTE ;
+
+." hello goodbye: " hello goodbye done
+." aloha: " aloha done
+' goodbye 'aloha !
+." (assigned goodbye) aloha: " aloha done
+
+( tick always goes to the next word IN THE INPUT STREAM )
+( In other words, it IGNORES the `'aloha !` and first )
+( consumes a character from the input stream )
+: alohaSays  ' 'aloha ! ;
+alohaSays hello
+." (alohaSays hello) aloha: " aloha done
+alohaSays goodbye
+." (alohaSays goodbye) aloha: " aloha done
+
+: alohaComming   ['] hello 'aloha ! ;
+: alohaGoing  ['] goodbye 'aloha ! ;
+alohaComming
+." (comming) aloha: " aloha done
+alohaGoing
+." (going) aloha: " aloha done
