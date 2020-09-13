@@ -259,4 +259,6 @@ VARIABLE burnerLimits 4 CELLS ALLOT
 200 3 &burnerLimit !
 150 4 &burnerLimit !
 
+0 &burnerLimit @ . done
+1 &burnerLimit @ . done
 
