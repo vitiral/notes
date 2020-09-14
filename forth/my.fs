@@ -31,19 +31,19 @@ cleared
 
 : eq_1a ( a b c -- [a+b]/c ) -rot + swap / ;
 : eq_1b { a b c -- [a+b]/c } a b + c / ;
-: eq_1c { a b c | d -- [a+b]/c }  a b + to d d c / ;
 : eq_1_input ( -- a b c ) 10 20 2 ;
 
 cleared
-." equation 1 in 3 forms: " eq_1_input eq_1a . ." " eq_1_input eq_1b . ." " eq_1_input eq_1c . done
+." equation 1 in 3 forms: " 
+  eq_1_input eq_1a . ." " 
+  eq_1_input eq_1b . done
 
 ( other stack operations: SWAP DUP OVER ROT -ROT DROP )
 ( 2 conterparts: 2SWAP 2DUP .. etc )
 ( Note: ROT rotates left, -ROT rotates right )
 
-: .CARTON_FULL   ( eggs -- ) 12 = IF ." It's full " ELSE ." Not full " THEN ;
-
 cleared
+: .CARTON_FULL   ( eggs -- ) 12 = IF ." It's full " ELSE ." Not full " THEN ;
 ." Carton full w/ 10? " 10 .carton_full done
 ." Carton full w/ 2? " 2 .carton_full done
 ." Carton full w/ 12? " 12 .carton_full done
@@ -68,7 +68,7 @@ cleared
 ." sign 0: " 0 .SIGN done
 
 cleared
-: WITHIN ( n low high -- low <= n < high )
+: within_a ( n low high -- low <= n < high )
   rot dup ( low high n n )
   rot ( low n n high )
   >= IF drop drop false
@@ -84,11 +84,11 @@ cleared
 : range 5 10 ;
 
 cleared
-." n=1 5 <= n < 10? " 1 range WITHIN .BOOL SPACE done
-." n=5 5 <= n < 10? " 5 range WITHIN .BOOL SPACE done
-." n=6 5 <= n < 10? " 6 range WITHIN .BOOL SPACE done
-." n=10 5 <= n < 10? " 10 range WITHIN .BOOL SPACE done
-." n=100 5 <= n < 10? " 100 range WITHIN .BOOL SPACE done
+." n=1 5 <= n < 10? " 1 range within_a .BOOL SPACE done
+." n=5 5 <= n < 10? " 5 range within_a .BOOL SPACE done
+." n=6 5 <= n < 10? " 6 range within_a .BOOL SPACE done
+." n=10 5 <= n < 10? " 10 range within_a .BOOL SPACE done
+." n=100 5 <= n < 10? " 100 range within_a .BOOL SPACE done
 
 ( using variables is SO much easier! )
 : within_b { n low high -- low <= n < high }
@@ -98,7 +98,7 @@ cleared
   THEN THEN ;
 
 cleared
-." WITHIN_B: " CR ;
+." WITHIN_B: " CR
 ." n=1 5 <= n < 10? " 1 range within_b .BOOL SPACE done
 ." n=5 5 <= n < 10? " 5 range within_b .BOOL SPACE done
 ." n=6 5 <= n < 10? " 6 range within_b .BOOL SPACE done
@@ -106,10 +106,10 @@ cleared
 ." n=100 5 <= n < 10? " 100 range within_b .BOOL SPACE done
 
 cleared
-CR ." ### Ch5" CR ;
+CR ." ### Ch5" CR
 ." 1+-: " 0 1+ 1- . done
-." 2+-: " 0 2+ 2- . done
-." 2*/: " 1 2* 2/ . done
+." 2+-: " 0 2 + 2 - . done
+." 2*/: " 1 2 * 2 / . done
 ." ABS 1 -1: " 1 ABS . -1 ABS . done
 ." NEGATE 42: " 42 NEGATE . done
 ." MIN 4 400: " 4 400 MIN . done
@@ -230,6 +230,7 @@ cleared
 : ?   @ . ; ( wow, this wasn't actually defined )
 CR ." Ch8: Variables, constants, arrays" CR
 
+MARKER -work
 VARIABLE DATE
 cleared
 12 DATE ! ( store the date as 12 )
@@ -237,7 +238,7 @@ cleared
 ." Or just... " DATE ? done
 13 DATE !
 ." Now the date is " DATE ? done
-FORGET DATE
+-work
 
 cleared
 variable day   variable month    variable year
@@ -334,7 +335,8 @@ cleared
 ." Next availble cell: " here U. done
 ." PAD size: " pad U. done
 ." Stack pointer : " SP@ U. done
-." Stack pointer contents : " SP@ @ U. done
+." Stack pointer contents : " 
+  SP@ @ U. done
 42
 ." Stack pointer contents after 42: " SP@ @ U. done
 drop
