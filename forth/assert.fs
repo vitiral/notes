@@ -9,6 +9,14 @@
     ." Not equal: " UD. UD. true THROW
   THEN 4drop ;
 : assertEmpty ( -- ) DEPTH 0 > IF ." Stack not cleared!" .S true THROW THEN ;
+: assertC= ( addr1 addr2 count -- )
+  3dup C= not IF
+    rot over ( addr2 count addr1 count )
+    CR ." if " .S CR
+    ." Arrays not equal." CR ." addr1:" dump
+    ." addr2:" dump
+    true THROW
+  THEN 3drop ;
 
 3 2 1 0 sp@3
 3 assertEqual

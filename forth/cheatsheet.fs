@@ -383,11 +383,19 @@ myBytes 3 + ( =caddr ) cell 3 - ( =n ) erase
 
 myBytes @ HEX 02012A assertEqual  DECIMAL
 
+\ Dictionary structure:
+\ name field: counted string, i.e. \x04NAME
+\ link field: addr of PREVIOUS entry or 0 if last
+\ code (or code pointer) field, unspecified
+\ data field: aligned cells determined by ALLOT | , | etc
+
 HEX
-." HERE=    0x" HERE U. CR
-." PAD=     0x" PAD U. CR
-DECIMAL ." PAD-HERE=" PAD HERE - cell / U. ." cells" CR
+." HERE=    0x" HERE U. CR  \ cell after last in dictionary
+." PAD=     0x" PAD U. CR   \ HERE + someConstant: can be used for tmp buffer
+DECIMAL ." PAD - HERE=" PAD HERE - cell / U. ." cells" CR
 HEX
+\ Note: these are not in ANS forth. See the text processing section for
+\ How to use "correctly"
 \ ." Dict H=  0x" H U. CR  \ not in gforth
 ." TIB=     0x" tib U. CR  \ terminal input buffer
 ." #TIB=    0x" #tib U. CR \ ???
@@ -396,6 +404,7 @@ DECIMAL
 
 \ ### Vectored execution
 
+\ define some functions
 : goodAnswer 3 ;
 : bestAnswer 42 ;
 
@@ -415,5 +424,40 @@ variable 'currentAnswer
 getCurrentAnswer 3 assertEqual
 ' bestAnswer 'currentAnswer !
 getCurrentAnswer 42 assertEqual
+
+\ ' gets value from INPUT stream, ['] gets NEXT WORD
+: useBestAnswer 
+  ['] bestAnswer  \ note: value after ['] MUST be on the same line.
+                  \ also: ['] will even consume comments!
+  'currentAnswer ! ;
+
+' goodAnswer 'currentAnswer !
+getCurrentAnswer 3 assertEqual
+useBestAnswer
+getCurrentAnswer 42 assertEqual
+assertEmpty
+
+
+\ ### Ch10: I/O and String handling
+\ This chapter is outdated. http://forum.6502.org/viewtopic.php?f=9&t=4364 provides
+\ an excellent reference for filling in the missing pieces
+
+\ TIB is the address to the beggining of the "text input buffer"
+\ #TIB is the number of characters in the TIB
+\ TYPE ( addr count -- ) writes the contents of addr to the terminal
+TIB #TIB @ TYPE  \ prints this whole line
+CR
+assertEmpty
+
+\ In dict as:
+\ \x0BhackyString | link | colon-code | ." | \x07example | EXIT
+: hackyString ." example" ;
+' hackyString
+  >BODY      \ ( xt -- &body )
+  2 CELLS +  \ skip some code and strlen. Found through trial/error
+  S" example" \ another way to specify a counted string
+  drop        \ drop the "count"
+  7 assertC=
+assertEmpty
 
 bye

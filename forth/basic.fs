@@ -6,6 +6,7 @@
 : sp@3 ( 3 2 1 0 -- 3 2 1 0 3 ) SP@ 3 cells + @ ;
 : 3dup sp@2 sp@2 sp@2 ;
 : 4dup sp@3 sp@3 sp@3 sp@3 ;
+: 3drop 2drop drop ;
 : 4drop 2drop 2drop ;
 : NOT 0= ;
 
@@ -22,5 +23,20 @@
 : 2@d ( addr u:2*cells -- d )
   \ retrieve the double indexing by double cells
   cells + 2 * 2@ ; 
+: -2rot ( d2 d1 d0 -- d0 d2 d1 )
+  2swap 2>R  ( d2 d0  R: d1 )
+  2swap 2R> ;
 
 : BINARY  2 BASE ! ;
+
+: C= ( addr1 addr2 count -- flag )
+  \ return whether the bytes are equal in the two locations
+  0 DO ( [0,count)
+    ( addr1 addr2 ) 2dup
+    I + C@  \ c@[addr2+I]
+    swap I + C@  \ c@[addr1+I]
+    <> IF
+      2drop false UNLOOP EXIT
+    THEN
+  LOOP
+  2drop true ;
