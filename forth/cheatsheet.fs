@@ -407,13 +407,13 @@ DECIMAL
 ' goodAnswer EXECUTE 3 assertEqual \ EXECUTE runs it
 
 \ Create a function which runs the vector
-variable currentAnswer
-' goodAnswer currentAnswer !  \ set the addr of goodAnswer to currentAnswer
+variable 'currentAnswer
+' goodAnswer 'currentAnswer !  \ set the addr of goodAnswer to 'currentAnswer
 
-: getCurrentAnswer  ( -- u ) currentAnswer @ EXECUTE ;
+: getCurrentAnswer  ( -- u ) 'currentAnswer @ EXECUTE ;
 
 getCurrentAnswer 3 assertEqual
-' bestAnswer currentAnswer !
+' bestAnswer 'currentAnswer !
 getCurrentAnswer 42 assertEqual
 
 bye
