@@ -450,12 +450,12 @@ CR
 assertEmpty
 
 \ In dict as:
-\ \x0BhackyString | link | colon-code | ." | \x07example | EXIT
+\ \x0BhackyString | link | colon-code | other-code... | \x07example | EXIT
 : hackyString ." example" ;
 ' hackyString
   >BODY      \ ( xt -- &body )
   2 CELLS +  \ skip some code and strlen. Found through trial/error
-  S" example" \ another way to specify a counted string
+  S" example" \ much better way to specify a counted string :P
   drop        \ drop the "count"
   7 assertC=
 assertEmpty
