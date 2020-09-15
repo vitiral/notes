@@ -22,3 +22,5 @@
 : 2@d ( addr u:2*cells -- d )
   \ retrieve the double indexing by double cells
   cells + 2 * 2@ ; 
+
+: BINARY  2 BASE ! ;

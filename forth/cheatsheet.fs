@@ -299,8 +299,8 @@ month @ 09 assertEqual
 day @ 14 assertEqual
 
 \ ? is shorhand for  @ .
-: DATE.   year ?  month ?  day ? ;
-." Date: " DATE. CR
+: isoDate   year ?  month ?  day ? ;
+." Date: " isoDate CR
 
 \ Length 2 variables
 2VARIABLE  2DATE
@@ -334,9 +334,86 @@ myArray 1 @u 442 assertEqual
 
 
 \ TODO: hmm doesn't work
-myArray 3 cells 1 fill \ fill myArray with 1's
-myArray 0 @u 1 assertEqual
-myArray 1 @u 1 assertEqual
-myArray 2 @u 1 assertEqual
+\ : fill ( c-addr u char -- )
+\   \ If u is greater than zero, store char in each of u consecutive characters
+\   \ of memory beginning at c-addr.
+
+myArray 3 1 fill \ fill first 3 BYTES with 1
+HEX
+myArray 0 @u 010101 assertEqual
+DECIMAL
+
+." myArray contents:" CR
+myArray 3 cells dump
+
+myArray 3 cells erase \ erase all of myArray
+myArray 0 @u 0 assertEqual
+myArray 1 @u 0 assertEqual
+myArray 2 @u 0 assertEqual
+assertEmpty
+
+\ Store bytes at addresses
+42 myArray 0 + C!
+1  myArray 1 + C!
+2  myArray 2 + C!
+
+myArray 0 + C@ 42 assertEqual
+myArray 1 + C@ 1 assertEqual
+myArray 2 + C@ 2 assertEqual
+myArray 0 @u HEX 02012A assertEqual  DECIMAL
+assertEmpty
+
+\ Initialize an array with character values
+CREATE initArray  \ put name into dict at compile time. Does NOT allocate data space
+  42 ,            \ , reserves one cell of data space and stores x in the cell
+  1 , 2 ,
+initArray 0 @u 42 assertEqual
+initArray 1 @u 1 assertEqual
+initArray 2 @u 2 assertEqual
+
+CREATE myBytes
+  42 C,  \ C, reserves one BYTE of data space
+  1 C, 2 C,
+\ note: we are now not aligned. It would be BAD to use  ,
+\ without first calling CREATE (which auto-aligns)
+align \ alternatively, call  ALIGN  :D
+
+\ non initialized bytes can be filled with JUNK
+myBytes 3 + ( =caddr ) cell 3 - ( =n ) erase
+
+myBytes @ HEX 02012A assertEqual  DECIMAL
+
+HEX
+." HERE=    0x" HERE U. CR
+." PAD=     0x" PAD U. CR
+DECIMAL ." PAD-HERE=" PAD HERE - cell / U. ." cells" CR
+HEX
+\ ." Dict H=  0x" H U. CR  \ not in gforth
+." TIB=     0x" tib U. CR  \ terminal input buffer
+." #TIB=    0x" #tib U. CR \ ???
+." >IN=0x" >IN U. CR       \ current parsed position in input-stream
+DECIMAL
+
+\ ### Vectored execution
+
+: goodAnswer 3 ;
+: bestAnswer 42 ;
+
+HEX
+." xt of goodAnswer : " 
+  ' goodAnswer   \ `  gets the address of next word on INPUT STREAM
+  U. CR
+DECIMAL
+' goodAnswer EXECUTE 3 assertEqual \ EXECUTE runs it
+
+\ Create a function which runs the vector
+variable currentAnswer
+' goodAnswer currentAnswer !  \ set the addr of goodAnswer to currentAnswer
+
+: getCurrentAnswer  ( -- u ) currentAnswer @ EXECUTE ;
+
+getCurrentAnswer 3 assertEqual
+' bestAnswer currentAnswer !
+getCurrentAnswer 42 assertEqual
 
 bye
