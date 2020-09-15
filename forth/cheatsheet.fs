@@ -157,12 +157,28 @@ assertEmpty
 useReturnBuffer
 
 
-\ ### Markers and include
-MARKER -work \ set a marker in the dictionary
-INCLUDE hello.fs  \ includes a file
+\ ### Markers and files
+use blocks.forth  \ see blocks.forth for documentation
+marker -work \ set a marker in the dictionary
+include hello.fs  \ includes a file
 hello \ from hello.fs
+hello_result  800 assertEqual
 : thisWillBeDeleted ." this will be deleted by -work " CR ;
 thisWillBeDeleted
+
+\ Note: Can use  u LIST  to view contents of a block
+1 load   block_1_result 42 assertEqual
+." Printing block 1 to console:" CR
+\ load block 0 and type it to the console
+1 block      \ load block 1 into buffer, return addr
+  1024 type  \ type to console
+\ block 1 is loaded into a buffer, but that buffer
+\  is only valid until a "multitasking" word like
+\  EMIT or TYPE is used.
+\ The buffer contents can be _modified_ and written
+\  to disk with UPDATE, which will update disk b4
+\  reusing the buffer. FLUSH will force the update.
+
 -work  \ removes anything since   MARKER -work
 \ hello -- this wouldn't work anymore
 assertEmpty
@@ -264,5 +280,37 @@ beginWhile
   3 assertEqual 2 assertEqual 
   1 assertEqual 0 assertEqual
 assertEmpty
+
+
+\ ### Variables, constants and arrays
+
+\ declares 3 global variables
+VARIABLE day   VARIABLE month   VARIABLE year 
+
+\ When the variable is used, the variables addr is put on the stack
+
+\ function to set the date. ! prefix is standard when setting variables
+\ ! is used to SET a value ( u addr -- )
+
+: !DATE   ( year month day -- ) day !   month !   year ! ;
+2020 09 14 !DATE
+
+\ @ ( addr - u ) is used to retrieve values at an address
+year @ 2020 assertEqual
+month @ 09 assertEqual
+day @ 14 assertEqual
+
+\ ? is shorhand for  @ .
+: DATE.   year ?  month ?  day ? ;
+." Date: " DATE. CR
+
+\ Length 2 variables
+2VARIABLE  2DATE
+20200914. 2DATE 2!
+2DATE 2@  20200914. dassertEqual
+: 2DATE.  <# # # [char] - hold # # [char] - hold # # # # #> TYPE SPACE ;
+
+." 2DATE: " 20200914. 2DATE. CR
+
 
 bye

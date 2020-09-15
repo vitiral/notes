@@ -5,7 +5,7 @@
 : assertEqual ( u1 u0 -- ) 2dup <> IF
     ." Not equal: " U. U. true THROW
   THEN 2drop ;
-: dAssertEqual ( d1 d0 -- ) .S CR 4dup .S CR D<> IF
+: dAssertEqual ( d1 d0 -- ) 4dup D<> IF
     ." Not equal: " UD. UD. true THROW
   THEN 4drop ;
 : assertEmpty ( -- ) DEPTH 0 > IF ." Stack not cleared!" .S true THROW THEN ;

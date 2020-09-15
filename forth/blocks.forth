@@ -1,16 +1,32 @@
-( Large letter F)                                              
+0000 demonstrate block 0                                    \ 0
+Blocks in forth must be 16 lines and 64 column wide            
+They are for when there is no filesystem                       
+Newlines are not necessary, but are included here for easy text
+editing                                                        
                                                                
-: STAR    [CHAR] * EMIT ;                                      
-: STARS   0 DO  STAR  LOOP ;                                   
-: MARGIN  CR 30 SPACES ;                                       
-: BLIP    MARGIN STAR ;                                        
-: BAR     MARGIN 5 STARS ;                                     
-: F       BAR BLIP BAR BLIP BLIP CR ;                          
-                                                               
-                                                               
+Note:  0 LOAD  is undefined, so this block can be used for     
+only documentation.                                            
                                                                
                                                                
                                                                
                                                                
                                                                
-                                                          ( $ )
+                                                               
+                                                               
+                                                               
+\ [0001] this is the first useable block                      ^
+                                                               
+                                                               
+                                                               
+: block_1_result 42 0 + ;                                      
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                            \ $
