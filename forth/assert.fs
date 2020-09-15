@@ -10,6 +10,6 @@
   THEN 4drop ;
 : assertEmpty ( -- ) DEPTH 0 > IF ." Stack not cleared!" .S true THROW THEN ;
 
-3 2 1 0 dup:3
+3 2 1 0 sp@3
 3 assertEqual
 0 assertEqual 1 assertEqual 2 assertEqual 3 assertEqual

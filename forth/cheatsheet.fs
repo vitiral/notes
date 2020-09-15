@@ -1,19 +1,9 @@
 \ line comment
 ( inline comment )
 ( Note: CASE is ignored for all words )
+INCLUDE basic.fs
+INCLUDE assert.fs
 
-\ Define some basic helper methods
-: dup:3 ( 3 2 1 0 -- 3 2 1 0 3 ) SP@ 3 CELLS + @ ;
-: 4dup dup:3 dup:3 dup:3 dup:3 ;
-: 4drop 2drop 2drop ;
-: NOT 0= ;
-
-INCLUDE assert.fs  \ include another forth file
-assertEmpty
-3 2 1 0
-dup:3
-3 assertEqual
-0 assertEqual 1 assertEqual 2 assertEqual 3 assertEqual
 
 
 \ ### Interpreter Hints
@@ -99,7 +89,8 @@ false NOT true assertEqual    \ I prefer to bind NOT to 0=
 
 
 \ ### Double length arithmetic
-\ <numbers>. for specifying double
+\ [0-9]*.  for specifying double. ( lsb msb )
+42. 0 assertEqual 42 assertEqual
 HEX 0F000F000F000. DECIMAL 263886817259520. dAssertEqual
 assertEmpty
 
@@ -284,6 +275,13 @@ assertEmpty
 
 \ ### Variables, constants and arrays
 
+\ Constants
+42 constant theAnswer
+theAnswer 42 assertEqual
+
+42. 2constant theAnswer2
+theAnswer2 42. dassertEqual
+
 \ declares 3 global variables
 VARIABLE day   VARIABLE month   VARIABLE year 
 
@@ -309,8 +307,36 @@ day @ 14 assertEqual
 20200914. 2DATE 2!
 2DATE 2@  20200914. dassertEqual
 : 2DATE.  <# # # [char] - hold # # [char] - hold # # # # #> TYPE SPACE ;
-
 ." 2DATE: " 20200914. 2DATE. CR
+assertEmpty
 
+variable myArray  \ declare space in dictionary called MYARRAY
+  2 cells  \ simply 2 * cellsize
+  allot    \ allot an _additional_ amount of bytes for myArray
+
+
+42 myArray !           \ store 42 into myArray index 0
+43 myArray cell+ !    \ store 43 into myArray index 1
+44 myArray 2 cells+ ! \ store 44 into myArray index 1
+
+myArray @ 42 assertEqual
+myArray cell+ @ 43 assertEqual
+myArray 2 cells+ @ 44 assertEqual
+
+\ or using my words
+myArray 0 @u 42 assertEqual
+myArray 1 @u 43 assertEqual
+myArray 2 @u 44 assertEqual
+assertEmpty
+
+442 myArray 1 !u
+myArray 1 @u 442 assertEqual
+
+
+\ TODO: hmm doesn't work
+myArray 3 cells 1 fill \ fill myArray with 1's
+myArray 0 @u 1 assertEqual
+myArray 1 @u 1 assertEqual
+myArray 2 @u 1 assertEqual
 
 bye
