@@ -90,7 +90,7 @@
 #t ; for true
 #f ; for false -- any value other than #f is true
 (not #t) ; => #f
-(and 0 #f (error "doesn't get here")) ; => #f
+(and 0 (error "doesn't get here")) ; => #f
 (or #f 0 (error "doesn't get here"))  ; => 0
 
 ;;; Characters

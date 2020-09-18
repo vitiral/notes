@@ -1,3 +1,4 @@
+\ Much of this is from going through the excellent tutorial at www.forth.com/starting-forth
 \ line comment
 ( inline comment )
 ( Note: CASE is ignored for all words )
@@ -445,19 +446,27 @@ assertEmpty
 \ TIB is the address to the beggining of the "text input buffer"
 \ #TIB is the number of characters in the TIB
 \ TYPE ( addr count -- ) writes the contents of addr to the terminal
-TIB #TIB @ TYPE  \ prints this whole line
-CR
+tib #tib @ type CR \ prints this whole line
 assertEmpty
+
+\ Modern implementations may not include TIB, instead use SOURCE, which is
+\ in the ANS standard. : source ( -- tib #tib )
+source type CR \ prints whole line, just like above
 
 \ In dict as:
 \ \x0BhackyString | link | colon-code | other-code... | \x07example | EXIT
+
 : hackyString ." example" ;
+: normalString S" example" ; \ S" ..." is ( -- addr count ) of the string
 ' hackyString
-  >BODY      \ ( xt -- &body )
+  >BODY      \ ( xt -- &body data-field address corresponding to xt )
   2 CELLS +  \ skip some code and strlen. Found through trial/error
-  S" example" \ much better way to specify a counted string :P
+  normalString
   drop        \ drop the "count"
   7 assertC=
 assertEmpty
+
+
+
 
 bye
