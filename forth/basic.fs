@@ -28,15 +28,3 @@
   2swap 2R> ;
 
 : BINARY  2 BASE ! ;
-
-: C= ( addr1 addr2 count -- flag )
-  \ return whether the bytes are equal in the two locations
-  0 DO ( [0,count)
-    ( addr1 addr2 ) 2dup
-    I + C@  \ c@[addr2+I]
-    swap I + C@  \ c@[addr1+I]
-    <> IF
-      2drop false UNLOOP EXIT
-    THEN
-  LOOP
-  2drop true ;

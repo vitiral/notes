@@ -2,9 +2,11 @@
 \ line comment
 ( inline comment )
 ( Note: CASE is ignored for all words )
+
+\ Resources
+\ - https://forth-standard.org/standard/words - find definitions of words
 INCLUDE basic.fs
 INCLUDE assert.fs
-
 
 
 \ ### Interpreter Hints
@@ -467,6 +469,172 @@ source type CR \ prints whole line, just like above
 assertEmpty
 
 
+\ Disk access
+." block 1 line 0:" cr
+1 block 64 type cr  \ access the first block, type out 64 characters
+." block 1 line 8:" cr
+1 block 8 64 * +    \ add 8 "lines" (each 64 bytes) to the address
+  64 type cr
+
+S" spaces?      " -TRAILING \ removes ending spaces
+swap drop 7 assertEqual ( count )
+assertEmpty
+
+\ Moving data around
+1 block pad 63 cmove \ ( addr1 addr2 count ) move count bytes of addr1 into addr2
+
+\ Altenatively:
+\ cmove> will move them from high->low memory (instead of low->high),
+\   allowing you to move to an address that overlaps but is higher in 
+\   memory.
+\ move will do so wihout clobbering (using intermediate memory)
+pad
+  S" \ [0001] this is the first 'use'-able block                 \ 0"
+  assertC=
+
+\ fill the pad with BL, which for some reason means space
+pad 1024 char bl fill
+pad C@ char bl assertEqual
+
+
+\ KEY ( -- u ) await a key press and return it
+
+\ 9  CONSTANT #tab
+\ 10 CONSTANT #cr
+\ 32 CONSTANT #sp  \ use br
+
+DECIMAL
+S" 42" 2dup
+  \ convert string to a number, adding to ud1 after
+  \ multiplying it by BASE (? why ?)
+  ( addr count )
+  0. 2swap
+  ( 0. addr count )
+  >NUMBER ( ud1 addr1 u1 -- ud2 addr2 u2 )
+  0 AssertEqual \ no count left
+  ( ud2 addr )
+  -rot 42. dAssertEqual \ we got the value we expect
+  ( addr1 count addr2 )
+  swap drop 2 - assertEqual \ addr2 advanced +2
+
+S" foo" S" foo" compare 0 = assertTrue
+S" abc" S" xyz" compare -1 = assertTrue
+S" xyz" S" abc" compare 1 = assertTrue
+
+
+\ ### Extending the compiler
+\ Types of behaviour:
+\ runtime: action a word takes when _executed_. This is a typical definition.
+\ compiletime: action a word takes when _compiled_.
+\ 
+\ Words can actually behave in _both_ ways, of which there are generally two:
+\ - defining words: when executed compiles a new definition into the dict,
+\   specifies the compile-time _and_ runtime of the words it _defines_.
+\   For example, CONSTANT has a compile time behavior (store a value) and
+\   then the word it defines has a runtime behavior (fetch the value).
+\ - compiling word: used _within_ a colon ':' definition which does something
+\   during compilation. Notably, this does _not_ create a dictionary entry,
+\   instead putting values into the currently compiling word. For example,
+\   `."` puts a string into the word at compile time and prints it at runtime.
+\   IF puts an address at compile time and THEN jumps to that address. DO
+\   puts an address at compile time along with some counters on the return stack
+\   then loop increments the counter and jumps back when appropriate.
+
+\ example of how VARIABLE is defined
+: exVariable 
+  ( compile: -- \ insertName w/ value 0 )
+  ( runtime: -- addr \ retrieve addr of name )
+  CREATE \ create the dictionary entry from the input stream and allocate a cell
+  0 , ;  \ allocate a cell initialized to 0
+  \ runtime: CREATE runtime behavior puts the address created on the stack
+
+\ Works just like VARIABLE
+exVariable foo
+foo @ 0 assertEqual
+33 foo !
+foo @ 33 assertEqual
+
+: myConstant 
+  ( compile: u -- \ insertName w/ value )
+  ( runtime: -- u \ retrive value )
+  CREATE ,  \ same as exVariable
+  DOES> @ ; \ CREATE puts the addr on the stack, @ retrieves it
+30 myConstant cfoo
+cfoo 30 assertEqual
+
+: 2DMatrix ( #rows #cols -- )
+  CREATE DUP ,  \ create the name, store the cols
+  * ALLOT \ allot #rows*#cols bytes
+  DOES> ( row col -- addr )
+    ( row col array& )
+    ROT OVER ( col array& row array& )
+    @  ( col array& row #cols )
+    * + +  ( col [array&+row*#cols )
+    cell+ ( skip first cell in array& ) ; 
+
+
+10 10 2DMatrix decas@r,c
+: decasFill ( -- )
+  10 0 DO
+    10 0 DO
+      ( J=row I=col )
+      10 J * I + ( =c ) 
+      J I decas@r,c ( =caddr)
+      C!
+    LOOP
+  LOOP ;
+decasFill
+
+0 0 decas@r,c c@ 0 assertEqual
+1 5 decas@r,c c@ 15 assertEqual
+3 3 decas@r,c c@ 33 assertEqual
+9 9 decas@r,c c@ 99 assertEqual
+assertEmpty
+
+\ The colon compiler (':') looks up each word and compiles it's _index_ into
+\ the dictionary entry.
+\ However, a "compiling" word is _executed_ immediately. This is because
+\ the compiling words have their "precedence" bit set. These are called
+\ "immediate" words.
+\ 
+\ This can be done directly  : name definition ; IMMEDIATE
+
+: immediateAnswer theAnswer ; IMMEDIATE
+
+\ However, the below doesn't work because 42 will be left on the stack.
+\ Because of this, the compiler will complain that your definition is
+\ "unstructured"
+\ : helloWithAnswer immediateAnswer ." Hello answer." CR ; 
+
+
+\ We can resolve this by consuming the value with another immediate
+: assertAnswerNow  42 assertEqual ; IMMEDIATE
+: helloWithAnswer 
+  immediateAnswer assertAnswerNow  \ executed at compile-time
+  ." Hello answer." CR ; 
+helloWithAnswer
+\ Immediate words can also be used at the base level
+immediateAnswer 42 assertEqual
+assertEmpty
+
+: myDO  \ we are going to define our own DO...LOOP
+  POSTPONE 2>R \ 2>R gets compiled into the definition
+  here ; IMMEDIATE \ everything not "POSTPONE xxx" is run at compile-time
+
+\ A better example is to use [ ... ] which leave+reenter compilation
+\ mode, respectively.
+: helloWithAnswer2 immediateAnswer [ 42 assertEqual ] ." Hello answer2." CR ;
+helloWithAnswer2
+
+\ You can also use LITERAL to store values directly into the compiled word.
+\ This is a kind of "const" value.
+: 2ndAnswer [ 2 5 + 5 + 30 + ] LITERAL ;
+2ndAnswer 42 assertEqual
+assertEmpty
+
+\ Nice example: dumps it's own code to the console.
+: dump-this   [ HERE ] LITERAL  ." DUMP-THIS" 64 DUMP ;
+dump-this CR
 
 
 bye

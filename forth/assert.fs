@@ -10,9 +10,8 @@
   THEN 4drop ;
 : assertEmpty ( -- ) DEPTH 0 > IF ." Stack not cleared!" .S true THROW THEN ;
 : assertC= ( addr1 addr2 count -- )
-  3dup C= not IF
+  3dup dup -rot compare ( 0/false if equal ) IF
     rot over ( addr2 count addr1 count )
-    CR ." if " .S CR
     ." Arrays not equal." CR ." addr1:" dump
     ." addr2:" dump
     true THROW

@@ -21,6 +21,7 @@ No blank lines between definitions, except to separate distinct groups of defint
      n            single-length signed number
      d            double-length signed number
      u            single-length unsigned number
+     n
      ud           double-length unsigned number
      t            triple-length
      q            quadruple-length
