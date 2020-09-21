@@ -4,6 +4,7 @@
 	$Id: jonesforth.S,v 1.47 2009-09-11 08:33:13 rich Exp $
 
 	gcc -m32 -nostdlib -static -Wl,-Ttext,0 -Wl,--build-id=none -o jonesforth jonesforth.S
+	   -I /usr/include/x86_64-linux-gnu
 */
 	.set JONES_VERSION,47
 /*
@@ -122,6 +123,7 @@
 	assemble and run the code (save this file as 'jonesforth.S') are:
 
 	gcc -m32 -nostdlib -static -Wl,-Ttext,0 -Wl,--build-id=none -o jonesforth jonesforth.S
+	   -I /usr/include/x86_64-linux-gnu
 	cat jonesforth.f - | ./jonesforth
 
 	If you want to run your own FORTH programs you can do:
@@ -304,8 +306,8 @@
 
 /* NEXT macro. */
 	.macro NEXT
-	lodsl
-	jmp *(%eax)
+	lodsl        // %eax=%esi;%esi+=4
+	jmp *(%eax)  // indirect jump
 	.endm
 
 /*	The macro is called NEXT.  That's a FORTH-ism.  It expands to those two instructions.
@@ -470,12 +472,24 @@
 	(pop top of return stack into %ebx).
 */
 
-/* Macros to deal with the return stack. */
-	.macro PUSHRSP reg
-	lea -4(%ebp),%ebp	// push reg on to return stack
-	movl \reg,(%ebp)
+// lea :
+// The lea instruction places the address specified by its first operand
+// into the register specified by its second operand. Note, the contents of the
+// memory location are not loaded, only the effective address is computed and
+// placed into the register. This is useful for obtaining a pointer into a
+// memory region or to perform simple arithmetic operations.
+
+
+/* Macros to deal with the return stack, which "grows down" in memory
+*/
+
+	// Decrement the stack pointer and put reg into it.
+	.macro PUSHRSP reg      // push reg on to return stack
+	lea -4(%ebp),%ebp	// &%ebp=%ebp-4
+	movl \reg,(%ebp)	// %ebp=reg
 	.endm
 
+	// Put the value at the stack pointer into reg and increment the stack pointer.
 	.macro POPRSP reg
 	mov (%ebp),\reg		// pop top of return stack to reg
 	lea 4(%ebp),%ebp
@@ -499,7 +513,7 @@
 	.text
 	.align 4
 DOCOL:
-	PUSHRSP %esi		// push %esi on to the return stack
+	PUSHRSP %esi		// push %esi (inst ptr) on to the return stack
 	addl $4,%eax		// %eax points to codeword, so make
 	movl %eax,%esi		// %esi point to first data word
 	NEXT
@@ -564,7 +578,7 @@ stack points ->	| addr of DOUBLE   |	   + 4 =   +------------------+
 	.text
 	.globl _start
 _start:
-	cld
+	cld			// ???: what does this do?
 	mov %esp,var_S0		// Save the initial data stack pointer in FORTH variable S0.
 	mov $return_stack_top,%ebp // Initialise the return stack.
 	call set_up_data_segment
