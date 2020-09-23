@@ -29,10 +29,12 @@ mov <con>, <reg|mem>
 
 
 Register key:
-- %eax - accumulator, used for storing codeword addr in NEXT
+- %eax - accumulator, used for storing codeword addr in NEXT. Basically the pointer
+  to the word we are calling.
 - %esi - "instruction pointer", contains next instruction to in NEXT
 - %esp - our  _parameter/data stack_. Usually the "normal stack"
 - %ebp - our _return stack_. Usually called the "frame pointer"
+- %ebx - used to store values.
 
 ```
 /* NEXT macro. */

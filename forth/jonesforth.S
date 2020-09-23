@@ -578,7 +578,7 @@ stack points ->	| addr of DOUBLE   |	   + 4 =   +------------------+
 	.text
 	.globl _start
 _start:
-	cld			// ???: what does this do?
+	cld			// clears the "string direction flag", affects what movs does.
 	mov %esp,var_S0		// Save the initial data stack pointer in FORTH variable S0.
 	mov $return_stack_top,%ebp // Initialise the return stack.
 	call set_up_data_segment
@@ -1280,11 +1280,11 @@ var_\name :
 	<---------------------- BUFFER_SIZE (4096 bytes) ---------------------->
 */
 
-	defcode "KEY",3,,KEY
+	defcode "KEY",3,,KEY    // ( -- c )
 	call _KEY
 	push %eax		// push return value on stack
 	NEXT
-_KEY:
+_KEY:   // ( -- ) 
 	mov (currkey),%ebx
 	cmp (bufftop),%ebx
 	jge 1f			// exhausted the input buffer?

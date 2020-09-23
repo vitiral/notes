@@ -7,6 +7,9 @@ SHELL	:= /bin/bash
 
 all:	jonesforth
 
+typeforth: TypeForth.S
+	gcc -m32 -nostdlib -static $(BUILD_ID_NONE) -o $@ $< -I /usr/include/x86_64-linux-gnu
+
 jonesforth: jonesforth.S
 	gcc -m32 -nostdlib -static $(BUILD_ID_NONE) -o $@ $< -I /usr/include/x86_64-linux-gnu
 
