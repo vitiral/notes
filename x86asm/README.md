@@ -1,5 +1,14 @@
 Guide: [Programming from the ground up](http://download.savannah.gnu.org/releases/pgubook/)
 
+## Important Instructions
+
+"jump" instructions follow a "cmp[b|?|l]" instruction:
+- je Jump if the values were equal
+- jg Jump if the second value was greater than the first value
+- jge Jump if the second value was greater than or equal to the first value
+- jl Jump if the second value was less than the first value
+- jle Jump if the second value was less than or equal to the first value
+- jump unconditional jump
 
 `instruction pointer` a special register pointing to the place in memory to
 execute next.
@@ -39,6 +48,5 @@ Variables:
 - %edi is current position in list (index)
 - %ebx current highest value
 - %eax current value being examined
-
 
 
