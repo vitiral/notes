@@ -1285,13 +1285,13 @@ var_\name :
 	push %eax		// push return value on stack
 	NEXT
 _KEY:   // ( -- ) 
-	mov (currkey),%ebx
-	cmp (bufftop),%ebx
+	mov currkey,%ebx
+	cmp bufftop,%ebx
 	jge 1f			// exhausted the input buffer?
 	xor %eax,%eax
 	mov (%ebx),%al		// get next key from input buffer
 	inc %ebx
-	mov %ebx,(currkey)	// increment currkey
+	mov %ebx,currkey	// increment currkey
 	ret
 
 1:	// Out of input; use read(2) to fetch more input from stdin.
@@ -2166,7 +2166,7 @@ _COMMA:
 	mov $__NR_write,%eax	// write syscall
 	int $0x80
 
-	mov (currkey),%ecx	// the error occurred just before currkey position
+	mov currkey,%ecx	// the error occurred just before currkey position
 	mov %ecx,%edx
 	sub $buffer,%edx	// %edx = currkey - buffer (length in buffer before currkey)
 	cmp $40,%edx		// if > 40, then print only 40 characters
