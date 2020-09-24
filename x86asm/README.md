@@ -95,18 +95,60 @@ Function instructions:
 Side note: I think TypeForth can use the "normal" calling convention of `call`
 but still use `%ebp` for the data-stack.
 - _Before_ calling a function, we `subl $localsSize, %esp` then `call (xt)`
-  This will push the return-index onto the stack for us. WE then `addl
+  This will push the return-index onto the stack for us. Locals can then
+  be accessed by adding 4 to their index. After the call, WE then `addl
   $localsSize` again, cleaning up after ourselves function. No need for the
   base pointer!
-- If we ever want to interface w/ C-like code, we can store the %ebp on the
-  return stack, but I don't think this is necessary.
+- If we ever want to interface w/ C-like code we don't have to worry, since
+  C will store our ebp onto the stack and restore it before returning.
+  Obviously we would have to put the locals into the stack that C expects, but
+  this is fine.
+
+
+### Ch5 (p59): Files
+
+open syscall:
+- %eax=5: syscall number
+- %ebx=addr of first character in filename
+- %ecx=r/w intention. =0 for read =03101 for write
+- %edx=permission, =0666 is the most basic
+- return: %eax is the file-descriptor.
+
+read syscall:
+- %eax=3: syscall number
+- %ebx=fd
+- %ecx=address of buffer to store data
+- %edx=size of the buffer
+- return: %eax the number of bytes read or NEGATIVE error code
+
+write syscall:
+- %eax=4: syscall number
+- %ebx=fd
+- %ecx=address of buffer with bytes to write
+- %edx=number of bytes to write
+- return: %eax the number of bytes written or NEGATIVE error code
+
+close syscall:
+- %eax=6: syscall number
+- %ebx=fd
+
+Special files open by default:
+- 0: STDIN
+- 1: STDOUT
+- 2: STDERR
+
+```
+# bss section is for uniniitilized data
+# stands for Block Started by Symbol, or I like Block Something Something
+.section .bss
+  .lcomm my_buffer, 512
+```
 
 
 
 
 
 
-### Ch5 (p??): Files
-
-### Skip the rest
+### Skipped the rest
+This is all the info I needed to write TypeForth
 
