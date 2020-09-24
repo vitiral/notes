@@ -20,19 +20,18 @@ _start:
 	movl data_items(,%edi,4), %eax  # load the first byte of data
 	movl %eax, %ebx  # set the value to be the current largest
 
-start_loop:
+1: // loop start
 	cmpl  $0, %eax  # check to see if we've hit the end
-	je loop_exit
+	je 3f
 	cmpl %eax, %ebx
-	jge endif       # second value (ebx) > first value (eax)
+	jge 2f       # jump if second value (ebx) > first value (eax).
+               # almost like postfix notation...
 	movl %eax, %ebx
-endif:
+2: // if...then
 	inc %edi
 	movl data_items(,%edi,4), %eax  # load the first byte of data
-	jmp start_loop
-loop_exit:
-
+	jmp 1b
+3: // end loop
 	movl $1, %eax   # system call number for exiting a program
-	// movl $1, %ebx   # return code = largest. Already set correctly.
+	// movl $1, %ebx# return code = largest. Already set correctly.
 	int  $0x80      # kernel vectored interrupt
-
