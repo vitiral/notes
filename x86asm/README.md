@@ -29,9 +29,8 @@ ADDRESS_OR_OFFSET(%BASE_OR_OFFSET,%INDEX,MULTIPLIER)
   `movl (label_name), %eax` -- the parens do NOT deref). You can also specify
   a constant directly `movl 0x400, %eax` -- notice there is NOT a `$`.
 - `indexed addressing mode`: instruction contains the memory address to access
-  and
-  also an `index register` to offset the address. You can also specify a `multiplier`
-  `movl label_name(,%edi,4), %eax`
+  and also an `index register` to offset the address. You can also specify a
+  `multiplier` `movl label_name(,%edi,4), %eax`
 - `indirect addressing mode`: instruction contains a register that contains a pointer
   to the data, `movl (%ebx), %eax`
 - `base pointer addressing mode`: like indirect addressing but also includes a number
@@ -66,11 +65,45 @@ See `largest.S` for my code. Important points:
 - `cmpl` is the compare operation, which sets the flags register. `je` will
   jump if the comparisons were equal, whearas jge will jump if the SECOND is >=
   the FIRST (it's backwards... why???)
-- `movl data_items(,%edi,4), %eax` uses base pointer addressing mode where
+- `movl label_name(,%edi,4), %eax` uses base pointer addressing mode where
   `data_items` is the base pointer and `%edi,4` is adding `edi*4`
 
 
 ### Ch4 (p41): Functions
+Stack instructions:
+- `%esp` always contains the _pointer_ to the current top of stack.
+- `pushl <value>` pushes a value onto the stack, which grows downward.
+  Same as `movl <value>, (%esp); subl $4, %esp`
+- `popl <memory>` sets the memory location and increments %esp by 4. Same
+  as `movl (%esp), (<memory>); addl $4, %esp`
+
+
+Function instructions:
+- `call <mem>` calls a "function". First it pushes the next (local) instruction address
+  onto the stack (%esp). Then it modifies the instruction pointer (%eip) to point to the
+  start of the function. Same as `pushl 4+%eip; jmp <addr>`
+- Conventionally, the _assembly_/C-code then stores the current %esp in the %ebp
+  (the base pointer) so that the C-compiler is easy to write. The reason for this
+  is that during C functions the stack may grow/shrink.
+- Next, the function reserves the space it needs. By using i.e. `subl $8,
+  %esp`. I now realize why it needs the base pointer... it needs it to find the
+  return address at the end!
+- "You can use other registers in base pointer addressing mode, but the x86
+  architecture makes using the %ebp register a lot faster." -- I highly doubt
+  this.
+
+Side note: I think TypeForth can use the "normal" calling convention of `call`
+but still use `%ebp` for the data-stack.
+- _Before_ calling a function, we `subl $localsSize, %esp` then `call (xt)`
+  This will push the return-index onto the stack for us. WE then `addl
+  $localsSize` again, cleaning up after ourselves function. No need for the
+  base pointer!
+- If we ever want to interface w/ C-like code, we can store the %ebp on the
+  return stack, but I don't think this is necessary.
+
+
+
+
 
 
 ### Ch5 (p??): Files
