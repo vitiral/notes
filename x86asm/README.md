@@ -144,11 +144,12 @@ Special files open by default:
   .lcomm my_buffer, 512
 ```
 
-
-
+argv: parameters stored on the stack at the beginning of the program
+- 8(%esp): number of arguments
+- 12(%esp): name of the program (argv_0)
+- 16(%esp): rest of the arguments (argv_1 ... )
 
 
 
 ### Skipped the rest
 This is all the info I needed to write TypeForth
-
