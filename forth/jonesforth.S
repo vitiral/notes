@@ -694,7 +694,7 @@ name_\label :
 \label :
 	.int code_\label	// codeword
 	.text
-	//.align 4
+	.align 4
 	.globl code_\label
 code_\label :			// assembler code follows
 	.endm

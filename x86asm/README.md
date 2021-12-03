@@ -26,8 +26,8 @@ ADDRESS_OR_OFFSET(%BASE_OR_OFFSET,%INDEX,MULTIPLIER)
 ```
 - `direct addressing mode`: instructions contains the specific memory address/label
   to access. i.e. `movl label_name, %eax` (or equivalently and confusingly
-  `movl (label_name), %eax` -- the parens do NOT deref). You can also specify
-  a constant directly `movl 0x400, %eax` -- notice there is NOT a `$`.
+  `movl (label_name), %eax`). You can also specify a constant directly `movl
+  0x400, %eax` -- notice there is NOT a `$`.
 - `indexed addressing mode`: instruction contains the memory address to access
   and also an `index register` to offset the address. You can also specify a
   `multiplier` `movl label_name(,%edi,4), %eax`

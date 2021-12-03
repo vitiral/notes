@@ -42,7 +42,7 @@
 \	except that you must use at least one whitespace character between words, and words themselves
 \	cannot contain whitespace.
 \
-\	FORTH is case-sensitive.  Use capslock!
+\	FORTH is case-insensitive.  Use capslock!
 
 \ The primitive word /MOD (DIVMOD) leaves both the quotient and the remainder on the stack.  (On
 \ i386, the idivl instruction gives both anyway).  Now we can define the / and MOD in terms of /MOD

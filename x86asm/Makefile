@@ -19,3 +19,6 @@ toupper: toupper.S
 	@as toupper.S --32 -o out/toupper.o
 	@ld out/toupper.o -m elf_i386 -o out/toupper
 
+indirect: indirect.S
+	@as indirect.S --32 -o out/indirect.o
+	@ld out/indirect.o -m elf_i386 -o out/indirect
