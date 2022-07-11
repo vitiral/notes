@@ -14,8 +14,10 @@ void main() {
   eprint("Starting main\n");
 
   while (fread(buf, 1, 1, stdin)) {
-    eprintf("[stderr] C stdin: %c (0x%X)\n", buf[0], buf[0]);
-    printf("[stdout] C stdin: %c (0x%X)\n", buf[0], buf[0]);
+    // eprintf("[C stderr] : %c (0x%X)\n", buf[0], buf[0]);
+     printf("[C stdout] : %c (0x%X)\n", buf[0], buf[0]);
+    fflush(stderr);
+    fflush(stdout);
   }
   eprint("Done.\n");
 }
