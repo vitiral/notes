@@ -32,6 +32,9 @@ Pointers
   changed _but the value pointed to can be_.
 - `const int const* ptr` is a **const pointer to const**. It's totally const.
 
+Really, pointers are just more explicit references. References do
+auto-referencing and dereferencing and have less power.
 
+Reference to pointer: `int*& ref`: allows you to change the pointer.
 
 

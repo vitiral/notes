@@ -1,6 +1,6 @@
 Current place:
 
-https://www.learncpp.com/cpp-tutorial/value-categories-lvalues-and-rvalues/
+https://www.learncpp.com/cpp-tutorial/return-by-reference-and-return-by-address/
 
 ## Notes
 Mostly, things made a lot of sense comming from C so far.
