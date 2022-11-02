@@ -37,4 +37,16 @@ auto-referencing and dereferencing and have less power.
 
 Reference to pointer: `int*& ref`: allows you to change the pointer.
 
+TLDR; references are almost identical to pointers, with the following
+differences:
+
+* No need to de-refeference. `int a& = 8; a = 7;` is valid.
+* Once initialized, a reference cannot be reseated, meaning it can not be
+  changed to reference another object (!). This is quite tricky. The below code
+  doesn't change ref to point at y, it sets x to y (!). I.e. `ref = y` is the
+  same thing as `x = y`.  `int& ref{ x }; ref = y;`
+* Cannot have a null-reference, can only have a `nullptr`.
+* `auto` will drop references (what!?). You must use `auto& myRef`
+  if you want the reference to stay.
+* The way const gets applied is weird. Refer to 9.12 when this matters.
 
