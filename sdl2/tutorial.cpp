@@ -179,6 +179,17 @@ bool Display::loadMedia() {
   );
 }
 
+void keydown(SDL_Event& e, Game& g) {
+  cout << "Keydown: " << sdlEventToString(e) << '\n';
+  switch(e.key.keysym.sym) {
+    case SDLK_UP:    g.e1.loc.y += 5; return;
+    case SDLK_DOWN:  g.e1.loc.y -= 5; return;
+    case SDLK_LEFT:  g.e1.loc.x -= 5; return;
+    case SDLK_RIGHT: g.e1.loc.x += 5; return;
+    default: cout << "  ... Hit default\n";
+  }
+}
+
 // *****************
 // * Event Loop
 void eventLoop(Display& d, Game& g) {
@@ -192,20 +203,20 @@ void eventLoop(Display& d, Game& g) {
   bool quit = false;
   while( quit == false ){
     while(SDL_PollEvent(&e)) {
-      cout << "Event: " << sdlEventToString(e) << '\n';
+      cout << "e1 x=" << g.e1.loc.x << " y=" << g.e1.loc.y << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Texture* img = g.showingX ? &*d.i_xOut : &*d.i_png ;
-          SDL_RenderClear(&*d.rend);
-          SDL_RenderCopy(&*d.rend, img, NULL, NULL);
-          g.e1.render(d, g);
-          SDL_RenderPresent(&*d.rend);
           g.showingX = not g.showingX;
-
           break;
         }
+        case SDL_KEYDOWN: keydown(e, g); break;
         case SDL_QUIT: quit = true; break;
       }
+      SDL_RenderClear(&*d.rend);
+      SDL_Texture* img = g.showingX ? &*d.i_xOut : &*d.i_png ;
+      SDL_RenderCopy(&*d.rend, img, NULL, NULL);
+      g.e1.render(d, g);
+      SDL_RenderPresent(&*d.rend);
     }
   }
 }
