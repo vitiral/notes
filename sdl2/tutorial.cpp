@@ -20,6 +20,8 @@ SDL_Surface* gScreenSurface = nullptr; // The surface contained by the window
 SDL_Surface* gHelloWorldImg = nullptr;
 SDL_Surface* gXImg = nullptr;
 
+bool gState = false;
+
 
 // Initialize SDL
 bool init() {
@@ -54,10 +56,10 @@ bool init() {
   return true;
 }
 
-bool loadImg(SDL_Surface** toSurface, char* path) {
-  *toSurface = SDL_LoadBMP(path);
-  if(not *toSurface) {
-    printf("Unable to load %s! Error: %s\n", *toSurface, SDL_GetError());
+bool loadSurface(SDL_Surface*& toSurface, const std::string& path) {
+  toSurface = SDL_LoadBMP(path.c_str());
+  if(not toSurface) {
+    printf("Unable to load %s! Error: %s\n", toSurface, SDL_GetError());
     return false;
   }
   return true;
@@ -65,8 +67,8 @@ bool loadImg(SDL_Surface** toSurface, char* path) {
 
 bool loadMedia() {
   return (
-    loadImg(&gHelloWorldImg, "data/02_img.bmp")
-    and loadImg(&gXImg, "data/x.bmp")
+    loadSurface(gHelloWorldImg, "data/02_img.bmp")
+    and loadSurface(gXImg, "data/x.bmp")
   );
 }
 
@@ -74,13 +76,17 @@ void eventLoop() {
   SDL_Event e;
   bool quit = false;
   while( quit == false ){
-    while( SDL_PollEvent( &e ) ) {
+    while(SDL_PollEvent(&e)) {
       cout << "Event: " << sdlEventToString(e) << '\n';
-
-      if( e.type == SDL_QUIT ) quit = true;
-      else {
-        SDL_BlitSurface(gXImg, nullptr, gScreenSurface, nullptr);
-        SDL_UpdateWindowSurface(gWindow);
+      switch (e.type) {
+        case SDL_MOUSEBUTTONDOWN: {
+          SDL_Surface* img = gState ?  gHelloWorldImg : gXImg ;
+          SDL_BlitSurface(img, nullptr, gScreenSurface, nullptr);
+          SDL_UpdateWindowSurface(gWindow);
+          gState = not gState;
+          break;
+        }
+        case SDL_QUIT: quit = true; break;
       }
     }
   }

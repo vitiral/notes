@@ -1,4 +1,4 @@
-OBJS = 02_img.cpp \
+OBJS = tutorial.cpp \
   libs/evt2str/sdl_event_to_string.*
 CC = g++
 COMPILER_FLAGS = -w
