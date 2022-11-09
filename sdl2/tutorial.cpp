@@ -133,6 +133,12 @@ bool Display::loadMedia() {
 // *****************
 // * Event Loop
 void eventLoop(Display& d) {
+  // Demonstrate stretching/shrinking an image
+  SDL_Rect stretchRect {
+    .x = 0, .y = 0,
+    .w = SCREEN_WIDTH / 2, .h = SCREEN_HEIGHT / 2
+  };
+
   SDL_Event e;
   bool quit = false;
   while( quit == false ){
@@ -141,7 +147,8 @@ void eventLoop(Display& d) {
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
           SDL_Surface* img = d.state ? &*d.i_hello : &*d.i_xOut ;
-          SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
+          // SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
+          SDL_BlitScaled(img, nullptr, &*d.screen, &stretchRect);
           SDL_UpdateWindowSurface(&*d.window);
           d.state = not d.state;
           break;

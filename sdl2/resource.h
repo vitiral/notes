@@ -25,7 +25,6 @@ class Resource final {
   NO_COPY(Resource);
   T* res;
 public:
-
   // Constructor, move constructor, destructor
   Resource(T* ptr = nullptr) noexcept : res(ptr) {}
   Resource(Resource&& r)     noexcept : res{r.unwrap()} {}
