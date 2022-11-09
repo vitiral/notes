@@ -37,7 +37,9 @@ using namespace std;
 // *****************
 // * SDL wrapper types and helper functions
 using RWindow  = Resource<SDL_Window, SDL_DestroyWindow>;
+using RRenderer = Resource<SDL_Renderer, SDL_DestroyRenderer>;
 using RSurface = Resource<SDL_Surface, SDL_FreeSurface>;
+using RTexture = Resource<SDL_Texture, SDL_DestroyTexture>;
 
 // *****************
 // * Game Objects
@@ -54,15 +56,16 @@ public:
 
   bool state{false};
   RWindow     window{};
-  RSurface    screen{};
-  RSurface    i_hello{};
-  RSurface    i_xOut{};
-  RSurface    i_png{};
+  // RSurface    screen{};
+  RRenderer   rend{};
+
+  RTexture    i_hello{};
+  RTexture    i_xOut{};
+  RTexture    i_png{};
 
   bool init();
   RSurface optimize(RSurface& s, const std::string& path);
-  RSurface loadBmp(const std::string& path);
-  RSurface loadPng(const std::string& path);
+  RTexture loadTexture(const std::string& path);
   bool loadMedia();
 };
 
@@ -77,61 +80,35 @@ bool Display::init() {
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
     SDL_WINDOW_SHOWN);
+
   if(window.isNull()) {
     printf("Window could not be created! Error: %s\n", SDL_GetError());
     return false;
   }
 
+  rend = SDL_CreateRenderer(&*window, -1, SDL_RENDERER_ACCELERATED);
+  if(rend.isNull()) {
+    printf("Renderer could not be created! Error: %s\n", SDL_GetError());
+    return false;
+  }
 
-  // Get window surface
-  screen = SDL_GetWindowSurface(&*window);
-
-  // Fill the surface white
-  SDL_FillRect(
-    &*screen,
-    nullptr,
-    SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF )
-  );
-
-  // Update the surface
-  SDL_UpdateWindowSurface(&*window);
+  SDL_SetRenderDrawColor(&*rend, 0xFF, 0xFF, 0xFF, 0xFF);
   return true;
 }
 
-RSurface Display::optimize(RSurface& raw, const std::string& path) {
-  RSurface out{SDL_ConvertSurface(&*raw, screen->format, 0)};
+RTexture Display::loadTexture(const std::string& path) {
+  RTexture out{IMG_LoadTexture(&*rend, path.c_str())};
   if(out.isNull()) {
-    cout << "Unable to convert surface " << path << "! Error: " << SDL_GetError() << '\n';
+    cout << "Unable to load " << path << "! Error: " << IMG_GetError() << '\n';
   }
   return out;
 }
 
-RSurface Display::loadBmp(const std::string& path) {
-  RSurface raw{SDL_LoadBMP(path.c_str())};
-  if(raw.isNull()) {
-    cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
-    return RSurface{};
-  }
-  return optimize(raw, path);
-}
-
-RSurface Display::loadPng(const std::string& path) {
-  RSurface raw{IMG_Load(path.c_str())};
-  if(raw.isNull()) {
-    cout << "Unable to load " << path << "! Error: " << IMG_GetError() << '\n';
-    return RSurface{};
-  }
-  return optimize(raw, path);
-}
-
 bool Display::loadMedia() {
-  i_hello = loadBmp("data/02_img.bmp");
-  i_xOut  = loadBmp("data/x.bmp");
-  i_png   = loadPng("data/png_loaded.png");
   return not (
-    i_hello.isNull()
-    or i_xOut.isNull()
-    or i_png.isNull()
+    (i_hello = loadTexture("data/02_img.bmp")).isNull()
+    or (i_xOut  = loadTexture("data/x.bmp")).isNull()
+    or (i_png   = loadTexture("data/png_loaded.png")).isNull()
   );
 }
 
@@ -151,10 +128,10 @@ void eventLoop(Display& d) {
       cout << "Event: " << sdlEventToString(e) << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Surface* img = d.state ? &*d.i_png : &*d.i_xOut ;
-          // SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
-          SDL_BlitScaled(img, nullptr, &*d.screen, &stretchRect);
-          SDL_UpdateWindowSurface(&*d.window);
+          SDL_Texture* img = d.state ? &*d.i_png : &*d.i_xOut ;
+          SDL_RenderClear(&*d.rend);
+          SDL_RenderCopy(&*d.rend, img, NULL, NULL);
+          SDL_RenderPresent(&*d.rend);
           d.state = not d.state;
           break;
         }
@@ -186,8 +163,6 @@ int game() {
   if(not d.loadMedia()) {
     return 1;
   }
-  SDL_BlitSurface(&*d.i_hello, nullptr, &*d.screen, nullptr);
-  SDL_UpdateWindowSurface(&*d.window);
   eventLoop(d);
   return 0;
 }
