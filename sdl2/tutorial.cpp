@@ -106,7 +106,7 @@ class Entity {
 public:
   Color     color{0xFF};
   Size      sz{100, 50};
-  Loc       loc{50, -100};
+  Loc       loc{0, 0};
 
   void render(Display& d, Game& g) {
     color.render(d.rend);
@@ -123,7 +123,11 @@ class Game {
 public:
   Loc     center{0, 0};
 
-  Entity e1;
+  bool quit{};
+  bool ctrl{};
+
+  Entity e1{};
+  Entity e2{.loc{-100, -100}};
 
   bool showingX{false};
 };
@@ -186,7 +190,18 @@ void keydown(SDL_Event& e, Game& g) {
     case SDLK_DOWN:  g.e1.loc.y -= 5; return;
     case SDLK_LEFT:  g.e1.loc.x -= 5; return;
     case SDLK_RIGHT: g.e1.loc.x += 5; return;
-    default: cout << "  ... Hit default\n";
+
+    case SDLK_a:     g.center.x -= 5; return;
+    case SDLK_s:     g.center.y -= 5; return;
+    case SDLK_d:     g.center.x += 5; return;
+    case SDLK_w:     g.center.y += 5; return;
+
+    case SDLK_LCTRL:
+    case SDLK_RCTRL: g.ctrl = (e.key.state == SDL_PRESSED); return;
+    case SDLK_c:
+      if(g.ctrl) { cout << "Got Cntrl+C\n"; g.quit = true; }
+      return;
+    // default: cout << "  ... Hit default\n";
   }
 }
 
@@ -200,8 +215,7 @@ void eventLoop(Display& d, Game& g) {
   };
 
   SDL_Event e;
-  bool quit = false;
-  while( quit == false ){
+  while(not g.quit){
     while(SDL_PollEvent(&e)) {
       cout << "e1 x=" << g.e1.loc.x << " y=" << g.e1.loc.y << '\n';
       switch (e.type) {
@@ -210,12 +224,16 @@ void eventLoop(Display& d, Game& g) {
           break;
         }
         case SDL_KEYDOWN: keydown(e, g); break;
-        case SDL_QUIT: quit = true; break;
+        case SDL_QUIT:
+          cout << "Got SDL_QUIT\n";
+          g.quit = true;
+          break;
       }
       SDL_RenderClear(&*d.rend);
       SDL_Texture* img = g.showingX ? &*d.i_xOut : &*d.i_png ;
       SDL_RenderCopy(&*d.rend, img, NULL, NULL);
       g.e1.render(d, g);
+      g.e2.render(d, g);
       SDL_RenderPresent(&*d.rend);
     }
   }
