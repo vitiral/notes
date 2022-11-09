@@ -1,18 +1,25 @@
+/************
+ * Types and macros for handling resources from C.
+ *
+ * By wrapping C resources in the Resource class, we can achieve parity with C++
+ * idioms at no cost.
+ *
+ * When that would require too much boilerplate or more than a pointer is being
+ * managed, DEFER can be used for ensuring resources are destroyed properly.
+ */
 
-// Implicit copying of types which you don't want copied lead to many of the
-// footguns in C++ including object slicing and performance hits.
+// Implicit copying of types leads to many of the footguns in C++ including
+// object slicing, performance hits and confusing logic.
 //
-// Any SDL resource should not be copied anyway, so this is especially
-// important.
+// Opinion: most types should not support copying, especially not implicit
+// copying. This macro should be called for nearly all types in the game. If
+// copying is useful, then define an explicit `copy()` method to achieve the
+// same thing.
 #define NO_COPY(C) \
   C(const C& a)            = delete; \
   C& operator=(const C& a) = delete;
 
 // Resource class: a unique_ptr with customized destructor.
-//
-// SDL2 is a C library and thus does not have RAII resource handling.
-// By wrapping the resources in this class, we can achieve parity with C++
-// idioms at no cost.
 template<typename T, void D(T*)>
 class Resource final {
   NO_COPY(Resource);
@@ -44,7 +51,8 @@ public:
 
   // Direct initialization from a pointer.
   //
-  // This is a convienience function for both initialization and freeing.
+  // This is a convienience for both init and destroy. Attempting to init a
+  // resource when it already has a value will result in an error.
   Resource& operator=(T* res) noexcept {
     if(not res) { destroy(); return *this; }
     assert(not this->res);
@@ -59,10 +67,11 @@ public:
 // Defer some code execution using RAII. Use like:
 //
 //   auto r = myResource();
-//   DEFER(r.close());
+//   DEFER(r.close(); cout << "Resource closed\n");
 //   ... other code
 //
-// `r.close()` will be called when the DEFER statement goes out of scope.
+// Everything inside the DEFER parens will be run when the DEFER statement
+// goes out of scope.
 template<typename F>
 class _Defer final {
   F f;
@@ -71,4 +80,4 @@ public:
   ~_Defer() { f(); }
 };
 template <typename F>  _Defer(F) -> _Defer<F>;
-#define DEFER(CODE)  _Defer __defer ## _ ## __COUNTER__{ [&](){CODE;} }
+#define DEFER(CODE)  _Defer __defer ## __COUNTER__{ [&](){CODE;} }
