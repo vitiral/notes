@@ -38,14 +38,22 @@ using namespace std;
 using RWindow  = Resource<SDL_Window, SDL_DestroyWindow>;
 using RSurface = Resource<SDL_Surface, SDL_FreeSurface>;
 
-bool loadSurface(RSurface& toSurface, const std::string& path) {
-  toSurface = SDL_LoadBMP(path.c_str());
-  if(toSurface.isNull()) {
+bool loadSurface(RSurface& screen, RSurface& toSurface, const std::string& path) {
+  RSurface raw{SDL_LoadBMP(path.c_str())};
+  if(raw.isNull()) {
     cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
+    return false;
+  }
+
+  // Convert to native bitmap for faster blitting.
+  toSurface = SDL_ConvertSurface(&*raw, screen->format, 0);
+  if(toSurface.isNull()) {
+    cout << "Unable to convert surface " << path << "! Error: " << SDL_GetError() << '\n';
     return false;
   }
   return true;
 }
+
 
 // *****************
 // * Game Objects
@@ -64,9 +72,10 @@ public:
   RWindow     window{};
   RSurface    screen{};
   RSurface    i_hello{};
-  RSurface    i_X{};
+  RSurface    i_xOut{};
 
   bool init();
+  RSurface loadSurface(const std::string& path);
   bool loadMedia();
 };
 
@@ -100,11 +109,25 @@ bool Display::init() {
   return true;
 }
 
+RSurface Display::loadSurface(const std::string& path) {
+  RSurface raw{SDL_LoadBMP(path.c_str())};
+  if(raw.isNull()) {
+    cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
+    return RSurface{};
+  }
+
+  // Convert to native bitmap for faster blitting.
+  RSurface out{SDL_ConvertSurface(&*raw, screen->format, 0)};
+  if(out.isNull()) {
+    cout << "Unable to convert surface " << path << "! Error: " << SDL_GetError() << '\n';
+  }
+  return out;
+}
+
 bool Display::loadMedia() {
-  return (
-    loadSurface(i_hello, "data/02_img.bmp")
-    and loadSurface(i_X, "data/x.bmp")
-  );
+  i_hello = loadSurface("data/02_img.bmp");
+  i_xOut  = loadSurface("data/x.bmp");
+  return not (i_hello.isNull() or i_xOut.isNull());
 }
 
 // *****************
@@ -117,7 +140,7 @@ void eventLoop(Display& d) {
       cout << "Event: " << sdlEventToString(e) << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Surface* img = d.state ? &*d.i_hello : &*d.i_X ;
+          SDL_Surface* img = d.state ? &*d.i_hello : &*d.i_xOut ;
           SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
           SDL_UpdateWindowSurface(&*d.window);
           d.state = not d.state;

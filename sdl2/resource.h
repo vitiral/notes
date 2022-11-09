@@ -26,10 +26,12 @@ class Resource final {
   T* res;
 public:
 
-  Resource(T* ptr = nullptr) : res(ptr) {}
+  // Constructor, move constructor, destructor
+  Resource(T* ptr = nullptr) noexcept : res(ptr) {}
+  Resource(Resource&& r)     noexcept : res{r.unwrap()} {}
   ~Resource() { destroy(); }
 
-  // Get the resource, it's your job to manage it.
+  // Unwrap the resource, it's your job to manage it.
   T* unwrap() noexcept {
     T* out = res;
     res = nullptr;
@@ -59,9 +61,9 @@ public:
     this->res = res;
   }
 
-  T& operator*() const  { return *res; }
-  T* operator->() const { return res; }
-  bool isNull() const { return res == nullptr; }
+  T& operator*()  const noexcept { return *res; }
+  T* operator->() const noexcept { return res; }
+  bool isNull()   const noexcept { return res == nullptr; }
 };
 
 // Defer some code execution using RAII. Use like:
