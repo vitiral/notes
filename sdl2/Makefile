@@ -2,7 +2,8 @@ OBJS = tutorial.cpp \
   libs/evt2str/sdl_event_to_string.*
 CC = g++
 COMPILER_FLAGS = -w
-LINKER_FLAGS = -lSDL2
+LINKER_FLAGS = \
+  -lSDL2 -lSDL2_image
 OBJ_NAME = game  # output name
 
 run: build

@@ -81,4 +81,9 @@ public:
   ~_Defer() { f(); }
 };
 template <typename F>  _Defer(F) -> _Defer<F>;
-#define DEFER(CODE)  _Defer __defer ## __COUNTER__{ [&](){CODE;} }
+
+#define _DEFER1(a, b) a ## b
+#define _DEFER2(a, b) _DEFER1(a, b)
+#define _DEFER3(a) _DEFER2(a, __COUNTER__)
+#define DEFER(CODE)  _Defer _DEFER3(__defer){ [&](){CODE;} }
+

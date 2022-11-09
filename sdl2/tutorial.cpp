@@ -23,6 +23,7 @@
  */
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include <cstdio>
 #include <cassert>
@@ -37,23 +38,6 @@ using namespace std;
 // * SDL wrapper types and helper functions
 using RWindow  = Resource<SDL_Window, SDL_DestroyWindow>;
 using RSurface = Resource<SDL_Surface, SDL_FreeSurface>;
-
-bool loadSurface(RSurface& screen, RSurface& toSurface, const std::string& path) {
-  RSurface raw{SDL_LoadBMP(path.c_str())};
-  if(raw.isNull()) {
-    cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
-    return false;
-  }
-
-  // Convert to native bitmap for faster blitting.
-  toSurface = SDL_ConvertSurface(&*raw, screen->format, 0);
-  if(toSurface.isNull()) {
-    cout << "Unable to convert surface " << path << "! Error: " << SDL_GetError() << '\n';
-    return false;
-  }
-  return true;
-}
-
 
 // *****************
 // * Game Objects
@@ -73,9 +57,12 @@ public:
   RSurface    screen{};
   RSurface    i_hello{};
   RSurface    i_xOut{};
+  RSurface    i_png{};
 
   bool init();
-  RSurface loadSurface(const std::string& path);
+  RSurface optimize(RSurface& s, const std::string& path);
+  RSurface loadBmp(const std::string& path);
+  RSurface loadPng(const std::string& path);
   bool loadMedia();
 };
 
@@ -91,9 +78,11 @@ bool Display::init() {
     SCREEN_HEIGHT,
     SDL_WINDOW_SHOWN);
   if(window.isNull()) {
-    printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+    printf("Window could not be created! Error: %s\n", SDL_GetError());
     return false;
   }
+
+
   // Get window surface
   screen = SDL_GetWindowSurface(&*window);
 
@@ -109,14 +98,7 @@ bool Display::init() {
   return true;
 }
 
-RSurface Display::loadSurface(const std::string& path) {
-  RSurface raw{SDL_LoadBMP(path.c_str())};
-  if(raw.isNull()) {
-    cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
-    return RSurface{};
-  }
-
-  // Convert to native bitmap for faster blitting.
+RSurface Display::optimize(RSurface& raw, const std::string& path) {
   RSurface out{SDL_ConvertSurface(&*raw, screen->format, 0)};
   if(out.isNull()) {
     cout << "Unable to convert surface " << path << "! Error: " << SDL_GetError() << '\n';
@@ -124,10 +106,33 @@ RSurface Display::loadSurface(const std::string& path) {
   return out;
 }
 
+RSurface Display::loadBmp(const std::string& path) {
+  RSurface raw{SDL_LoadBMP(path.c_str())};
+  if(raw.isNull()) {
+    cout << "Unable to load " << path << "! Error: " << SDL_GetError() << '\n';
+    return RSurface{};
+  }
+  return optimize(raw, path);
+}
+
+RSurface Display::loadPng(const std::string& path) {
+  RSurface raw{IMG_Load(path.c_str())};
+  if(raw.isNull()) {
+    cout << "Unable to load " << path << "! Error: " << IMG_GetError() << '\n';
+    return RSurface{};
+  }
+  return optimize(raw, path);
+}
+
 bool Display::loadMedia() {
-  i_hello = loadSurface("data/02_img.bmp");
-  i_xOut  = loadSurface("data/x.bmp");
-  return not (i_hello.isNull() or i_xOut.isNull());
+  i_hello = loadBmp("data/02_img.bmp");
+  i_xOut  = loadBmp("data/x.bmp");
+  i_png   = loadPng("data/png_loaded.png");
+  return not (
+    i_hello.isNull()
+    or i_xOut.isNull()
+    or i_png.isNull()
+  );
 }
 
 // *****************
@@ -146,7 +151,7 @@ void eventLoop(Display& d) {
       cout << "Event: " << sdlEventToString(e) << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Surface* img = d.state ? &*d.i_hello : &*d.i_xOut ;
+          SDL_Surface* img = d.state ? &*d.i_png : &*d.i_xOut ;
           // SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
           SDL_BlitScaled(img, nullptr, &*d.screen, &stretchRect);
           SDL_UpdateWindowSurface(&*d.window);
@@ -166,10 +171,14 @@ int game() {
     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
     return 1;
   }
-  DEFER(
-    SDL_Quit();
-    cout << "SDL_Quit Successfully\n";
-  );
+  DEFER( SDL_Quit(); cout << "SDL_Quit Successfully\n" );
+
+  int imgFlags = IMG_INIT_PNG;
+  if(not (IMG_Init(imgFlags) & imgFlags)) {
+    printf("Could not initialize! Error: %s\n", IMG_GetError());
+    return 1;
+  }
+  DEFER( IMG_Quit() );
 
   Display d{};
   d.init();
