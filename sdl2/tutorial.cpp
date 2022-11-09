@@ -27,6 +27,8 @@
 #include <iostream>
 #include <cstdio>
 #include <cassert>
+#include <compare>
+#include <set>
 
 // There is no good debugging of events in SDL2, so we import this library.
 #include "libs/evt2str/sdl_event_to_string.h"
@@ -48,13 +50,22 @@ using RTexture = Resource<SDL_Texture, SDL_DestroyTexture>;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+struct Loc;
+
+struct Size {
+  int w{}, h{};
+
+  Size operator/ (const int r) const { return Size { w / r, h / r }; }
+  bool operator==(Size r)  const { return w == r.w and w == r.w; }
+};
+
 class Display {
   NO_COPY(Display);
 
 public:
   Display() = default;
 
-  bool state{false};
+  Size        sz{SCREEN_WIDTH, SCREEN_HEIGHT};
   RWindow     window{};
   // RSurface    screen{};
   RRenderer   rend{};
@@ -67,6 +78,62 @@ public:
   RSurface optimize(RSurface& s, const std::string& path);
   RTexture loadTexture(const std::string& path);
   bool loadMedia();
+};
+
+struct Color {
+  Uint8 r{}; Uint8 g{}; Uint8 b{}; Uint8 a{};
+  Color(Uint8 r=0, Uint8 g=0, Uint8 b=0, Uint8 a=SDL_ALPHA_OPAQUE)
+    : r{r}, g{g}, b{b}, a{a}
+  {}
+
+  void render(RRenderer& rend) {
+    SDL_SetRenderDrawColor(&*rend, r, g, b, a);
+  }
+};
+
+struct Loc {
+  int x{}, y{};
+
+  bool operator==(Loc r)  const { return x == r.x and y == r.y; }
+  Loc operator- ()         const { return Loc{-x, -y};           }
+  Loc operator+ (Loc r)   const { return Loc{x+r.x, y+r.y};     }
+  Loc operator- (Loc r)   const { return Loc{x-r.x, y-r.y};     }
+};
+
+class Game;
+
+class Entity {
+public:
+  Color     color{0xFF};
+  Size      sz{100, 50};
+  Loc       loc{50, -100};
+
+  void render(Display& d, Game& g) {
+    color.render(d.rend);
+    SDL_Rect r = sdlRect(d, g);
+    SDL_RenderFillRect(&*d.rend, &r);
+  }
+
+  // Get the SDL Rectangle for the entity
+  SDL_Rect sdlRect(Display& d, Game& g);
+};
+
+// Game State
+class Game {
+public:
+  Loc     center{0, 0};
+
+  Entity e1;
+
+  bool showingX{false};
+};
+
+SDL_Rect Entity::sdlRect(Display& d, Game& g) {
+  Loc rel = loc - g.center; // relative location to center
+  rel.y = -rel.y;           // reverse so that +y goes down (SDL coordinates)
+  rel = rel - Loc{sz.w / 2, sz.h / 2};     // get "top-left" position
+  rel = rel + Loc{d.sz.w / 2, d.sz.h / 2}; // Update coordinates for SDL_Rect
+  return (SDL_Rect) {rel.x, rel.y, sz.w, sz.h};
 };
 
 // Initialize SDL
@@ -114,7 +181,7 @@ bool Display::loadMedia() {
 
 // *****************
 // * Event Loop
-void eventLoop(Display& d) {
+void eventLoop(Display& d, Game& g) {
   // Demonstrate stretching/shrinking an image
   SDL_Rect stretchRect {
     .x = 0, .y = 0,
@@ -128,11 +195,13 @@ void eventLoop(Display& d) {
       cout << "Event: " << sdlEventToString(e) << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Texture* img = d.state ? &*d.i_png : &*d.i_xOut ;
+          SDL_Texture* img = g.showingX ? &*d.i_xOut : &*d.i_png ;
           SDL_RenderClear(&*d.rend);
           SDL_RenderCopy(&*d.rend, img, NULL, NULL);
+          g.e1.render(d, g);
           SDL_RenderPresent(&*d.rend);
-          d.state = not d.state;
+          g.showingX = not g.showingX;
+
           break;
         }
         case SDL_QUIT: quit = true; break;
@@ -163,7 +232,10 @@ int game() {
   if(not d.loadMedia()) {
     return 1;
   }
-  eventLoop(d);
+
+  Game g{};
+
+  eventLoop(d, g);
   return 0;
 }
 
