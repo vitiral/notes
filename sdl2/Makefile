@@ -1,4 +1,5 @@
-OBJS = 01_hello_SDL.cpp
+OBJS = 02_img.cpp \
+  libs/evt2str/sdl_event_to_string.*
 CC = g++
 COMPILER_FLAGS = -w
 LINKER_FLAGS = -lSDL2
