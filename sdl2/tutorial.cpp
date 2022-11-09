@@ -15,7 +15,52 @@ using namespace std;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-SDL_Window*  gWindow = nullptr;        // The window we'll be rendering to
+// Smart unique_ptr with a customized destructor (D)
+template<typename T, void D(T*)>
+class Res {
+public:
+  T* res;
+
+  Res(T* ptr = nullptr) : res(ptr) {}
+  ~Res() { destroy(); }
+
+  void destroy() {
+    if(not res) return;
+    D(res);
+    res = nullptr;
+  }
+
+  // no copy or copy assignment
+  Res(const Res& a)            = delete;
+  Res& operator=(const Res& a) = delete;
+
+  // Move constructor
+  Res& operator=(Res&& a) noexcept {
+    if (&a == this) return *this;
+    destroy(); // destroy our own resource
+    res = a.res;
+    a.res = nullptr;
+    return *this;
+  }
+
+  T& operator*() const { return *res; }
+  T* operator->() const { return res; }
+  bool isNull() const { return res == nullptr; }
+};
+
+using RWindow  = Res<SDL_Window, SDL_DestroyWindow>;
+using RSurface = Res<SDL_Surface, SDL_FreeSurface>;
+
+class Game {
+public:
+  RWindow  window;
+  RSurface screen;
+  RSurface i_hello;
+  RSurface i_X;
+};
+
+
+SDL_Window*  gWindow = nullptr;
 SDL_Surface* gScreenSurface = nullptr; // The surface contained by the window
 SDL_Surface* gHelloWorldImg = nullptr;
 SDL_Surface* gXImg = nullptr;
@@ -24,7 +69,7 @@ bool gState = false;
 
 
 // Initialize SDL
-bool init() {
+bool init(Game& g) {
   if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
     printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
     return false;
@@ -65,14 +110,14 @@ bool loadSurface(SDL_Surface*& toSurface, const std::string& path) {
   return true;
 }
 
-bool loadMedia() {
+bool loadMedia(Game& g) {
   return (
     loadSurface(gHelloWorldImg, "data/02_img.bmp")
     and loadSurface(gXImg, "data/x.bmp")
   );
 }
 
-void eventLoop() {
+void eventLoop(Game& g) {
   SDL_Event e;
   bool quit = false;
   while( quit == false ){
@@ -98,18 +143,20 @@ void close() {
   SDL_FreeSurface(gXImg);
   gXImg = nullptr;
 
-  SDL_DestroyWindow(gWindow);
-  gWindow = nullptr;
+  {
+    RWindow w{gWindow};
+  }
 
   SDL_Quit();
 }
 
 
 int main( int argc, char* args[] ) {
-  if(init() and loadMedia()) {
+  Game g;
+  if(init(g) and loadMedia(g)) {
     SDL_BlitSurface(gHelloWorldImg, nullptr, gScreenSurface, nullptr);
     SDL_UpdateWindowSurface(gWindow);
-    eventLoop();
+    eventLoop(g);
   }
   close();
   return 0;
