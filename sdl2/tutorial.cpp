@@ -109,7 +109,7 @@ bool Display::loadMedia() {
 
 // *****************
 // * Event Loop
-void eventLoop(Display& g) {
+void eventLoop(Display& d) {
   SDL_Event e;
   bool quit = false;
   while( quit == false ){
@@ -117,10 +117,10 @@ void eventLoop(Display& g) {
       cout << "Event: " << sdlEventToString(e) << '\n';
       switch (e.type) {
         case SDL_MOUSEBUTTONDOWN: {
-          SDL_Surface* img = g.state ? &*g.i_hello : &*g.i_X ;
-          SDL_BlitSurface(img, nullptr, &*g.screen, nullptr);
-          SDL_UpdateWindowSurface(&*g.window);
-          g.state = not g.state;
+          SDL_Surface* img = d.state ? &*d.i_hello : &*d.i_X ;
+          SDL_BlitSurface(img, nullptr, &*d.screen, nullptr);
+          SDL_UpdateWindowSurface(&*d.window);
+          d.state = not d.state;
           break;
         }
         case SDL_QUIT: quit = true; break;
@@ -141,20 +141,20 @@ int game() {
     cout << "SDL_Quit Successfully\n";
   );
 
-  Display g{};
-  g.init();
+  Display d{};
+  d.init();
 
-  if(not g.loadMedia()) {
+  if(not d.loadMedia()) {
     return 1;
   }
-  SDL_BlitSurface(&*g.i_hello, nullptr, &*g.screen, nullptr);
-  SDL_UpdateWindowSurface(&*g.window);
-  eventLoop(g);
+  SDL_BlitSurface(&*d.i_hello, nullptr, &*d.screen, nullptr);
+  SDL_UpdateWindowSurface(&*d.window);
+  eventLoop(d);
   return 0;
 }
 
 
-int main( int argc, char* args[] ) {
+int main(int argc, char* args[]) {
   int err = game();
   return err;
 }
