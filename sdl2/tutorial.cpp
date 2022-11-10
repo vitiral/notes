@@ -24,6 +24,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 #include <cassert>
@@ -109,6 +110,13 @@ struct Color {
   }
 };
 
+// Bound val by [-abs:abs]
+int bound(int abs, int val) {
+  assert(abs >= 0);
+  if(val > 0) return min(abs, val);
+  return max(-abs, val);
+}
+
 struct Loc {
   int x{}, y{};
 
@@ -116,6 +124,23 @@ struct Loc {
   Loc operator- ()         const { return Loc{-x, -y};           }
   Loc operator+ (Loc r)   const { return Loc{x+r.x, y+r.y};     }
   Loc operator- (Loc r)   const { return Loc{x-r.x, y-r.y};     }
+  Loc operator/ (int r)   const { return Loc{x/r, y/r};     }
+  Loc operator* (int r)   const { return Loc{x*r, y*r};     }
+
+  Loc bound(int abs) { return Loc{::bound(abs, x), ::bound(abs, y)}; }
+};
+
+struct Movement {
+  Loc v{};      // velocity vector
+  Loc a{};      // accelleration vector
+  int slowness {1}; // larger = slower to accelerate
+  int maxA{5};
+  int maxV{10};
+
+  void update(Loc aChange) {
+    a = (a + (aChange / slowness)).bound(maxA);
+    v = (v + a).bound(maxV);
+  }
 };
 
 class Game;
@@ -125,11 +150,16 @@ public:
   Color     color{0xFF};
   Size      sz{100, 50};
   Loc       loc{0, 0};
+  Movement  mv{};
 
   void render(Display& d, Game& g) {
     color.render(d.rend);
     SDL_Rect r = sdlRect(d, g);
     SDL_RenderFillRect(&*d.rend, &r);
+  }
+
+  Loc move() {
+    return loc + mv.v;
   }
 
   // Get the SDL Rectangle for the entity
@@ -306,9 +336,20 @@ void consumeEvents(Game& g, TimeMs now) {
         break;
     }
   }
-
   g.numEvents = 0;
 }
+
+void update(Game& g) {
+  Controller& c = g.controller;
+  if(not (c.w.m_isPressed or c.a.m_isPressed or c.s.m_isPressed or c.d.m_isPressed)) {
+    g.e1.mv = Movement{};
+  } else {
+    Loc aChange {c.d.m_pressed - c.a.m_pressed, c.w.m_pressed - c.s.m_pressed};
+    g.e1.mv.update(aChange);
+  }
+  g.e1.loc = g.e1.move();
+}
+
 // *****************
 // * Event Loop
 
@@ -352,6 +393,7 @@ void eventLoop(Display& d, Game& g) {
       }
     }
     consumeEvents(g, SDL_GetTicks());
+    update(g);
     paintScreen(d, g);
     frameDelay(g);
     g.loop += 1;
