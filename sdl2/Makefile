@@ -6,8 +6,11 @@ LINKER_FLAGS = \
   -lSDL2 -lSDL2_image
 OBJ_NAME = game  # output name
 
-run: build
+run: test
 	./bin/$(OBJ_NAME)
+
+test: build
+	./bin/$(OBJ_NAME) --test
 
 build : $(OBJS)
 	mkdir -p bin/

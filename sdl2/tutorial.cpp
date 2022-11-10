@@ -36,6 +36,7 @@
 // There is no good debugging of events in SDL2, so we import this library.
 #include "libs/evt2str/sdl_event_to_string.h"
 #include "resource.h" // Resource and DEFER for wrapping C resources.
+#include "test.h"
 
 using namespace std;
 using TimeMs = Uint32;
@@ -63,6 +64,12 @@ struct Size {
   Size operator/ (const int r) const { return Size { w / r, h / r }; }
   bool operator==(Size r)  const { return w == r.w and w == r.w; }
 };
+
+TEST(size)
+  Size sz = Size{10, 5};
+  Size d2 = sz / 2;
+  ASSERT_EQ(5, d2.w); ASSERT_EQ(2, d2.h);
+END_TEST
 
 class Timer {
 public:
@@ -93,10 +100,21 @@ public:
   RTexture    i_xOut{};
   RTexture    i_png{};
 
+  TimeMs frame{0};  // timeMs at start of frame
+
   bool init();
   RSurface optimize(RSurface& s, const std::string& path);
   RTexture loadTexture(const std::string& path);
   bool loadMedia();
+
+  void frameDelay() {
+    TimeMs now = SDL_GetTicks();
+    TimeMs end = frame + FRAME_LENGTH;
+    if(end > now) {
+      SDL_Delay(end - now);
+    }
+    frame = SDL_GetTicks();
+  }
 };
 
 struct Color {
@@ -117,11 +135,18 @@ int bound(int abs, int val) {
   return max(-abs, val);
 }
 
+TEST(bound)
+  ASSERT_EQ(10, bound(10, 12));
+  ASSERT_EQ(7,   bound(10, 7));
+  ASSERT_EQ(-10, bound(10, -15));
+  ASSERT_EQ(-5,  bound(10, -5));
+END_TEST
+
 struct Loc {
   int x{}, y{};
 
   bool operator==(Loc r)  const { return x == r.x and y == r.y; }
-  Loc operator- ()         const { return Loc{-x, -y};           }
+  Loc operator- ()        const { return Loc{-x, -y};           }
   Loc operator+ (Loc r)   const { return Loc{x+r.x, y+r.y};     }
   Loc operator- (Loc r)   const { return Loc{x-r.x, y-r.y};     }
   Loc operator/ (int r)   const { return Loc{x/r, y/r};     }
@@ -130,13 +155,46 @@ struct Loc {
   Loc bound(int abs) { return Loc{::bound(abs, x), ::bound(abs, y)}; }
 };
 
+// Reduce magnitude of value, never changing from positive to negative.
+int subMag(int val, int abs) {
+  if(val > 0) {
+    if(abs > val) return 0;
+                  return val - abs;
+  }
+  if(abs > -val) return 0;
+  return val + abs;
+}
+
+// updateVelocity
+// dir: vector direction
+// vel: current velocity
+// acc: acceleration
+// maxVel: maximum velocity
+int updateVel(int dir, int vel, int acc, int maxVel) {
+  if(dir) return bound(maxVel, vel + acc * dir);
+  else    return subMag(vel, acc);
+}
+
+TEST(updateVel)
+  const auto uv = updateVel;
+  //        expect     dir     vel       acc      maxVel
+  ASSERT_EQ(0,       uv(0,     10,       12,      15));
+  ASSERT_EQ(0,       uv(0,    -10,       12,      15));
+  ASSERT_EQ(12,      uv(1,     0,        12,      15));
+  ASSERT_EQ(15,      uv(1,     12,       12,      15));
+  ASSERT_EQ(-7,      uv(-1,    5,        12,      15));
+END_TEST
+
 struct Movement {
   Loc v{};    // velocity vector
-  int a {5};  // acceleration per tick
-  int maxV{10};
+  int a {3};  // acceleration per tick
+  int maxV{15};
 
-  void update(Loc aChange) {
-    v = (v + a).bound(maxV);
+  void update(Loc dir) {
+    assert(abs(dir.x) <= 1);
+    assert(abs(dir.y) <= 1);
+    v.x = updateVel(dir.x, v.x, a, maxV);
+    v.y = updateVel(dir.y, v.y, a, maxV);
   }
 };
 
@@ -163,53 +221,10 @@ public:
   SDL_Rect sdlRect(Display& d, Game& g);
 };
 
-// Helps record the total time a button was pressed.
-class ButtonState {
-public:
-  ButtonState(TimeMs now): m_lastAction{now} {}
-
-  bool   m_isPressed{};  // is currently pressed
-  TimeMs m_lastAction;   // Start of press/unpress
-  TimeMs m_pressed{0};   // total duration pressed
-  TimeMs m_unpressed{0}; // total duration unpressed
-
-
-  void event(TimeMs now, bool pressed) {
-    if(pressed) press(now);
-    else        unpress(now);
-  }
-
-  void press(TimeMs now) {
-    m_unpressed += now - m_lastAction;
-    m_isPressed = true;
-    m_lastAction = now;
-  }
-
-  void unpress(TimeMs now) {
-    if(m_isPressed) {
-      m_pressed += now - m_lastAction;
-    }
-    m_lastAction = now;
-    m_isPressed = false;
-  }
-};
-
 class Controller {
 public:
-  Uint8 w, a, s, d;
-  Uint8 ml, mr;        // mouse left/right
-
-  // Controller(TimeMs n)
-  //   :         w{n},  a{n},    s{n},    d{n},
-  //             up{n}, left{n}, down{n}, right{n},
-  //             mLeft{n},       mRight{n}
-  // {}
-
-
-  // ButtonState w,     a,       s,       d;
-  // ButtonState up,    left,    down,    right;
-  // ButtonState mLeft,          mRight;
-  // Loc mouse{};
+  Uint8 w{},  a{}, s{}, d{};
+  Uint8 ml{}, mr{};        // mouse left/right
 };
 
 const int MAX_EVENTS = 256;
@@ -217,21 +232,15 @@ const int MAX_EVENTS = 256;
 // Game State
 class Game {
 public:
-  Controller controller;
-  TimeMs frame{0};  // ticks at start of frame
-  TimeMs loop {0};
-  array<SDL_Event, 256> events;
-  int numEvents;
+  Controller controller{};
+  TimeMs loop {0};  // game loop number (incrementing)
 
-  Loc       center{0, 0};
-
-  bool quit{};
-  bool ctrl{};
-
+  Loc    center{0, 0};
   Entity e1{};
   Entity e2{.loc{-100, -100}};
 
-  Game(TimeMs now) : controller{now} {}
+  bool quit{};
+  bool ctrl{};
 };
 
 SDL_Rect Entity::sdlRect(Display& d, Game& g) {
@@ -285,9 +294,8 @@ bool Display::loadMedia() {
   );
 }
 
-void mouseEvent(Game& g, SDL_MouseButtonEvent& e, TimeMs now, bool pressed) {
+void mouseEvent(Game& g, SDL_MouseButtonEvent& e, bool pressed) {
   Controller& c = g.controller;
-  ButtonState* b = nullptr;
   switch (static_cast<int>(e.button)) {
     case SDL_BUTTON_LEFT:  c.ml = pressed;
     case SDL_BUTTON_RIGHT: c.mr = pressed;
@@ -295,7 +303,7 @@ void mouseEvent(Game& g, SDL_MouseButtonEvent& e, TimeMs now, bool pressed) {
   }
 }
 
-void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
+void keyEvent(Game& g, SDL_KeyboardEvent& e, bool pressed) {
   if(e.repeat) return;
   cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
   Controller& c = g.controller;
@@ -305,10 +313,10 @@ void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
     case SDLK_LEFT:  g.e1.loc.x -= 5; return;
     case SDLK_RIGHT: g.e1.loc.x += 5; return;
 
-    case SDLK_a:     c.a = pressed; break;
-    case SDLK_s:     c.s = pressed; break;
-    case SDLK_d:     c.d = pressed; break;
-    case SDLK_w:     c.w = pressed; break;
+    case SDLK_a:     c.a = pressed; assert(c.a <= 1); break;
+    case SDLK_s:     c.s = pressed; assert(c.s <= 1); break;
+    case SDLK_d:     c.d = pressed; assert(c.d <= 1); break;
+    case SDLK_w:     c.w = pressed; assert(c.w <= 1); break;
 
     case SDLK_LCTRL:
     case SDLK_RCTRL: g.ctrl = pressed; return;
@@ -320,31 +328,24 @@ void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
 }
 
 void consumeEvents(Game& g, TimeMs now) {
-  for(int i = 0; i < g.numEvents; ++i) {
-    SDL_Event& e = g.events[i];
-    cout << "e1 x=" << g.e1.loc.x << " y=" << g.e1.loc.y << '\n';
+  SDL_Event e;
+  while(SDL_PollEvent(&e)) {
     switch (e.type) {
-      case SDL_MOUSEBUTTONDOWN: mouseEvent(g, e.button, now, true); break;
-      case SDL_MOUSEBUTTONUP:   mouseEvent(g, e.button, now, false); break;
-      case SDL_KEYDOWN: keyEvent(g, e.key, now, true); break;
-      case SDL_KEYUP:   keyEvent(g, e.key, now, false); break;
+      case SDL_MOUSEBUTTONDOWN: mouseEvent(g, e.button, true);  break;
+      case SDL_MOUSEBUTTONUP:   mouseEvent(g, e.button, false); break;
+      case SDL_KEYDOWN:         keyEvent  (g, e.key,    true);  break;
+      case SDL_KEYUP:           keyEvent  (g, e.key,    false); break;
       case SDL_QUIT:
         cout << "Got SDL_QUIT\n";
         g.quit = true;
         break;
     }
   }
-  g.numEvents = 0;
 }
 
 void update(Game& g) {
   Controller& c = g.controller;
-  if(not (c.w.m_isPressed or c.a.m_isPressed or c.s.m_isPressed or c.d.m_isPressed)) {
-    g.e1.mv = Movement{};
-  } else {
-    Loc aChange {c.d - c.a c.w - c.s};
-    g.e1.mv.update(aChange);
-  }
+  g.e1.mv.update(Loc{c.d - c.a, c.w - c.s});
   g.e1.loc = g.e1.move();
 }
 
@@ -360,18 +361,8 @@ void paintScreen(Display& d, Game& g) {
   SDL_RenderPresent(&*d.rend);
 }
 
-void frameDelay(Game& g) {
-  TimeMs now = SDL_GetTicks();
-  TimeMs end = g.frame + FRAME_LENGTH;
-  if(end > now) {
-    SDL_Delay(end - now);
-  }
-  g.frame = SDL_GetTicks();
-}
-
-
 void eventLoop(Display& d, Game& g) {
-  g.frame = SDL_GetTicks();
+  d.frame = SDL_GetTicks();
 
   // Demonstrate stretching/shrinking an image
   SDL_Rect stretchRect {
@@ -381,19 +372,10 @@ void eventLoop(Display& d, Game& g) {
 
   SDL_Event e;
   while(not g.quit){
-    cout << "WHILE LOOP " << g.loop << '\n';
-    assert(0 == g.numEvents);
-    while(SDL_PollEvent(&g.events[g.numEvents])) {
-      e = g.events[g.numEvents];
-      g.numEvents += 1;
-      if(g.numEvents >= MAX_EVENTS) {
-        break;
-      }
-    }
     consumeEvents(g, SDL_GetTicks());
     update(g);
     paintScreen(d, g);
-    frameDelay(g);
+    d.frameDelay();
     g.loop += 1;
   }
 }
@@ -421,14 +403,29 @@ int game() {
     return 1;
   }
 
-  Game g{SDL_GetTicks()};
+  Game g{};
 
   eventLoop(d, g);
   return 0;
 }
 
+int tests() {
+  cout << "Running tests\n";
+  CALL_TEST(size);
+  CALL_TEST(bound);
+  CALL_TEST(updateVel);
+  return 0;
+}
 
 int main(int argc, char* args[]) {
+  cout << "argc=" << argc << '\n';
+
+  if(argc > 1) {
+    if(0 == strcmp(args[1], "--test")) {
+      return tests();
+    }
+  }
+
   int err = game();
   return err;
 }
