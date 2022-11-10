@@ -245,6 +245,40 @@ public:
   void keyEvent(SDL_KeyboardEvent& e, bool pressed);
 };
 
+void Game::mouseEvent(SDL_MouseButtonEvent& e, bool pressed) {
+  Controller& c = controller;
+  switch (static_cast<int>(e.button)) {
+    case SDL_BUTTON_LEFT:  c.ml = pressed;
+    case SDL_BUTTON_RIGHT: c.mr = pressed;
+    default: return;
+  }
+}
+
+void Game::keyEvent(SDL_KeyboardEvent& e, bool pressed) {
+  if(e.repeat) return;
+  cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
+  Controller& c = controller;
+  switch(e.keysym.sym) {
+    case SDLK_UP:    e1.loc.y += 5; return;
+    case SDLK_DOWN:  e1.loc.y -= 5; return;
+    case SDLK_LEFT:  e1.loc.x -= 5; return;
+    case SDLK_RIGHT: e1.loc.x += 5; return;
+
+    case SDLK_a:     c.a = pressed; assert(c.a <= 1); break;
+    case SDLK_s:     c.s = pressed; assert(c.s <= 1); break;
+    case SDLK_d:     c.d = pressed; assert(c.d <= 1); break;
+    case SDLK_w:     c.w = pressed; assert(c.w <= 1); break;
+
+    case SDLK_LCTRL:
+    case SDLK_RCTRL: ctrl = pressed; return;
+    case SDLK_c:
+      if(ctrl) { cout << "Got Cntrl+C\n"; quit = true; }
+      return;
+    default: cout << "  ... Hit default\n";
+  }
+}
+
+
 SDL_Rect Entity::sdlRect(Display& d, Game& g) {
   Loc rel = loc - g.center; // relative location to center
   rel.y = -rel.y;           // reverse so that +y goes down (SDL coordinates)
@@ -296,40 +330,10 @@ bool Display::loadMedia() {
   );
 }
 
-void Game::mouseEvent(SDL_MouseButtonEvent& e, bool pressed) {
-  Controller& c = g.controller;
-  switch (static_cast<int>(e.button)) {
-    case SDL_BUTTON_LEFT:  c.ml = pressed;
-    case SDL_BUTTON_RIGHT: c.mr = pressed;
-    default: return;
-  }
-}
-
-void Game::keyEvent(SDL_KeyboardEvent& e, bool pressed) {
-  if(e.repeat) return;
-  cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
-  Controller& c = g.controller;
-  switch(e.keysym.sym) {
-    case SDLK_UP:    g.e1.loc.y += 5; return;
-    case SDLK_DOWN:  g.e1.loc.y -= 5; return;
-    case SDLK_LEFT:  g.e1.loc.x -= 5; return;
-    case SDLK_RIGHT: g.e1.loc.x += 5; return;
-
-    case SDLK_a:     c.a = pressed; assert(c.a <= 1); break;
-    case SDLK_s:     c.s = pressed; assert(c.s <= 1); break;
-    case SDLK_d:     c.d = pressed; assert(c.d <= 1); break;
-    case SDLK_w:     c.w = pressed; assert(c.w <= 1); break;
-
-    case SDLK_LCTRL:
-    case SDLK_RCTRL: g.ctrl = pressed; return;
-    case SDLK_c:
-      if(g.ctrl) { cout << "Got Cntrl+C\n"; g.quit = true; }
-      return;
-    default: cout << "  ... Hit default\n";
-  }
-}
-
-void consumeEvents(Game& g, TimeMs now) {
+// *****************
+// * Event Loop
+//
+void consumeEvents(Game& g) {
   SDL_Event e;
   while(SDL_PollEvent(&e)) {
     switch (e.type) {
@@ -351,10 +355,6 @@ void update(Game& g) {
   g.e1.loc = g.e1.move();
 }
 
-// *****************
-// * Event Loop
-
-
 void paintScreen(Display& d, Game& g) {
   SDL_RenderClear(&*d.rend);
   SDL_RenderCopy(&*d.rend, &*d.i_png, NULL, NULL);
@@ -374,7 +374,7 @@ void eventLoop(Display& d, Game& g) {
 
   SDL_Event e;
   while(not g.quit){
-    consumeEvents(g, SDL_GetTicks());
+    consumeEvents(g);
     update(g);
     paintScreen(d, g);
     d.frameDelay();
