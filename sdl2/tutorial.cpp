@@ -18,7 +18,11 @@
  *
  * ## Notes
  * https://lazyfoo.net/tutorials/SDL/index.php
- * - Current place Lesson 05
+ * - Lesson 10: you can make certain colors transparent.
+ * - Lesson 11: how to clip out a sprite sheet
+ * - Lesson 12: color modulation, great for early status affects!
+ * - Lesson 13: alpha modulation for transparency
+ * - Lesson 14: sprite movement
  *
  */
 
@@ -126,6 +130,11 @@ struct Color {
   void render(RRenderer& rend) {
     SDL_SetRenderDrawColor(&*rend, r, g, b, a);
   }
+
+  SDL_Color apply(SDL_Color c) {
+    c.r = r;  c.g = g;  c.b = b;  c.a = a;
+    return c;
+  }
 };
 
 // Bound val by [-abs:abs]
@@ -155,14 +164,14 @@ struct Loc {
   Loc bound(int abs) { return Loc{::bound(abs, x), ::bound(abs, y)}; }
 };
 
-// Reduce magnitude of value, never changing from positive to negative.
+// Reduce magnitude of value, never crossing 0. Good for slowing down an entity.
 int subMag(int val, int abs) {
   if(val > 0) {
     if(abs > val) return 0;
                   return val - abs;
   }
-  if(abs > -val) return 0;
-  return val + abs;
+  if(abs > -val)  return 0;
+                  return val + abs;
 }
 
 // updateVelocity
@@ -203,14 +212,18 @@ class Game;
 class Entity {
 public:
   Color     color{0xFF};
-  Size      sz{100, 50};
+  Size      sz{50, 100};
   Loc       loc{0, 0};
   Movement  mv{};
 
   void render(Display& d, Game& g) {
-    color.render(d.rend);
-    SDL_Rect r = sdlRect(d, g);
-    SDL_RenderFillRect(&*d.rend, &r);
+    // color.render(d.rend);
+    // SDL_Rect r = sdlRect(d, g);
+    // SDL_RenderFillRect(&*d.rend, &r);
+    auto v = sdlTriangle(d, g);
+    SDL_RenderGeometry(
+      &*d.rend, /*texture=*/nullptr,
+      v.data(), 3, nullptr, 0);
   }
 
   Loc move() {
@@ -218,7 +231,9 @@ public:
   }
 
   // Get the SDL Rectangle for the entity
-  SDL_Rect sdlRect(Display& d, Game& g);
+  Loc           displayLoc(Display& d, Game& g);
+  SDL_Rect      sdlRect(Display& d, Game& g);
+  array<SDL_Vertex, 3> sdlTriangle(Display& d, Game& g);
 };
 
 class Controller {
@@ -278,14 +293,40 @@ void Game::keyEvent(SDL_KeyboardEvent& e, bool pressed) {
   }
 }
 
-
-SDL_Rect Entity::sdlRect(Display& d, Game& g) {
+// Returns Loc for the display. Note that this is (by default) for a rectangle
+// being rendered on the display, where (x,y) is the "top left" and (x+w, y+h)
+// is the "bottom right"
+Loc Entity::displayLoc(Display& d, Game& g) {
   Loc rel = loc - g.center; // relative location to center
   rel.y = -rel.y;           // reverse so that +y goes down (SDL coordinates)
-  rel = rel - Loc{sz.w / 2, sz.h / 2};     // get "top-left" position
-  rel = rel + Loc{d.sz.w / 2, d.sz.h / 2}; // Update coordinates for SDL_Rect
+  rel = rel - Loc{sz.w / 2, sz.h / 2};      // get "top-left" position
+  return rel + Loc{d.sz.w / 2, d.sz.h / 2}; // Update coordinates for SDL_Rect
+}
+
+SDL_Rect Entity::sdlRect(Display& d, Game& g) {
+  Loc rel = displayLoc(d, g);
   return (SDL_Rect) {rel.x, rel.y, sz.w, sz.h};
 };
+
+array<SDL_Vertex, 3> Entity::sdlTriangle(Display& d, Game& g) {
+  Loc rel = displayLoc(d, g);
+  array<SDL_Vertex, 3> out{};
+  // Center (top)
+  out[0].position.x = rel.x + sz.w / 2;
+  out[0].position.y = rel.y;
+
+  // Left
+  out[1].position.x = rel.x;
+  out[1].position.y = rel.y + sz.h;
+
+  // Right
+  out[2].position.x = rel.x + sz.w;
+  out[2].position.y = rel.y + sz.h;
+
+  for(auto& v: out) v.color = color.apply(v.color);
+
+  return out;
+}
 
 // Initialize SDL
 bool Display::init() {
