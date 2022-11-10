@@ -131,14 +131,11 @@ struct Loc {
 };
 
 struct Movement {
-  Loc v{};      // velocity vector
-  Loc a{};      // accelleration vector
-  int slowness {1}; // larger = slower to accelerate
-  int maxA{5};
+  Loc v{};    // velocity vector
+  int a {5};  // acceleration per tick
   int maxV{10};
 
   void update(Loc aChange) {
-    a = (a + (aChange / slowness)).bound(maxA);
     v = (v + a).bound(maxV);
   }
 };
@@ -199,16 +196,20 @@ public:
 
 class Controller {
 public:
-  Controller(TimeMs n)
-    :         w{n},  a{n},    s{n},    d{n},
-              up{n}, left{n}, down{n}, right{n},
-              mLeft{n},       mRight{n}
-  {}
+  Uint8 w, a, s, d;
+  Uint8 ml, mr;        // mouse left/right
 
-  ButtonState w,     a,       s,       d;
-  ButtonState up,    left,    down,    right;
-  ButtonState mLeft,          mRight;
-  Loc mouse{};
+  // Controller(TimeMs n)
+  //   :         w{n},  a{n},    s{n},    d{n},
+  //             up{n}, left{n}, down{n}, right{n},
+  //             mLeft{n},       mRight{n}
+  // {}
+
+
+  // ButtonState w,     a,       s,       d;
+  // ButtonState up,    left,    down,    right;
+  // ButtonState mLeft,          mRight;
+  // Loc mouse{};
 };
 
 const int MAX_EVENTS = 256;
@@ -288,28 +289,26 @@ void mouseEvent(Game& g, SDL_MouseButtonEvent& e, TimeMs now, bool pressed) {
   Controller& c = g.controller;
   ButtonState* b = nullptr;
   switch (static_cast<int>(e.button)) {
-    case SDL_BUTTON_LEFT:  b = &c.mLeft; break;
-    case SDL_BUTTON_RIGHT: b = &c.mRight; break;
+    case SDL_BUTTON_LEFT:  c.ml = pressed;
+    case SDL_BUTTON_RIGHT: c.mr = pressed;
     default: return;
   }
-  b->event(now, pressed);
 }
 
 void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
   if(e.repeat) return;
   cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
   Controller& c = g.controller;
-  ButtonState* b = nullptr;
   switch(e.keysym.sym) {
     case SDLK_UP:    g.e1.loc.y += 5; return;
     case SDLK_DOWN:  g.e1.loc.y -= 5; return;
     case SDLK_LEFT:  g.e1.loc.x -= 5; return;
     case SDLK_RIGHT: g.e1.loc.x += 5; return;
 
-    case SDLK_a:     b = &c.a; break;
-    case SDLK_s:     b = &c.s; break;
-    case SDLK_d:     b = &c.d; break;
-    case SDLK_w:     b = &c.w; break;
+    case SDLK_a:     c.a = pressed; break;
+    case SDLK_s:     c.s = pressed; break;
+    case SDLK_d:     c.d = pressed; break;
+    case SDLK_w:     c.w = pressed; break;
 
     case SDLK_LCTRL:
     case SDLK_RCTRL: g.ctrl = pressed; return;
@@ -318,7 +317,6 @@ void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
       return;
     default: cout << "  ... Hit default\n";
   }
-  b->event(now, pressed);
 }
 
 void consumeEvents(Game& g, TimeMs now) {
@@ -344,7 +342,7 @@ void update(Game& g) {
   if(not (c.w.m_isPressed or c.a.m_isPressed or c.s.m_isPressed or c.d.m_isPressed)) {
     g.e1.mv = Movement{};
   } else {
-    Loc aChange {c.d.m_pressed - c.a.m_pressed, c.w.m_pressed - c.s.m_pressed};
+    Loc aChange {c.d - c.a c.w - c.s};
     g.e1.mv.update(aChange);
   }
   g.e1.loc = g.e1.move();
