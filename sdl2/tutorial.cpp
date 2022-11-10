@@ -241,6 +241,8 @@ public:
 
   bool quit{};
   bool ctrl{};
+  void mouseEvent(SDL_MouseButtonEvent& e, bool pressed);
+  void keyEvent(SDL_KeyboardEvent& e, bool pressed);
 };
 
 SDL_Rect Entity::sdlRect(Display& d, Game& g) {
@@ -294,7 +296,7 @@ bool Display::loadMedia() {
   );
 }
 
-void mouseEvent(Game& g, SDL_MouseButtonEvent& e, bool pressed) {
+void Game::mouseEvent(SDL_MouseButtonEvent& e, bool pressed) {
   Controller& c = g.controller;
   switch (static_cast<int>(e.button)) {
     case SDL_BUTTON_LEFT:  c.ml = pressed;
@@ -303,7 +305,7 @@ void mouseEvent(Game& g, SDL_MouseButtonEvent& e, bool pressed) {
   }
 }
 
-void keyEvent(Game& g, SDL_KeyboardEvent& e, bool pressed) {
+void Game::keyEvent(SDL_KeyboardEvent& e, bool pressed) {
   if(e.repeat) return;
   cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
   Controller& c = g.controller;
@@ -331,10 +333,10 @@ void consumeEvents(Game& g, TimeMs now) {
   SDL_Event e;
   while(SDL_PollEvent(&e)) {
     switch (e.type) {
-      case SDL_MOUSEBUTTONDOWN: mouseEvent(g, e.button, true);  break;
-      case SDL_MOUSEBUTTONUP:   mouseEvent(g, e.button, false); break;
-      case SDL_KEYDOWN:         keyEvent  (g, e.key,    true);  break;
-      case SDL_KEYUP:           keyEvent  (g, e.key,    false); break;
+      case SDL_MOUSEBUTTONDOWN: g.mouseEvent(e.button, true);  break;
+      case SDL_MOUSEBUTTONUP:   g.mouseEvent(e.button, false); break;
+      case SDL_KEYDOWN:         g.keyEvent  (e.key,    true);  break;
+      case SDL_KEYUP:           g.keyEvent  (e.key,    false); break;
       case SDL_QUIT:
         cout << "Got SDL_QUIT\n";
         g.quit = true;
