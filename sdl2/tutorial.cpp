@@ -37,6 +37,7 @@
 #include "resource.h" // Resource and DEFER for wrapping C resources.
 
 using namespace std;
+using TimeMs = Uint32;
 
 // *****************
 // * SDL wrapper types and helper functions
@@ -51,7 +52,7 @@ using RTexture = Resource<SDL_Texture, SDL_DestroyTexture>;
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const Uint64 FRAME_LENGTH = 33; // 33ms, 30 fps
+const TimeMs FRAME_LENGTH = 33; // 33ms, 30 fps
 
 struct Loc;
 
@@ -65,13 +66,13 @@ struct Size {
 class Timer {
 public:
   string_view  m_name;
-  Uint64 m_start;
+  TimeMs m_start;
   Timer(string_view name) : m_name{name} {
-    m_start = SDL_GetTicks64();
+    m_start = SDL_GetTicks();
   }
 
   ~Timer() {
-    Uint64 end = SDL_GetTicks64();
+    TimeMs end = SDL_GetTicks();
     cout << "Timer " << m_name << " total=" << (end - m_start) << "ms\n";
   }
 };
@@ -138,51 +139,60 @@ public:
 // Helps record the total time a button was pressed.
 class ButtonState {
 public:
-  Uint64 m_started{0}; // from SDL_GetTicks64
-  Uint64 m_pressed{0}; // total duration pressed
-  Uint64 m_presses{0}; // number of times pressed (non-repeat)
+  ButtonState(TimeMs now): m_lastAction{now} {}
 
-  // Call before reading values in order to determine length pressed
-  void update(Uint64 ticks) {
-    if(m_started) {
-      m_pressed += ticks - m_started;
-      m_started = ticks;
-    }
+  bool   m_isPressed{};  // is currently pressed
+  TimeMs m_lastAction;   // Start of press/unpress
+  TimeMs m_pressed{0};   // total duration pressed
+  TimeMs m_unpressed{0}; // total duration unpressed
+
+
+  void event(TimeMs now, bool pressed) {
+    if(pressed) press(now);
+    else        unpress(now);
   }
 
-  void press(Uint64 ticks) {
-    m_presses += 1;
-    if(m_started) return;
-    m_started = ticks;
+  void press(TimeMs now) {
+    m_unpressed += now - m_lastAction;
+    m_isPressed = true;
+    m_lastAction = now;
   }
 
-  void unpress(Uint64 ticks) {
-    if(m_started) {
-      m_pressed += ticks - m_started;
+  void unpress(TimeMs now) {
+    if(m_isPressed) {
+      m_pressed += now - m_lastAction;
     }
-    m_started = 0;
+    m_lastAction = now;
+    m_isPressed = false;
   }
 };
 
-class Controler {
+class Controller {
 public:
-  Loc mouse;
+  Controller(TimeMs n)
+    :         w{n},  a{n},    s{n},    d{n},
+              up{n}, left{n}, down{n}, right{n},
+              mLeft{n},       mRight{n}
+  {}
 
-  ButtonState w,   a,   s,    d;
-  ButtonState up, left, down, right;
-  ButtonState mLeft,    mRight;
+  ButtonState w,     a,       s,       d;
+  ButtonState up,    left,    down,    right;
+  ButtonState mLeft,          mRight;
+  Loc mouse{};
 };
+
+const int MAX_EVENTS = 256;
 
 // Game State
 class Game {
 public:
-  Uint64 frame{0};  // ticks at start of frame
-  Uint64 loop {0};
+  Controller controller;
+  TimeMs frame{0};  // ticks at start of frame
+  TimeMs loop {0};
   array<SDL_Event, 256> events;
   int numEvents;
 
-  Loc     center{0, 0};
-  Controler controller;
+  Loc       center{0, 0};
 
   bool quit{};
   bool ctrl{};
@@ -190,7 +200,7 @@ public:
   Entity e1{};
   Entity e2{.loc{-100, -100}};
 
-  bool showingX{false};
+  Game(TimeMs now) : controller{now} {}
 };
 
 SDL_Rect Entity::sdlRect(Display& d, Game& g) {
@@ -244,56 +254,85 @@ bool Display::loadMedia() {
   );
 }
 
-void keydown(SDL_Event& e, Game& g) {
-  cout << "Keydown: " << sdlEventToString(e) << '\n';
-  switch(e.key.keysym.sym) {
+void mouseEvent(Game& g, SDL_MouseButtonEvent& e, TimeMs now, bool pressed) {
+  Controller& c = g.controller;
+  ButtonState* b = nullptr;
+  switch (static_cast<int>(e.button)) {
+    case SDL_BUTTON_LEFT:  b = &c.mLeft; break;
+    case SDL_BUTTON_RIGHT: b = &c.mRight; break;
+    default: return;
+  }
+  b->event(now, pressed);
+}
+
+void keyEvent(Game& g, SDL_KeyboardEvent& e, TimeMs now, bool pressed) {
+  if(e.repeat) return;
+  cout << "Keydown: " << sdlEventToString(SDL_Event{.key = e}) << '\n';
+  Controller& c = g.controller;
+  ButtonState* b = nullptr;
+  switch(e.keysym.sym) {
     case SDLK_UP:    g.e1.loc.y += 5; return;
     case SDLK_DOWN:  g.e1.loc.y -= 5; return;
     case SDLK_LEFT:  g.e1.loc.x -= 5; return;
     case SDLK_RIGHT: g.e1.loc.x += 5; return;
 
-    case SDLK_a:     g.center.x -= 5; return;
-    case SDLK_s:     g.center.y -= 5; return;
-    case SDLK_d:     g.center.x += 5; return;
-    case SDLK_w:     g.center.y += 5; return;
+    case SDLK_a:     b = &c.a; break;
+    case SDLK_s:     b = &c.s; break;
+    case SDLK_d:     b = &c.d; break;
+    case SDLK_w:     b = &c.w; break;
 
     case SDLK_LCTRL:
-    case SDLK_RCTRL: g.ctrl = (e.key.state == SDL_PRESSED); return;
+    case SDLK_RCTRL: g.ctrl = pressed; return;
     case SDLK_c:
       if(g.ctrl) { cout << "Got Cntrl+C\n"; g.quit = true; }
       return;
-    // default: cout << "  ... Hit default\n";
+    default: cout << "  ... Hit default\n";
   }
+  b->event(now, pressed);
 }
 
+void consumeEvents(Game& g, TimeMs now) {
+  for(int i = 0; i < g.numEvents; ++i) {
+    SDL_Event& e = g.events[i];
+    cout << "e1 x=" << g.e1.loc.x << " y=" << g.e1.loc.y << '\n';
+    switch (e.type) {
+      case SDL_MOUSEBUTTONDOWN: mouseEvent(g, e.button, now, true); break;
+      case SDL_MOUSEBUTTONUP:   mouseEvent(g, e.button, now, false); break;
+      case SDL_KEYDOWN: keyEvent(g, e.key, now, true); break;
+      case SDL_KEYUP:   keyEvent(g, e.key, now, false); break;
+      case SDL_QUIT:
+        cout << "Got SDL_QUIT\n";
+        g.quit = true;
+        break;
+    }
+  }
+
+  g.numEvents = 0;
+}
 // *****************
 // * Event Loop
 
-void consumeEvents(Game& g) {
-
-}
 
 void paintScreen(Display& d, Game& g) {
   SDL_RenderClear(&*d.rend);
-  SDL_Texture* img = g.showingX ? &*d.i_xOut : &*d.i_png ;
-  SDL_RenderCopy(&*d.rend, img, NULL, NULL);
+  SDL_RenderCopy(&*d.rend, &*d.i_png, NULL, NULL);
   g.e1.render(d, g);
   g.e2.render(d, g);
   SDL_RenderPresent(&*d.rend);
 }
 
 void frameDelay(Game& g) {
-  Uint64 now = SDL_GetTicks64();
-  Uint64 end = g.frame + FRAME_LENGTH;
+  TimeMs now = SDL_GetTicks();
+  TimeMs end = g.frame + FRAME_LENGTH;
   if(end > now) {
     SDL_Delay(end - now);
   }
-  g.frame = SDL_GetTicks64();
+  g.frame = SDL_GetTicks();
 }
 
 
 void eventLoop(Display& d, Game& g) {
-  g.frame = SDL_GetTicks64();
+  g.frame = SDL_GetTicks();
 
   // Demonstrate stretching/shrinking an image
   SDL_Rect stretchRect {
@@ -304,22 +343,15 @@ void eventLoop(Display& d, Game& g) {
   SDL_Event e;
   while(not g.quit){
     cout << "WHILE LOOP " << g.loop << '\n';
+    assert(0 == g.numEvents);
     while(SDL_PollEvent(&g.events[g.numEvents])) {
       e = g.events[g.numEvents];
-
-      cout << "e1 x=" << g.e1.loc.x << " y=" << g.e1.loc.y << '\n';
-      switch (e.type) {
-        case SDL_MOUSEBUTTONDOWN: {
-          g.showingX = not g.showingX;
-          break;
-        }
-        case SDL_KEYDOWN: keydown(e, g); break;
-        case SDL_QUIT:
-          cout << "Got SDL_QUIT\n";
-          g.quit = true;
-          break;
+      g.numEvents += 1;
+      if(g.numEvents >= MAX_EVENTS) {
+        break;
       }
     }
+    consumeEvents(g, SDL_GetTicks());
     paintScreen(d, g);
     frameDelay(g);
     g.loop += 1;
@@ -349,7 +381,7 @@ int game() {
     return 1;
   }
 
-  Game g{};
+  Game g{SDL_GetTicks()};
 
   eventLoop(d, g);
   return 0;
