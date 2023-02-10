@@ -23,6 +23,7 @@
  * - Lesson 12: color modulation, great for early status affects!
  * - Lesson 13: alpha modulation for transparency
  * - Lesson 14: sprite movement
+ * - Lesson 15: rotation
  *
  */
 
