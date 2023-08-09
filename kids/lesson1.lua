@@ -49,4 +49,13 @@ tellFlavor('bacon')
 tellFlavor('candy rocks')
 tellFlavor('eesjjt6ufe4yf')
 
+tellFlavor('daddy is clickity click')
+print('daddy == clickity click:', daddy)
+daddy = 'clickity click'
+mommy = 'work'
+print('daddy == clickity click:', daddy)
+print('mommy == '..mommy)
+
+graham = 't7jhydtathuteuwqtcwec7cohjuuuuuuuuuuuuuuuuuuuurg635<F6>ggtfyuidk'
+print('Grahm == '..graham)
 
