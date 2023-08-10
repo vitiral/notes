@@ -99,23 +99,34 @@ def patienceLIS(stacks):
   """
   return [s[-1].i for s in stacks]
 
-def getEqLines(inc, linesA, linesB, a, a2, b, b2):
-  """Walk lines skipping equal lines.
+def skipEqLinesTop(linesA, linesB, a, a2, b, b2):
+  """Walk lines at the top (index=0), skipping equal lines.
 
   Items i<a and i<b are equal to eachother (or vice-versa if inc==-1).
   """
   while a <= a2 and b <= b2:
     if linesA[a] != linesB[b]:
       return a, b
-    a += inc; b += inc
+    a += 1; b += 1
   return a, b
+
+def skipEqLinesBot(linesA, linesB, a, a2, b, b2):
+  """Walk lines at the bot (index=-1) skipping equal lines.
+
+  Items i>a2 and i>b2 are equal to eachother
+  """
+  while a <= a2 and b <= b2:
+    if linesA[a2-1] != linesB[b2-1]:
+      return a2, b2
+    a2 -= 1; b2 -= 1
+  return a2, b2
 
 def patienceDiffI(out, linesA, linesB, a, a2, b, b2):
   """Get the patience dif indexes (a/b indexes inclusive).
   """
   b_, b2_ = b, b2 # cache absolute (starting) min/max of b
-  a, b   = getEqLines( 1, linesA, linesB,  a, a2,  b, b2)
-  a2, b2 = getEqLines(-1, linesA, linesB, a2,  a, b2,  b)
+  a, b   = skipEqLinesTop(linesA, linesB, a, a2, b, b2)
+  a2, b2 = skipEqLinesBot(linesA, linesB, a, a2, b, b2)
 
   # B unchanged lines (top)
   out.extend([(' ', i) for i in range(b_, b)])
@@ -145,12 +156,12 @@ def patienceDiffI(out, linesA, linesB, a, a2, b, b2):
     b = bsi + 1
     i = i
   if not lisB:
-    out.extend([('-', i) for i in range(a, a2)])
     out.extend([('+', i) for i in range(b, b2)])
+    out.extend([('-', i) for i in range(a, a2)])
   assert b <= b2
 
   # B unchanged lines (top)
-  out.extend([(' ', i) for i in range(b2, b2_)])
+  out.extend([(' ', i) for i in range(b2, b2_+1)])
   return out
 
 def patienceDiff(linesA, linesB):
@@ -190,6 +201,18 @@ def testPatienceStacks():
   result = patienceLIS(stacks)
   assert(expected == result)
 
+def testGetEqLines():
+  linesA = 'this is incorrect and so is this'.split()
+  linesB = 'this is good and correct and so is this'.split()
+  a, a2, b, b2 = 0, len(linesA), 0, len(linesB)
+  assert (7, 9)  == (a2, b2)
+  a, b = skipEqLinesTop(linesA, linesB, a, a2, b, b2)
+  assert 2 == a;  assert 2 == b
+
+  a2, b2 = skipEqLinesBot(linesA, linesB, a, a2, b, b2)
+  assert 3 == a2; assert 5 == b2
+
+
 def testPatienceDiff():
   linesA = 'this is incorrect and so is this'.split()
   linesB = 'this is good and correct and so is this'.split()
@@ -200,13 +223,15 @@ def testPatienceDiff():
       (' ', 'and'), (' ', 'so'), (' ', 'is'), (' ', 'this'),
   ]
   result = patienceDiff(linesA, linesB)
-  print("## Compare")
-  pp(result)
+  print('## Expected:')
   pp(expected)
+  print('## Result:')
+  pp(result)
   assert expected == result
 
 
 if __name__ == '__main__':
   testPatienceStacks()
+  testGetEqLines()
   testPatienceDiff()
 
