@@ -1,4 +1,5 @@
 # Thanks to https://blog.jcoglan.com/2017/09/19/the-patience-diff-algorithm/
+
 #
 # Tests taken from that article
 
@@ -62,7 +63,7 @@ def linesUniqueCountMaps(linesA, linesB, a, a2, b, b2):
 def patienceStacks(countMap):
   """Return the patience stacks from countMap.
 
-  Patience stacks are a set of stacks sorted using Count.i (only count==1 used)
+  Patience stacks are a set of stacks sorted using line indexes of unique lines.
 
   The algorithm is akin to playing a simplistic game of "patience" (aka
   solitare) where the top of each stack has a smaller value than the item below
