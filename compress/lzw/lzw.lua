@@ -45,7 +45,7 @@ function M.encodeLzwFull(fn, state, idx, max, dict, size)
   for _, c in fn, state, idx do
     size = size + 1
     if size % 1024 == 0 then
-      dpnt(sfmt('Encoded %sKiB', size // 1024))
+      print(sfmt('Encoded %sKiB', size // 1024))
     end
     local new = build..c
     if dict[new] then build = new
@@ -62,7 +62,7 @@ function M.encodeLzwFull(fn, state, idx, max, dict, size)
   end
 end
 
-local function llpop(prev, nxt, i)
+local function llPop(prev, nxt, i)
   local pi = prev[i]
   local ni = nxt[i]
   nxt[pi] = ni
@@ -96,35 +96,39 @@ end
 function M.encodeLlzFull(fn, state, idx, max, dict, size)
   print('!! encoding FULL', max)
   local llprev, llnext = llzLLs(max)
+  local llv = {false}
+  for s, code in pairs(dict) do
+    llv[code] = s
+  end
   local root = 0 -- root index. Items after root stay, items before root are deleted
 
   local build = ''
   for i, c in fn, state, idx do
     size = size + 1; if size % 1024 == 0 then
-      dpnt(sfmt('Encoded %sKiB', size // 1024))
+      print(sfmt('Encoded %sKiB', size // 1024))
     end
     assert(type(c) == 'string')
-    dwrite('!! ', c, ': ')
     local new = build..c
     local code = dict[new]
     if code then -- recognized code
       if code > 255 then
-        llpop(llprev, llnext, code)
+        llPop(llprev, llnext, code)
         llPutNext(llprev, llnext, root, code)
         root = code -- additional recognized items go after this
+        assert(root < max) -- I think this actually needs to be checked against (?)
       end
       build = new
-      dpnt(sfmt('building %q', new))
     else -- Create new code using least-used code.
       assert(#build > 0)
       co.yield(assert(dict[build])); build = ''
       co.yield(string.byte(c))
-      root = 0
-      code = llprev[root] -- replace least-used code with new
-      llpop(llprev, llnext, code)
-      llPutNext(llprev, llnext, root, code)
-      dpnt(sfmt('new %s=%q del %q', code, new, dict[code]))
+      code = llprev[0]      -- replace least-used code with new
+      dict[llv[code]] = nil -- remove previous code value
+      llv[code] = new       -- and cache new one
+      llPop(llprev, llnext, code)
+      llPutNext(llprev, llnext, 0, code)
       dict[new] = code
+      root = 0
     end
   end
 
@@ -140,12 +144,12 @@ function M.encodeTh(fullFn, fn, state, idx, max)
   fullFn = fullFn or M.encodeLzwFull
   local dict = {}; for i=0,0xFF do dict[string.char(i)] = i end
   local next_code = 0x100
-  local build = ""
+  local build = ''
   local size = 0
   co.yield()
   for i, c in fn, state, idx do
     size = size + 1; if size % 1024 == 0 then
-      dpnt(sfmt('Encoded %sKiB', size // 1024))
+      print(sfmt('Encoded %sKiB', size // 1024))
     end
     assert(type(c) == 'string')
     dwrite('!! ', c, ': ')
@@ -186,23 +190,25 @@ function M.decodeLzwFull(fn, state, idx, max, dict)
 end
 
 function M.decodeLlzFull(fn, state, idx, max, dict)
+  print('!! decoding FULL')
   local llprev, llnext = llzLLs(max)
+
   local root = 0 -- root index. Items after root stay, items before root are deleted
   local code = nil
   for _, c in fn, state, idx do
     assert(type(c) == 'number')
-    if c <= 0xFF then -- Create new code using least-used code.
+    if code and c <= 0xFF then -- Create new code using least-used code.
       co.yield(c)
-      root = 0
       local new = dict[code]..string.char(c)
-      code = llprev[root] -- remove least-used code
-      llpop(llprev, llnext, code)
-      llPutNext(llprev, llnext, root, code)
-      dict[new] = code
+      code = llprev[0] -- remove least-used code
+      llPop(llprev, llnext, code)
+      llPutNext(llprev, llnext, 0, code)
+      dict[code] = new
+      root, code = 0, nil
     else
-      co.yield(assert(dict[c]))
       code = c
-      llpop(llprev, llnext, code)
+      co.yield(assert(dict[code]))
+      llPop(llprev, llnext, code)
       llPutNext(llprev, llnext, root, code)
       root = code
     end
