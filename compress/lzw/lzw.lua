@@ -87,15 +87,18 @@ local function llzLLs(max)
     llprev[i]=i-1
     llnext[i]=i+1
   end
-  llprev[256], llnext[max] = 0, 0
+  llprev[0],   llnext[max] = max, 0
+  llnext[0],   llprev[256] = 256, 0
   return llprev, llnext
 end
 
 
 function M.encodeLlzFull(fn, state, idx, max, dict, size)
+  print('!! encoding FULL', max)
   local llprev, llnext = llzLLs(max)
   local root = 0 -- root index. Items after root stay, items before root are deleted
 
+  local build = ''
   for i, c in fn, state, idx do
     size = size + 1; if size % 1024 == 0 then
       dpnt(sfmt('Encoded %sKiB', size // 1024))
@@ -113,7 +116,7 @@ function M.encodeLlzFull(fn, state, idx, max, dict, size)
       build = new
       dpnt(sfmt('building %q', new))
     else -- Create new code using least-used code.
-      assert(#build > 1)
+      assert(#build > 0)
       co.yield(assert(dict[build])); build = ''
       co.yield(string.byte(c))
       root = 0

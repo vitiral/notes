@@ -40,10 +40,20 @@ lzw.encodeFile(rawF, encF)
 lzw.decodeFile(encF, decF)
 assertFilesEq(rawF, decF)
 
+-- local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
+-- local encF = '/tmp/enwik8_2.lzw'
+-- local decF = '/tmp/enwik8.decoded'
+-- lzw.encodeFile(rawF, encF)
+-- lzw.decodeFile(encF, decF)
+-- print('asserting files')
+-- assertFilesEq(rawF, decF)
+
+
 local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
-local encF = '/tmp/enwik8_2.lzw'
+local encF = '/tmp/enwik8_2.llz'
 local decF = '/tmp/enwik8.decoded'
-lzw.encodeFile(rawF, encF)
-lzw.decodeFile(encF, decF)
+lzw.encodeFile(rawF, encF, lzw.encodeLlzFull)
+print('!! Encoded to', encF)
+lzw.decodeFile(encF, decF, lzw.decodeLlzFull)
 print('asserting files')
 assertFilesEq(rawF, decF)
