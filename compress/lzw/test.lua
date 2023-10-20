@@ -17,6 +17,12 @@ local function dbg(codes)
   print()
 end
 
+local function assertFilesEq(p1, p2)
+  local p = io.popen(sfmt('diff -q %s %s', p1, p2))
+  local msg = p:read()
+  assert(p:close(), msg)
+end
+
 local s = 'hi hi there bob. hi hi there jane.'
 local enc = encodeStr(s)
 print(string.format('!! len %s -> %s', #s, #enc))
@@ -27,8 +33,17 @@ print('Exp: ', s)
 print('Dec: ', dec)
 
 print('!! encoding enwik8')
-local rawF = '/home/rett/tmp/wik/enwik8'
-local encF = '/tmp/enwik8_2.lzw'
-local decF = '/tmp/enwik8'
--- lzw.encodeFile(rawF, encF)
+local rawF = 'test.lua'
+local encF = 'test.lua.lzw'
+local decF = 'test.lua.decoded'
+lzw.encodeFile(rawF, encF)
 lzw.decodeFile(encF, decF)
+assertFilesEq(rawF, decF)
+
+local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
+local encF = '/tmp/enwik8_2.lzw'
+local decF = '/tmp/enwik8.decoded'
+lzw.encodeFile(rawF, encF)
+lzw.decodeFile(encF, decF)
+print('asserting files')
+assertFilesEq(rawF, decF)

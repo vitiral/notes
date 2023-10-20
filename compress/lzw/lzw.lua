@@ -5,20 +5,28 @@ local co = coroutine
 local M = {}
 
 local function dpnt(...)
-  print(...)
+  -- print(...)
 end
 
 local function dwrite(...)
-  io.stdout:write(...)
+  -- io.stdout:write(...)
 end
 
 local function nextTh(th)
-  if co.status(th) ~= "dead" then return select(2, co.resume(th)) end
+  local stat = co.status(th)
+  if stat ~= "dead" then
+    local res = {co.resume(th)}
+    if not res[1] then error(sfmt(
+      'resume failed on %s thread. Now stat=%s\n  result: %s %s\n',
+      stat, co.status(th), tostring(res[1]), tostring(res[2])
+    ))end
+    return select(2, table.unpack(res))
+  end
 end
 
 local function iterTh(fn, ...)
   local th = co.create(fn)
-  co.resume(th, ...)
+  assert(co.resume(th, ...))
   return nextTh, th
 end
 
@@ -32,20 +40,20 @@ local function tofile(f, mode)
   return f
 end
 
-function M.encodeTh(fn, state, index)
+function M.encodeTh(fn, state, idx, max)
   dpnt('!! encodeTh')
-  co.yield()
+  max = max or 0xFFFF
   local dict = {}; for i=0,0xFF do dict[string.char(i)] = i end
   local next_code = 0x100
   local build = ""
   local size = 0
-  for i, c in fn, state, index do
-    size = size + 1
-    if size % 1024 == 0 then
+  co.yield()
+  local llv, llnext, llprev = {}, {}, {}
+  for i, c in fn, state, idx do
+    size = size + 1; if size % 1024 == 0 then
       dpnt(sfmt('Encoded %sKiB', size // 1024))
     end
     assert(type(c) == 'string')
-    index = i
     dwrite('!! ', c, ': ')
     local new = build..c
     if dict[new] then -- recognized code
@@ -57,14 +65,13 @@ function M.encodeTh(fn, state, index)
       co.yield(assert(dict[build])); build = ''
       co.yield(string.byte(c))
       dict[new] = next_code; next_code = next_code + 1
-      if next_code >= 4096 then break end
+      if next_code > max then idx = i;  break end
     end
   end
 
-  if next_code >= 4096 then -- no new codes
+  if next_code > max then -- no new codes
     assert(#build == 0)
-    while true do
-      index, c = fn(state, index); if index == nil then break end
+    for _, c in fn, state, idx do
       size = size + 1
       if size % 1024 == 0 then
         dpnt(sfmt('Encoded %sKiB', size // 1024))
@@ -93,16 +100,18 @@ function M.encode(...)
   return t
 end
 
-function M.decodeTh(f, state, idx)
-  dpnt'!! DECODE'
-  co.yield()
+function M.decodeTh(fn, state, idx, max)
+  max = max or 0xFFFF
+  dpnt('!! DECODE', fn, state, idx, max)
   local t = {}
   local dict = {}; for i=0,0xFF do dict[i] = string.char(i) end
   local next_code = 0x100
   local code = nil
-  for _, c in f, state, idx do
+  co.yield()
+  dpnt('!! decode resumed', fn, state, idx)
+  for i, c in fn, state, idx do
     assert(type(c) == 'number')
-    dwrite('!! ', tostring(c), ': ')
+    dwrite('!! decode loop', tostring(i), tostring(c), ': ')
     if not code then
       code = c
       dpnt(sfmt('code=%s%q', code, dict[code]))
@@ -112,12 +121,13 @@ function M.decodeTh(f, state, idx)
       dpnt(sfmt('new and push %s%q', next_code, new))
       dict[next_code] = new; next_code = next_code + 1
       co.yield(new); code = nil
-      if next_code >= 4096 then idx = i;  break end
+      if next_code > max then idx = i;  break end
     end
   end
+  if code then co.yield(dict[code]) end
 
-  if next_code >= 4096 then
-    for _, c in f, state, idx do co.yield(assert(dict[c])) end
+  if next_code > max then
+    for _, c in fn, state, idx do co.yield(assert(dict[c])) end
   end
   return table.concat(t)
 end
@@ -131,44 +141,27 @@ function M.decode(...)
 end
 
 function M.encodeFile(from, to)
-  from, to = tofile(from, 'rb'), tofile(to, 'wb')
-  local c0 = nil
-  -- encode two codes (12*2 bits) as three bytes
+  from, to = assert(tofile(from, 'rb')), assert(tofile(to, 'wb'))
   for c in iterTh(M.encodeTh, nextFile, from, 1) do
-    if c0 then
-      to:write(
-        c0 >> 4,                       -- c0 upper 8 bits
-        ((c0 & 0x0F) << 8) | (c >> 8), -- c0 lower 4 bits + c upper 4
-        c & 0xFF                       -- c lower 8 bits
-      )
-      c0 = nil
-    else c0 = c end
-  end
-  if c0 then
-    to:write(
-      c0 >> 4,            -- c0 upper 8 bits
-      ((c0 & 0x0F) << 8), -- c0 lower 4 bits + 0
-      0)                  -- zero for c
+    to:write(string.char(c >> 8), string.char(c & 0xFF))
   end
   to:flush()
   from:close(); to:close()
 end
 
-function M.readCodes(file, data)
-  if data then -- leftover data
-    local _, b2, b3 = string.byte(data)
-    return false, (((b2 & 0x0F) << 4) | b3)
-  end
-  data = file:read(3)
+function M.readCodes(file)
+  assert(file)
+  local data = file:read(2)
   if data then
-    local b1, b2, _ = string.byte(data)
-    return data, (b1 << 8) | (b2 >> 4)
+    local b1, b2 = string.byte(data), string.byte(data:sub(2,2))
+    return true, (b1 << 8) | b2
   end
 end
 
 function M.decodeFile(from, to)
-  from, to = tofile(from, 'rb'), tofile(to, 'wb')
-  for s in iterTh(M.decodeTh, M.readCodes, file, false) do
+  from, to = assert(tofile(from, 'rb')), assert(tofile(to, 'wb'))
+  dpnt('Decoding ', from, M.readCodes, from)
+  for s in iterTh(M.decodeTh, M.readCodes, from) do
     to:write(s)
   end
   to:flush()
