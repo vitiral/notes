@@ -23,37 +23,47 @@ local function assertFilesEq(p1, p2)
   assert(p:close(), msg)
 end
 
-local s = 'hi hi there bob. hi hi there jane.'
-local enc = encodeStr(s)
-print(string.format('!! len %s -> %s', #s, #enc))
-dbg(enc)
-
-local dec = lzw.decode(ipairs(enc))
-print('Exp: ', s)
-print('Dec: ', dec)
-
-print('!! encoding enwik8')
-local rawF = 'test.lua'
-local encF = 'test.lua.lzw'
-local decF = 'test.lua.decoded'
-lzw.encodeFile(rawF, encF)
-lzw.decodeFile(encF, decF)
-assertFilesEq(rawF, decF)
-
--- local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
--- local encF = '/tmp/enwik8_2.lzw'
--- local decF = '/tmp/enwik8.decoded'
+-- local s = 'hi hi there bob. hi hi there jane.'
+-- local enc = encodeStr(s)
+-- print(string.format('!! len %s -> %s', #s, #enc))
+-- dbg(enc)
+-- 
+-- local dec = lzw.decode(ipairs(enc))
+-- print('Exp: ', s)
+-- print('Dec: ', dec)
+-- 
+-- print('!! encoding enwik8')
+-- local rawF = 'test.lua'
+-- local encF = 'test.lua.lzw'
+-- local decF = 'test.lua.decoded'
 -- lzw.encodeFile(rawF, encF)
 -- lzw.decodeFile(encF, decF)
+-- assertFilesEq(rawF, decF)
+-- 
+-- -- local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
+-- -- local encF = '/tmp/enwik8_2.lzw'
+-- -- local decF = '/tmp/enwik8.decoded'
+-- -- lzw.encodeFile(rawF, encF)
+-- -- lzw.decodeFile(encF, decF)
+-- -- print('asserting files')
+-- -- assertFilesEq(rawF, decF)
+-- 
+-- 
+-- local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
+-- local encF = '/tmp/enwik8_2.llz'
+-- local decF = '/tmp/enwik8.decoded'
+-- lzw.encodeFile(rawF, encF, lzw.encodeLlzFull)
+-- print('!! Encoded to', encF)
+-- lzw.decodeFile(encF, decF, lzw.decodeLlzFull)
 -- print('asserting files')
 -- assertFilesEq(rawF, decF)
 
+local lzw2 = require'lzw2'
+local s = 'hi hi there bob. hi hi there jane.'
+local enc = lzw2.encode(s, 0xFFFF)
+print(string.format('!! len %s -> %s', #s, #enc))
+dbg(enc)
 
-local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
-local encF = '/tmp/enwik8_2.llz'
-local decF = '/tmp/enwik8.decoded'
-lzw.encodeFile(rawF, encF, lzw.encodeLlzFull)
-print('!! Encoded to', encF)
-lzw.decodeFile(encF, decF, lzw.decodeLlzFull)
-print('asserting files')
-assertFilesEq(rawF, decF)
+local dec = lzw2.decode(enc, 0xFFFF)
+print('Exp: ', s)
+print('Dec: ', dec)
