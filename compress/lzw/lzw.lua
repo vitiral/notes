@@ -62,24 +62,6 @@ function M.encodeLzwFull(fn, state, idx, max, dict, size)
   end
 end
 
-local function llPop(prev, nxt, i)
-  local pi = prev[i]
-  local ni = nxt[i]
-  nxt[pi] = ni
-  prev[ni] = pi
-  return i
-end
-
--- insert after
-local function llPutNext(prev, nxt, at, i)
-  local ni = nxt[at]
-  nxt[at] = i
-  prev[i] = at
-
-  nxt[i]   = ni
-  prev[ni] = i
-end
-
 local function llzLLs(max)
   local llprev, llnext = {0}, {0}
 
