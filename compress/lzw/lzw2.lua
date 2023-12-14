@@ -7,8 +7,56 @@ local sfmt = string.format
 local function pntf(...) print(sfmt(...)) end
 M = {}
 
--- Traditional LZW with max. Based on:
--- https://rosettacode.org/wiki/LZW_compression
+-- LZW encode
+-- We start with a dict of all char -> byte (char(0-255) -> (0-255))
+--
+-- To encode, we build up a "word" as we iterate through the bytes.
+-- 1. When we know the word, we emit nothing and keep building
+-- 2. When we don't know the word, we emit the word we do know
+--    and set dict[word] = size++. We continue building a word starting
+--    at the last character.
+--
+-- Let's take a look at how this works in practice:
+-- a b b b a b a
+--
+-- codes[a=1, b=2, c=3]
+--
+-- 1. a -> w = 'a'    IS known,                                w='a'
+-- 2. b -> w = 'ab'   is NOT known:  emit 1'a';  codes[ab]=4;  w='b'
+-- 3. b -> w = 'bb'   is NOT known:  emit 2'b';  codes[bb]=5;  w='b'
+-- 3. b -> w = 'bb'   is known,                                w='bb'
+-- 4. a -> w = 'bba'  is NOT known:  emit 5'bb'; codes[bba]=6; w='a'
+-- 5. b -> w = 'ab'   is known, skip                           w='ab'
+-- 6. a -> w = 'aba'  is NOT known:  emit 4'ab'; codes[aba]=7  w='a'
+-- 7 EOF, emit 1'a'
+--
+--
+-- There is one special case the decoder has to happen: when the
+-- known word's [1]==[#word] the code will be known on the encoder
+-- without ever being emited. However, it's code == nextCode
+--
+-- Let's look at what was emitted and what the decoder has to build:
+--
+--   init codes{1=a 2=b c=3}
+--   1'a'                  -> known 1'a'   prev='a'
+--   2'b'  codes[4] = ab   -> known 2'b'  codes[4=ab]        prev='b'
+--   5???  5 is NOT known BUT it is next code size
+--         codes[5] = prev..prev[1]
+--   5'bb'                                                   prev='bb'
+--   4'ab' codes[6] = bba  -> known 4'ab' codes[6=bba]       prev='ab'
+--   1'a'  codes[7] = aba  -> known 1'a'  codes[
+--
+--
+-- To decode we reverse this. The decoder will receive only:
+-- 1. known codes
+-- 2. maxCode++
+--
+-- LZW decode
+-- 1. create same dict but of code -> word
+-- 1. initialize the word as the char(first code)
+-- 2. loop through the rest of codes. For each item the next code
+--    is equal to word..dict[code]:sub(1,1)
+-- 3. set word=dict[code]
 
 function M.encode(data, max)
   pntf('Encode len=%s max=%s', #data, max)
@@ -18,7 +66,7 @@ function M.encode(data, max)
   local idx, len = 1, #data
   while idx <= len do
     local c = data:sub(idx, idx); idx = idx + 1
-    local wc = w..c
+    local wc = w..c --ab
     if dict[wc] then w = wc
     else
       push(t, dict[w])
@@ -44,20 +92,22 @@ end
 
 function M.decode(encoded, max)
   pntf('Decode len=%s max=%s', #encoded, max)
-  local w, code, entry = char(encoded[1]), nil, nil
-  local t, dict, size  = {w},              {},  256
+  local prev, code, entry = char(encoded[1]), nil, nil
+  local t, dict, size  = {prev},              {},  256
   for i=0,0xFF do dict[i] = char(i) end
   local idx, len = 2, #encoded
   while idx <= len do
     code = encoded[idx]; idx = idx + 1
     found = dict[code]
     if found then            entry = found
-    elseif code == size then entry = w..w:sub(1,1)
-    else error'invalid compressed code' end
+    elseif code == size then
+      entry = prev..prev:sub(1,1)
+      pntf('code==size code=%s, prev=%q entry=%q', code, prev, entry)
+    else error('invalid compressed code '..code) end
     push(t, entry);
-    dict[size] = w..entry:sub(1,1)
+    dict[size] = prev..entry:sub(1,1)
     size = size + 1
-    w = entry
+    prev = entry
     if size > max then break end
   end
   while idx <= len do

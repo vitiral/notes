@@ -90,14 +90,14 @@ print('Dec: ', dec)
 assert(s == dec)
 
 -- LZW 16
--- local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
--- local encF = '/tmp/enwik8_16.lzw'
--- local decF = '/tmp/enwik8.decoded'
--- lzw2.encodeFile(rawF, encF)
--- print('!! Encoded to', encF)
--- lzw2.decodeFile(encF, decF)
--- print('!! Decoded to', decF)
--- assertFilesEq(rawF, decF)
+local rawF = '/home/rett/tmp/wik/enwik8_1MiB'
+local encF = '/tmp/enwik8_16.lzw'
+local decF = '/tmp/enwik8.decoded'
+lzw2.encodeFile(rawF, encF)
+print('!! Encoded to', encF)
+lzw2.decodeFile(encF, decF)
+print('!! Decoded to', decF)
+assertFilesEq(rawF, decF)
 
 -- LLZ 16
 -- local encF = '/tmp/enwik8_16.llz'
@@ -123,10 +123,10 @@ assert(s == dec)
 -- assertFilesEq(rawF, decF)
 
 -- LZW Big 16
-local rawF = '/home/rett/tmp/wik/enwik8'
-local encF = '/tmp/enwik8big_16.lzw'
-lzw2.encodeFile(rawF, encF)
-print('!! Encoded to', encF)
+-- local rawF = '/home/rett/tmp/wik/enwik8'
+-- local encF = '/tmp/enwik8big_16.lzw'
+-- lzw2.encodeFile(rawF, encF)
+-- print('!! Encoded to', encF)
 
 -- -- LLZ Big 16
 -- local rawF = '/home/rett/tmp/wik/enwik8'
