@@ -2,6 +2,10 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+#ifndef luaL_newlib
+#define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
+#endif
+
 int l_mul(lua_State *L) {
   lua_Integer n1 = luaL_checkinteger(L, 1);
   lua_Integer n2 = luaL_checkinteger(L, 2);
@@ -15,11 +19,6 @@ static const struct luaL_Reg pear[] = {
 };
 
 int luaopen_pear(lua_State *L) {
-#if LUA_VERSION_NUM >= 502 // LUA 5.2 or above
-  lua_newtable(L);
-  luaL_setfuncs(L, pear, 0);
-#else
-  luaL_register(L, "pear", xxtea);
-#endif
+  luaL_newlib(L, pear);
   return 1;
 }
