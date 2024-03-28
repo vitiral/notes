@@ -1,6 +1,10 @@
 
+local f = io.popen'uname'
+local plat = f:read(); f:close()
+local ext = '.so'; if plat == 'Darwin' then ext = '.dylib' end
+
 -- include a single function from the C library at path
-local mul, err = package.loadlib("./pear.so", "l_mul")
+local mul, err = package.loadlib('./pear'..ext, 'l_mul')
 assert(mul, err)
 
 local v = math.floor(2 ^ 33) + 3
