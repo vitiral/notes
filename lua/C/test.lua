@@ -15,4 +15,10 @@ assert(mul(v, v) == 51539607561) -- overflow
 local pear = require'pear'
 assert(pear.mul(v, v) == 51539607561) -- overflow
 
+local pear2_func = package.loadlib('./pear'..ext, 'luaopen_pear')
+print('pear2_func', pear2_func)
+local pear2 = pear2_func()
+print('pear2.mul', pear2.mul)
+assert(pear2.mul(v, v) == 51539607561) -- overflow
+
 print"test.lua done"
