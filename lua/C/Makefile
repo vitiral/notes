@@ -14,3 +14,13 @@ test: build
 	
 build: pear.c
 	$(CC) -$(LIBTYPE) $+ -o pear.$(LIBEXT) $(LUA_ARGS)
+
+pear: pear.c
+	gcc pear.c -c -Wall -llua5.3 -I/usr/include/lua5.3
+	gcc pear.o -shared -o pear.so
+	lua test.lua
+
+ioc: ioc.c
+	gcc ioc.c -c -Wall -llua5.3 -I/usr/include/lua5.3
+	gcc ioc.o -shared -o ioc.so
+	lua try_ioc.lua
