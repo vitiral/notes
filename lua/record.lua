@@ -17,23 +17,30 @@ M.Example = setmetatable({
     return string.format('Example(%s, %s)', self.first, self.last)
   end,
 
-  __index = { -- Methods
-    fullname = function(self)
-      return string.format('%s %s', self.first, self.last)
-    end,
-    hello = function(self)
-      print('Hello '..self:fullname()..'!')
-    end,
-  },
+  -- methods
+  fullname = function(self)
+    return string.format('%s %s', self.first, self.last)
+  end,
+  hello = function(self)
+    print('Hello '..self:fullname()..'!')
+  end,
 }, { -- Example's metatable: __call is Example's constructor
     __call=function(ty_, first, last)
       -- Note: ty_ == M.Example
       return setmetatable({first=first, last=last}, ty_)
     end
 })
+M.Example.__index = M.Example
+
+-- Or declare methods this way
+function M.Example:anotherMethod()
+  return 'another method '..tostring(self)
+end
 
 local example = M.Example('Vitiral', 'Example')
 assert(example:fullname() == 'Vitiral Example')
 example:hello() -- prints: Hello Vitiral Example!
+print('example missing field is nil:', example.missing)
+print(example:anotherMethod())
 
 return M
