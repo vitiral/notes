@@ -24,3 +24,8 @@ ioc: ioc.c
 	gcc ioc.c -c -Wall -llua5.3 -I/usr/include/lua5.3
 	gcc ioc.o -shared -o ioc.so
 	lua try_ioc.lua
+
+yield: yield.c
+	gcc yield.c -c -Wall -llua5.3 -I/usr/include/lua5.3
+	gcc yield.o -shared -o yield.so
+	lua yield.lua
