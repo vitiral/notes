@@ -88,17 +88,12 @@ def _quicksort(arr, li, hi):
     _quicksort(arr, li, pi - 1)
     _quicksort(arr, pi + 1, hi)
 
-
-
 def resolve_partition(arr, li, hi):
     """Ensure that the partition is in the right place
     by ensuring that all indexes < than it are to the left
     and > than it to the right.
 
     This uses partiation_index = hi for simplicity.
-
-    [7,10, 1, 3, 4]
-
     """
     piviot = arr[hi]
 
@@ -118,6 +113,57 @@ def resolve_partition(arr, li, hi):
 
 def test_quicksort():
     do_test(quicksort)
+
+
+def quicksort2(arr):
+    _quicksort2(arr, 0, len(arr) - 1)
+    print("quicksort2: ", arr)
+
+def _quicksort2(a, li, hi):
+    if hi - li < 2:
+      if (li < hi) and (a[hi] < a[li]):
+        print(f'len2 swap {li},{hi}: {a[li]} <-> {a[hi]}')
+        a[li], a[hi] = a[hi], a[li]
+        print(f' + result: {a}')
+      return
+
+    pi = resolve_partition2(a, li, hi)
+    _quicksort2(a, li, pi - 1)
+    _quicksort2(a, pi + 1, hi)
+
+def resolve_partition2(a, li, hi):
+    """
+    Use two "pointers" to create pivot
+    """
+    print(f"partition {li},{hi}:", a[li:hi+1])
+    pv = a[li]
+    l, h = li, hi + 1
+
+    # Basically: swap values from low with values from hi that are
+    #   both in the wrong place
+    while True:
+      while l < hi: # find a[l] > pv
+        l += 1
+        if pv < a[l]:
+          print(f"+ l={l}: {a[l]} >= {pv}")
+          break
+
+      while True: # find a[h] <= pv
+        h -= 1
+        if not (pv < a[h]):
+          print(f"+ h={h}: {a[h]} <= {pv}")
+          break
+
+      if l >= h:
+        a[li], a[h] = a[h], a[li]
+        print(f"+ pivot={h} ==> {a}")
+        return h
+
+      print(f"+ swap {l},{h}: {a[l]} <-> {a[h]}")
+      a[l], a[h] = a[h], a[l]
+
+def test_quicksort2():
+    do_test(quicksort2)
 
 
 ###############################################################################
